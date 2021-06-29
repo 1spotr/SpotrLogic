@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct Tag: Codable {
-    let id: String
-    let name: String
-    let pictureId: String
-    let pictureUrl: String
+public struct Tag: Codable {
+    public let id: String
+    public let name: String
+    public let pictureId: String
+    public let pictureUrl: String
 }
