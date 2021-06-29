@@ -8,10 +8,10 @@
 
 import Foundation
 
-class User: Codable {
-	let id : String
-	let username : String
-	let profilePictureURL : String?
+public class User: Codable {
+    public let id : String
+    public let username : String
+    public let profilePictureURL : String?
 
 	enum CodingKeys: String, CodingKey {
 		case id

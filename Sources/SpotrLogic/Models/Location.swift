@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Location: Codable {
+public struct Location: Codable {
     enum CodingKeys: String, CodingKey {
         case neighbourhood = "neighbourhood"
         case city = "locality"
@@ -16,17 +16,17 @@ struct Location: Codable {
         case country = "country"
     }
 
-    let neighbourhood: LocationNames?
-    let city: LocationNames?       // 10km+
-    let region: LocationNames?     // 100km+
-    let country: LocationNames?    // other country
+    public let neighbourhood: LocationNames?
+    public let city: LocationNames?       // 10km+
+    public let region: LocationNames?     // 100km+
+    public let country: LocationNames?    // other country
 }
 
-struct LocationNames: Codable {
+public struct LocationNames: Codable {
 
     enum CodingKeys: String, CodingKey {
         case longName = "long_name"
     }
 
-    let longName: String
+    public let longName: String
 }

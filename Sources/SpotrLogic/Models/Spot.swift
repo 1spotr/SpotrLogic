@@ -8,17 +8,17 @@
 
 import Foundation
 
-struct Spot: Identifiable, Codable {
-    let id : String
-    let name : String
-    let tags : [Tag]
-    var pictures: [Picture]
-    let thumbnail: Picture
-//    let geolocation: SpotrGeoloc
-    let location: Location
-    let timestamp: Date
-    let likeCount: Int?
-    let latestLikeAuthor: User?
+public struct Spot: Identifiable, Codable {
+    public let id : String
+    public let name : String
+    public let tags : [Tag]
+    public var pictures: [Picture]
+    public let thumbnail: Picture
+//    public let geolocation: SpotrGeoloc
+    public let location: Location
+    public let timestamp: Date
+    public let likeCount: Int?
+    public let latestLikeAuthor: User?
     // Spot preview
-    let authors: [User]
+    public let authors: [User]
 }
