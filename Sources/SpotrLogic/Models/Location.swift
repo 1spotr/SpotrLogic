@@ -10,10 +10,10 @@ import Foundation
 
 public struct Location: Codable {
     enum CodingKeys: String, CodingKey {
-        case neighbourhood = "neighbourhood"
+        case neighbourhood
         case city = "locality"
         case region = "administrative_area_level_1"
-        case country = "country"
+        case country
     }
 
     public let neighbourhood: LocationNames?

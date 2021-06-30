@@ -11,7 +11,7 @@ import Foundation
 public class User: Codable {
     public let id : String
     public let username : String
-    public let profilePictureURL : String?
+    public let profilePictureURL : URL?
 
 	enum CodingKeys: String, CodingKey {
 		case id
