@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Tag: Codable {
+public struct Tag: Identifiable, Codable, Hashable {
     public let id: String
     public let name: String
     public let pictureId: String
