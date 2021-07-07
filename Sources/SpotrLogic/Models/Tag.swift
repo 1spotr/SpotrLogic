@@ -12,5 +12,5 @@ public struct Tag: Identifiable, Codable, Hashable {
     public let id: String
     public let name: String
     public let pictureId: String
-    public let pictureUrl: String
+    public let pictureUrl: URL
 }
