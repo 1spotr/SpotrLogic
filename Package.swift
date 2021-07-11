@@ -15,7 +15,9 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // 🔥 Firebase
-         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.2.0"),
+        .package(name: "Firebase",
+                 url: "https://github.com/firebase/firebase-ios-sdk.git",
+                 from: "8.2.0"),
 
         // 📃 Log
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
@@ -26,8 +28,12 @@ let package = Package(
         .target(
             name: "SpotrLogic",
             dependencies: [
+//                "Firebase",
+//                .product(name: "FirebaseCore", package: "firebase-ios-sdk"),
+//                .product(name: "Firebase", package: "firebase-ios-sdk"),
+                .product(name: "FirebaseAuth", package: "Firebase"),
+//                .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
                 .product(name: "Logging", package: "swift-log"),
-//                .product(name: "FirebaseAuth", package: "firebase-ios-sdk"),
             ]),
         .testTarget(
             name: "SpotrLogicTests",
