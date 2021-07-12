@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Location: Codable {
+public struct Location: Codable, Hashable {
     enum CodingKeys: String, CodingKey {
         case neighbourhood
         case city = "locality"
@@ -22,7 +22,7 @@ public struct Location: Codable {
     public let country: LocationNames?    // other country
 }
 
-public struct LocationNames: Codable {
+public struct LocationNames: Codable, Hashable {
 
     enum CodingKeys: String, CodingKey {
         case longName = "long_name"

@@ -7,9 +7,12 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
 public struct Spot: Identifiable, Codable {
-    public let id : String
+
+    @DocumentID
+    public private(set) var id : String?
     public let name : String
     public let tags : [Tag]
     public var pictures: [Picture]

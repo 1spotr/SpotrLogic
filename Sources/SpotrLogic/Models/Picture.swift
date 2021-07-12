@@ -7,10 +7,19 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
-public struct Picture: Codable {
-    public let id: String?
+public struct Picture: Identifiable, Codable, Hashable {
+
+    @DocumentID
+    public private(set) var id: String?
     public let url: URL?
     public let author: User?
     public let created: Date?
+
+    // MARK: Equtable
+
+    public static func == (lhs: Picture, rhs: Picture) -> Bool {
+        lhs.id == rhs.id
+    }
 }

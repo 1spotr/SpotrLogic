@@ -7,9 +7,11 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
 public struct Tag: Identifiable, Codable, Hashable {
-    public let id: String
+    @DocumentID
+    public private(set) var id: String?
     public let name: String
     public let pictureId: String?
     public let pictureUrl: URL?

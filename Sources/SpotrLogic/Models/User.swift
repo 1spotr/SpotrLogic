@@ -7,15 +7,33 @@
 //
 
 import Foundation
+import FirebaseFirestoreSwift
 
-public class User: Codable {
-    public let id : String
+public class User: Identifiable, Codable, Hashable {
+
+    @DocumentID
+    public private(set) var id : String?
     public let username : String
     public let profilePictureURL : URL?
+
+    // MARK: Codable
 
 	enum CodingKeys: String, CodingKey {
 		case id
 		case username
 		case profilePictureURL = "profilePictureUrl"
 	}
+
+    // MARK: Equatable
+
+    public static func == (lhs: User, rhs: User) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    // MARK: Hashable
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
 }
