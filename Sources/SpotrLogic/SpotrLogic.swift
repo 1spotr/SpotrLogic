@@ -10,11 +10,11 @@ import Foundation
 import Logging
 
 
-class SpotrLogic {
+public class SpotrLogic {
 
     public let logger: Logger
 
-    init(logger: Logger) {
+    public init(logger: Logger) {
         self.logger = logger
         
     }
@@ -24,7 +24,7 @@ class SpotrLogic {
 
     // MARK: - Areas
 
-    func areas(completion: @escaping(Result<Set<Area>, Error>) -> Void) -> Void {
+    public func areas(completion: @escaping(Result<Set<Area>, Error>) -> Void) -> Void {
         Area.collection.getDocuments { query, error in
             do {
                 // Check if the query resolved with an error
@@ -45,11 +45,11 @@ class SpotrLogic {
 
     // MARK: - Errors
 
-    enum QueryErrors: Error {
+    public enum QueryErrors: Error {
         case noDocuments
     }
 
-    func handle(error: Error) -> Error {
+    private func handle(error: Error) -> Error {
         error
     }
 

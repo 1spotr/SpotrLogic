@@ -6,6 +6,6 @@
 //
 
 import FirebaseFirestore
-
+import FirebaseFirestoreSwift
 
 let firestore : Firestore = Firestore.firestore()
