@@ -11,6 +11,13 @@ import Foundation
 public struct Tag: Identifiable, Codable, Hashable {
     public let id: String
     public let name: String
-    public let pictureId: String
-    public let pictureUrl: URL
+    public let pictureId: String?
+    public let pictureUrl: URL?
+
+    public init(id: String, name: String, pictureId: String? = nil, pictureUrl: URL? = nil) {
+        self.id = id
+        self.name = name
+        self.pictureId = pictureId
+        self.pictureUrl = pictureUrl
+    }
 }
