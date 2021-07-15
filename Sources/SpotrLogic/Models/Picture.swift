@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 public struct Picture: Identifiable, Codable, Hashable {
 
-    @DocumentID
+//    @DocumentID
     public var id: String?
     public let url: URL?
     public let author: User?

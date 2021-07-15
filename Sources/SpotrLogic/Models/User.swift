@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 
 public class User: Identifiable, Codable, Hashable {
 
-    @DocumentID
+//    @DocumentID
     public var id : String?
     public let username : String
     public let profilePictureURL : URL?

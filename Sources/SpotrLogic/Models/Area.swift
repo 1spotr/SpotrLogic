@@ -11,7 +11,7 @@ import FirebaseFirestoreSwift
 public struct Area: Codable, Identifiable, Hashable {
 
 
-    @DocumentID
+//    @DocumentID
     public var id: String?
 
     public let name: String
