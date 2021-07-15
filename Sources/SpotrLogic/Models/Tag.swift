@@ -9,16 +9,26 @@
 import Foundation
 import FirebaseFirestoreSwift
 
+// MARK: - Tag
+
 public struct Tag: Identifiable, Codable, Hashable {
-    public private(set) var id: String?
+    public let id: String?
     public let name: String
     public let pictureId: String?
     public let pictureUrl: URL?
+    public let index : Int?
 
     public init(id: String, name: String, pictureId: String? = nil, pictureUrl: URL? = nil) {
         self.id = id
         self.name = name
         self.pictureId = pictureId
         self.pictureUrl = pictureUrl
+        self.index = nil
     }
+
+    // MARK: - Tags
+
+    // MARK: Collection
+
+    static let collection = firestore.collection("tags")
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 import Logging
-
+import FirebaseFirestoreSwift
 
 public class SpotrLogic {
 
@@ -43,10 +43,38 @@ public class SpotrLogic {
         }
     }
 
+    // MARK: - Tag
+
+    public func tags(for area: Area, completion: @escaping(Result<Set<Tag>, Error>) -> Void) throws {
+        guard let areaID = area.id else { throw  QueryErrors.noGetterID }
+
+        TagGrid.collection.document(areaID).getDocument { document, error in
+            do {
+                // Check if the query resolved with an error
+                if let error = error {
+                    throw error
+                }
+
+                guard let document = document else { throw QueryErrors.noDocuments }
+
+                guard let result = try document.data(as: TagGrid.self) else {
+                    throw QueryErrors.undecodable(document: document.documentID)
+                }
+
+                completion(.success(.init(result.tags)))
+            } catch {
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+    }
+
+
     // MARK: - Errors
 
     public enum QueryErrors: Error {
         case noDocuments
+        case noGetterID
+        case undecodable(document: String)
     }
 
     private func handle(error: Error) -> Error {
