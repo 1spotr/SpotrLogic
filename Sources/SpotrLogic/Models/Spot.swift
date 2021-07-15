@@ -9,9 +9,8 @@
 import Foundation
 import FirebaseFirestoreSwift
 
-public struct Spot: Identifiable, Codable {
+public struct Spot: Identifiable, Codable, Hashable {
 
-    @DocumentID
     public private(set) var id : String?
     public let name : String
     public let tags : [Tag]
@@ -24,4 +23,14 @@ public struct Spot: Identifiable, Codable {
     public let latestLikeAuthor: User?
     // Spot preview
     public let authors: [User]
+
+
+    // MARK: Equatable
+
+
+    // MARK: - Spots
+
+    // MARK: Collection
+
+    static let collection = firestore.collection("spots")
 }

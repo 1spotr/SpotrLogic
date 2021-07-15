@@ -10,7 +10,6 @@ import Foundation
 import FirebaseFirestoreSwift
 
 public struct Tag: Identifiable, Codable, Hashable {
-    @DocumentID
     public private(set) var id: String?
     public let name: String
     public let pictureId: String?
