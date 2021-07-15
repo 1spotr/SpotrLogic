@@ -12,7 +12,7 @@ public struct Area: Codable, Identifiable, Hashable {
 
 
     @DocumentID
-    public private(set) var id: String?
+    public var id: String?
 
     public let name: String
     public let pictures: [Picture]
