@@ -24,6 +24,28 @@ public class SpotrLogic {
 
     private var auth : Auth? = nil
 
+    /// Login anonymously.
+    public func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
+        let loginAuth = Auth.auth()
+
+        loginAuth.signInAnonymously { authData, error in
+            do {
+                // Check if the query resolved with an error
+                if let error = error {
+                    throw error
+                }
+
+                if authData == nil {
+                    throw AuthErrors.failed
+                }
+                self.auth = loginAuth
+                completion(.success(()))
+            } catch {
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+    }
+
     /// Login with user credential (email & password
     /// - Parameters:
     ///   - credential: The user credentials (email & password)
