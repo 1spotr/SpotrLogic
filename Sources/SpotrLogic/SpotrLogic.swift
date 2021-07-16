@@ -24,7 +24,7 @@ public class SpotrLogic {
 
     private var auth : Auth? = nil
 
-    func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
+    public func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
         let loginAuth = Auth.auth()
 
         loginAuth.signInAnonymously { authData, error in
