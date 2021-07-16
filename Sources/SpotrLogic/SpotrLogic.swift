@@ -24,27 +24,36 @@ public class SpotrLogic {
 
     private var auth : Auth? = nil
 
-    public func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
+    /// Login with user credential (email & password
+    /// - Parameters:
+    ///   - credential: The user credentials (email & password)
+    ///   - completion: The auth completion response
+    public func login(with credential: URLCredential,
+                      completion: @escaping(Result<Void, Error>)-> Void) throws -> Void {
+
+        guard let email = credential.user, let password = credential.password else {
+            throw AuthErrors.missingCredentials
+        }
+
         let loginAuth = Auth.auth()
 
-        loginAuth.signInAnonymously { authData, error in
+        loginAuth.signIn(withEmail: email, password: password) { authResult, error in
             do {
                 // Check if the query resolved with an error
                 if let error = error {
                     throw error
                 }
 
-                if authData == nil {
+                if authResult == nil {
                     throw AuthErrors.failed
                 }
 
+                self.auth = loginAuth
                 completion(.success(()))
             } catch {
                 completion(.failure(self.handle(error: error)))
             }
         }
-
-        auth = loginAuth
     }
 
 
@@ -99,6 +108,7 @@ public class SpotrLogic {
 
     public enum AuthErrors: Error {
         case failed
+        case missingCredentials
     }
 
     public enum QueryErrors: Error {
