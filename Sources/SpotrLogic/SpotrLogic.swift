@@ -9,6 +9,7 @@
 import Foundation
 import Logging
 import FirebaseFirestoreSwift
+import FirebaseAuth
 
 public class SpotrLogic {
 
@@ -20,6 +21,31 @@ public class SpotrLogic {
     }
 
     // MARK: - Authentications
+
+    private var auth : Auth? = nil
+
+    func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
+        let loginAuth = Auth.auth()
+
+        loginAuth.signInAnonymously { authData, error in
+            do {
+                // Check if the query resolved with an error
+                if let error = error {
+                    throw error
+                }
+
+                if authData == nil {
+                    throw AuthErrors.failed
+                }
+
+                completion(.success(()))
+            } catch {
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+
+        auth = loginAuth
+    }
 
 
     // MARK: - Areas
@@ -70,6 +96,10 @@ public class SpotrLogic {
 
 
     // MARK: - Errors
+
+    public enum AuthErrors: Error {
+        case failed
+    }
 
     public enum QueryErrors: Error {
         case noDocuments

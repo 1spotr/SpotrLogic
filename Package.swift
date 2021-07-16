@@ -27,6 +27,7 @@ let package = Package(
         .target(
             name: "SpotrLogic",
             dependencies: [
+                .product(name: "FirebaseAuth", package: "Firebase"),
                 .product(name: "FirebaseFirestore", package: "Firebase"),
                 .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase"),
                 .product(name: "Logging", package: "swift-log"),
