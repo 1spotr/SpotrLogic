@@ -14,16 +14,14 @@ import FirebaseFirestoreSwift
 public struct Tag: Identifiable, Codable, Hashable {
     public let id: String?
     public let name: String
-    public let pictureId: String?
-    public let pictureUrl: URL?
-    public let index : Int?
+    public let index: Int?
+    public let picture: Picture?
 
-    public init(id: String, name: String, pictureId: String? = nil, pictureUrl: URL? = nil) {
+    public init(id: String, name: String, picture: Picture? = nil) {
         self.id = id
         self.name = name
-        self.pictureId = pictureId
-        self.pictureUrl = pictureUrl
         self.index = nil
+        self.picture = picture
     }
 
     // MARK: - Tags
