@@ -8,12 +8,17 @@
 
 import Foundation
 import Logging
+
+// Firebase
 import FirebaseFirestoreSwift
 import FirebaseAuth
+import FirebaseFunctions
 
 public class SpotrLogic {
 
     public let logger: Logger
+
+    private var functions = Functions.functions(region: Function.Regions.europeWest.rawValue)
 
     public init(logger: Logger) {
         self.logger = logger
@@ -125,6 +130,33 @@ public class SpotrLogic {
         }
     }
 
+    // MARK: - Spots
+
+    public func featuredSpots(for area: Area,
+                              completion: @escaping(Result<[Spot], Error>) -> Void) throws {
+
+        guard let areaID = area.id else { throw  QueryErrors.noGetterID }
+
+        functions.httpsCallable(Function.getFeatured.rawValue).call(["area_id" : areaID]) { result, error in
+            do {
+                // Check if the query resolved with an error
+                if let error = error {
+                    throw error
+                }
+
+                guard let dict = result?.data as? [String: Any] else {
+                    throw QueryErrors.noDocuments
+                }
+                let result = try decoderFirestore.decode([Spot].self, from: dict)
+
+                completion(.success(.init(result)))
+            } catch {
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+
+    }
+
 
     // MARK: - Errors
 
@@ -136,7 +168,7 @@ public class SpotrLogic {
     public enum QueryErrors: Error {
         case noDocuments
         case noGetterID
-        case undecodable(document: String)
+        case undecodable(document: String?)
     }
 
     private func handle(error: Error) -> Error {

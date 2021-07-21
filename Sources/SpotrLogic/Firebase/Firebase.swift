@@ -22,3 +22,12 @@ public func configureFirebase(with file: URL? = nil) -> Void {
 }
 
 let firestore : Firestore = Firestore.firestore()
+
+
+// MARK: - Coding
+
+/// Firestore encoder.
+let encoderFirestore : Firestore.Encoder = .init()
+
+/// Firestore decoder.
+let decoderFirestore : Firestore.Decoder = .init()
