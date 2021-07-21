@@ -147,9 +147,13 @@ public class SpotrLogic {
                 guard let dict = result?.data as? [String: Any] else {
                     throw QueryErrors.noDocuments
                 }
-                let result = try decoderFirestore.decode([Spot].self, from: dict)
+                let result = try decoderFirestore.decode(FeaturedSpots.self, from: dict)
 
-                completion(.success(.init(result)))
+                guard let spots = result.result?.compactMap(\.spot) else {
+                    throw QueryErrors.undecodable(document: nil)
+                }
+
+                completion(.success(.init(spots)))
             } catch {
                 completion(.failure(self.handle(error: error)))
             }
