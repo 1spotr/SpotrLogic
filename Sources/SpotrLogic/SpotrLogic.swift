@@ -148,6 +148,7 @@ public class SpotrLogic {
                     throw QueryErrors.noDocuments
                 }
                 let result = try decoderFirestore.decode(FeaturedSpots.self, from: dict)
+                self.logger.debug("Fetched \(String(describing: result.count)) featured spots")
 
                 guard let spots = result.result?.compactMap(\.spot) else {
                     throw QueryErrors.undecodable(document: nil)
