@@ -14,7 +14,7 @@ public class Spot: ObservableObject, Identifiable, Codable, Hashable {
 
     public private(set) var id : String?
     public let name : String
-    public let tags : [Tag]?
+//    public let tags : [Tag]?
     public var pictures: [Picture]?
     public private(set) var thumbnail: Picture?
 //    public let geolocation: SpotrGeoloc
