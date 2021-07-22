@@ -7,25 +7,67 @@
 //
 
 import Foundation
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-public struct Spot: Identifiable, Codable, Hashable {
+public class Spot: Identifiable, Codable, Hashable {
 
     public private(set) var id : String?
     public let name : String
-//    public let tags : [Tag]?
-    public var pictures: [Picture]
-    public let thumbnail: Picture
+    public let tags : [Tag]?
+    public var pictures: [Picture]?
+    public private(set) var thumbnail: Picture?
 //    public let geolocation: SpotrGeoloc
     public let location: Location
-    public let timestamp: Date
+    public let created: Date
+    public let updated: Date
     public let likeCount: Int?
     public let latestLikeAuthor: User?
     // Spot preview
-    public let authors: [User]
+    public let authors: [User]?
 
 
-    // MARK: Equatable
+    // MARK: Coding
+
+    enum CodingKeys: String, CodingKey, CaseIterable {
+        case id
+        case name
+        case tags
+        case pictures
+        case thumbnail
+        case location
+        case created = "dt_created"
+        case updated = "dt_update"
+        case likeCount
+        case latestLikeAuthor
+        case authors
+    }
+
+    // MARK: Equate & Hashable
+
+    public static func == (lhs: Spot, rhs: Spot) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    // MARK: Loading
+
+    public func load() -> Void {
+        guard let id = id else { return }
+
+        Picture.collection.whereField("spot_id", isEqualTo: id)
+        .whereField("valid", isEqualTo: true)
+        .order(by: "dt_update", descending: true)
+            .getDocuments { query, error in
+                if let document = query?.documents,
+                   let result = try? document.compactMap({ try $0.data(as: Picture.self) }).first {
+                    self.thumbnail = result
+                }
+            }
+    }
 
 
     // MARK: - Spots

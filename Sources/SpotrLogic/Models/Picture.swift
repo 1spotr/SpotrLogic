@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 public struct Picture: Identifiable, Codable, Hashable {
@@ -21,4 +22,11 @@ public struct Picture: Identifiable, Codable, Hashable {
     public static func == (lhs: Picture, rhs: Picture) -> Bool {
         lhs.id == rhs.id
     }
+
+
+    // MARK: - Pictures
+
+    // MARK: Collection
+
+    static var collection = firestore.collection("pictures")
 }
