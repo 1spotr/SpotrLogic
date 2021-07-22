@@ -10,7 +10,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-public class Spot: Identifiable, Codable, Hashable {
+public class Spot: ObservableObject, Identifiable, Codable, Hashable {
 
     public private(set) var id : String?
     public let name : String
@@ -65,6 +65,9 @@ public class Spot: Identifiable, Codable, Hashable {
                 if let document = query?.documents,
                    let result = try? document.compactMap({ try $0.data(as: Picture.self) }).first {
                     self.thumbnail = result
+                    DispatchQueue.main.async {
+                        self.objectWillChange.send()
+                    }
                 }
             }
     }
