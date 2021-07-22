@@ -36,7 +36,7 @@ public class Spot: ObservableObject, Identifiable, Codable, Hashable {
         case pictures
         case thumbnail
         case location
-        case created = "dt_created"
+        case created = "dt_create"
         case updated = "dt_update"
         case likeCount
         case latestLikeAuthor
