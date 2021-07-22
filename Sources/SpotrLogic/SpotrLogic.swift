@@ -132,29 +132,29 @@ public class SpotrLogic {
 
     // MARK: - Spots
 
-    public func featuredSpots(for area: Area,
+    public func featuredSpots(for area: Area, limit : Int = 5,
                               completion: @escaping(Result<[Spot], Error>) -> Void) throws {
 
         guard let areaID = area.id else { throw  QueryErrors.noGetterID }
 
-        functions.httpsCallable(Function.getFeatured.rawValue).call(["area_id" : areaID]) { result, error in
+
+
+        Spot.collection
+            .whereField("areas_ids", arrayContains: areaID)
+            .order(by: "dt_update", descending: true)
+            .limit(to: limit)
+            .getDocuments { query, error in
             do {
                 // Check if the query resolved with an error
                 if let error = error {
                     throw error
                 }
 
-                guard let dict = result?.data as? [String: Any] else {
-                    throw QueryErrors.noDocuments
-                }
-                let result = try decoderFirestore.decode(FeaturedSpots.self, from: dict)
-                self.logger.debug("Fetched \(String(describing: result.count)) featured spots")
+                guard let documents = query?.documents else { throw QueryErrors.noDocuments }
 
-                guard let spots = result.result?.compactMap(\.spot) else {
-                    throw QueryErrors.undecodable(document: nil)
-                }
+                let result = try documents.compactMap({ try $0.data(as: Spot.self) })
 
-                completion(.success(.init(spots)))
+                completion(.success(.init(result)))
             } catch {
                 completion(.failure(self.handle(error: error)))
             }

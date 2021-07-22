@@ -13,7 +13,7 @@ public struct Spot: Identifiable, Codable, Hashable {
 
     public private(set) var id : String?
     public let name : String
-    public let tags : [Tag]
+    public let tags : [Tag]?
     public var pictures: [Picture]
     public let thumbnail: Picture
 //    public let geolocation: SpotrGeoloc
