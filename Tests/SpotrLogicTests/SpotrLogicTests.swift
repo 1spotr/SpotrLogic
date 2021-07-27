@@ -9,7 +9,6 @@ final class SpotrLogicTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        //        Bundle.main.bundleIdentifier = "test"
 
         configureFirebase(with: fileURL(named: "GoogleService-Info", extention: "plist"), testing: true)
     }
@@ -31,6 +30,8 @@ final class SpotrLogicTests: XCTestCase {
                 case .failure(let error):
                     logger.error("\(error)")
             }
+
+            expectation.fulfill()
         }
 
         wait(for: [expectation], timeout: 10)
