@@ -165,7 +165,7 @@ public class SpotrLogic {
 
     // MARK: - Pictures
 
-    func pictures(for spot: Spot,
+    public func pictures(for spot: Spot,
                   completion: @escaping(Result<[Picture], Error>) -> Void) throws {
 
         guard let spotID = spot.id else { throw QueryErrors.noGetterID }
@@ -175,6 +175,7 @@ public class SpotrLogic {
             .whereField("spot_id", isEqualTo: spotID)
             .whereField("valid", isEqualTo: true)
             .order(by: "dt_update", descending: true)
+            .limit(to: 10)
             .getDocuments { query, error in
 
                 do {
