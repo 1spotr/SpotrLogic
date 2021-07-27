@@ -1,0 +1,575 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isvalid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_update",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isvalid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "spotId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_update",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "spot",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "isvalid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "spot",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "isvalid",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "spot_id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "spot_id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "thumbnail",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "tag",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "isvalid",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pictures_suggestions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "spot_id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "id",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "areas_ids",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "discover",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "areas_ids",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "discover",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "areas_ids",
+          "arrayConfig": "CONTAINS"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_geolocation",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "geolocation",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "owner",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "projection_spots_lists_spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "owner",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "author.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "author.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "author.is_social_user",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "spot.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "author.social_user",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "spot.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "spot.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "spot.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "id",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "social_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "user.id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_geolocation.latitude",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_geolocation.longitude",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "areas_ids",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "dt_update",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hidden",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_geolocation",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "owner",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "tags",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "_geolocation",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "tags",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_geolocation",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_create",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dt_update",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "highlight_position",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "spots",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "valid",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "highlight_position",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

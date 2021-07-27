@@ -1,0 +1,108 @@
+service cloud.firestore {
+	match /databases/{database}/documents {
+  	 function signedIn() {
+    	return request.auth.uid != null;
+    }
+    
+    function isSocialSignedIn() {
+  		return signedIn() && exists(/databases/$(database)/documents/users_public_metadata/$(request.auth.uid)) && get(/databases/$(database)/documents/users_public_metadata/$(request.auth.uid)).data.username != null;
+  	}
+    
+    function isResourceAuthor() {
+    	return resource.data.author.id == request.auth.uid;
+    }
+    
+    function isRequestAuthor() {
+    	return request.resource.data.author.id == request.auth.uid;
+    }
+    
+    function requestIsComment() {
+    	return request.resource.data.type == "comment";
+    }
+    
+    function resourceIsComment() {
+    	return resource.data.type == "comment";
+    }
+    
+    function requestIsLike() {
+    	return request.resource.data.type == "favorite";
+    }
+    
+  	function resourceIsLike() {
+    	return resource.data.type == "favorite";
+    }
+
+		match /test_social_interactions/{document} {
+    	allow read: if signedIn();
+    }
+    match /content_events/{document} {
+    	allow create: if signedIn();
+    }
+    match /social_interactions_events/{document} {
+    	allow create: if signedIn();
+    }
+  	match /tags_grids/{document} {
+    	allow read;
+    }
+    match /users_public_metadata/{document} {
+    	allow read: if signedIn();
+    }
+  	match /users_private_metadata/{document} {
+    	allow read: if signedIn() && request.auth.uid == document;
+    }
+    match /users_private_metadata/{document}/notifications/{notification} {
+    	allow read: if signedIn() && request.auth.uid == document;
+    }
+    match /users_internal_metadata/{document} {
+    	allow read: if signedIn() && request.auth.uid == document;
+    }
+  	match /social_interactions/{document} {
+    	allow read: if signedIn();
+    }
+    match /projection_tags_lists_tags/{document} {
+    	allow read: if signedIn();
+    }
+    match /projection_spots_lists_spots/{document} {
+    	allow read: if signedIn();
+    }
+    match /projection_spot_card_spots/{document} {
+    	allow read: if signedIn();
+    }
+    match /areas/{document} {
+    	allow read;
+    }
+    match /tags/{document} {
+    	allow read;
+    }
+    match /spots/{document} {
+    	allow read;
+    }
+    match /pictures/{document} {
+    	allow read;
+    }
+    match /places/{document} {
+    	allow read: if signedIn();
+    }
+    match /social_feed_actions/{document} {
+    	allow read, create, update, delete: if false;
+    }
+    match /users/{document} {
+    	allow read, create, update, delete: if false;
+    }
+    match /commands_content_suggestions/{document} {
+    	allow create: if signedIn();
+    }
+    match /commands_pictures_invalidation/{document} {
+    	allow create: if signedIn();
+    }
+    match /commands_social_interactions/{document} {
+    	allow create: if signedIn();
+    }
+    match /commands_users/{document} {
+    	allow create: if signedIn();
+    }
+    match /commands_users_notifications/{document} {
+    	allow create: if signedIn();
+    }
+  }
+}

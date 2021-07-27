@@ -18,6 +18,9 @@ final class SpotrLogicTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
+
+        let expectation = XCTestExpectation(description: "Area fetching")
+
         let logic = SpotrLogic(logger: logger)
 
 
@@ -29,6 +32,8 @@ final class SpotrLogicTests: XCTestCase {
                     logger.error("\(error)")
             }
         }
+
+        wait(for: [expectation], timeout: 10)
     }
 }
 
