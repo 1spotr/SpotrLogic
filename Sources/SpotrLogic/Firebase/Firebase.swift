@@ -10,7 +10,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 /// Call this fontion to configure _Firebase_
-public func configureFirebase(with file: URL? = nil) -> Void {
+public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> Void {
 
 //    FirebaseApp.configure(options: .init(googleAppID: <#T##String#>, gcmSenderID: <#T##String#>))
 
@@ -19,6 +19,16 @@ public func configureFirebase(with file: URL? = nil) -> Void {
     } else {
         FirebaseApp.configure()
     }
+
+
+    if testing {
+        let settings = Firestore.firestore().settings
+        settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
+        settings.isPersistenceEnabled = false
+        settings.isSSLEnabled = false
+        firestore.settings = settings
+    }
+
 }
 
 let firestore : Firestore = Firestore.firestore()
