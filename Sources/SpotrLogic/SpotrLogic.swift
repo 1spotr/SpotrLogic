@@ -144,23 +144,56 @@ public class SpotrLogic {
             .order(by: "dt_update", descending: true)
             .limit(to: limit)
             .getDocuments { query, error in
-            do {
-                // Check if the query resolved with an error
-                if let error = error {
-                    throw error
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let documents = query?.documents else { throw QueryErrors.noDocuments }
+
+                    let result = try documents.compactMap({ try $0.data(as: Spot.self) })
+
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
                 }
-
-                guard let documents = query?.documents else { throw QueryErrors.noDocuments }
-
-                let result = try documents.compactMap({ try $0.data(as: Spot.self) })
-
-                completion(.success(.init(result)))
-            } catch {
-                completion(.failure(self.handle(error: error)))
             }
-        }
 
     }
+
+
+    // MARK: - Pictures
+
+    func pictures(for spot: Spot,
+                  completion: @escaping(Result<[Picture], Error>) -> Void) throws {
+
+        guard let spotID = spot.id else { throw QueryErrors.noGetterID }
+
+
+        Picture.collection
+            .whereField("spot_id", isEqualTo: spotID)
+            .whereField("valid", isEqualTo: true)
+            .order(by: "dt_update", descending: true)
+            .getDocuments { query, error in
+
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let documents = query?.documents else { throw QueryErrors.noDocuments }
+
+                    let result = try documents.compactMap({ try $0.data(as: Picture.self) })
+
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
+    }
+
 
 
     // MARK: - Errors
