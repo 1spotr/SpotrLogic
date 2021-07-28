@@ -15,7 +15,7 @@ public struct Spot: Identifiable, Codable, Hashable {
     public private(set) var identifier : String?
 
     public var id: String? {
-        (identifier ?? "") + (documentID ?? "")
+        (identifier ?? "") + (documentID ?? "") 
     }
     private let documentID : String?
 

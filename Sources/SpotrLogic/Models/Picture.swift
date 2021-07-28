@@ -27,7 +27,7 @@ public struct Picture: Identifiable, Codable, Hashable {
 
     // MARK: - Coding
 
-    enum CodingKeys {
+    enum CodingKeys: String, CodingKey {
         case id
         case url = "img_url"
         case author
