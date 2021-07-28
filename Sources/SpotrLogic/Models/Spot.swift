@@ -12,7 +12,14 @@ import FirebaseFirestoreSwift
 
 public struct Spot: Identifiable, Codable, Hashable {
 
-    public private(set) var id : String?
+    public private(set) var identifier : String?
+
+    public var id: String? {
+        (identifier ?? "") + (documentID ?? "")
+    }
+    private let documentID : String?
+
+
     public let name : String
     public let location: Location
     public let created: Date
@@ -24,8 +31,9 @@ public struct Spot: Identifiable, Codable, Hashable {
     // MARK: Coding
 
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case id
+        case identifier = "id"
         case name
+        case documentID = "_id"
         case location
         case created = "dt_create"
         case updated = "dt_update"
