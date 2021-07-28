@@ -17,7 +17,7 @@ let package = Package(
         // 🔥 Firebase
         .package(name: "Firebase",
                  url: "https://github.com/firebase/firebase-ios-sdk.git",
-                 from: "8.2.0"),
+                 .upToNextMinor(from: "8.2.0")),
 
         // 📃 Log
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
