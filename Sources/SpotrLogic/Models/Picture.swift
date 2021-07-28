@@ -15,12 +15,24 @@ public struct Picture: Identifiable, Codable, Hashable {
     public private(set) var id: String?
     public let url: URL?
     public let author: User?
-    public let created: Date?
+    public let created: Date
+    public let updated: Date
+
 
     // MARK: Equtable
 
     public static func == (lhs: Picture, rhs: Picture) -> Bool {
         lhs.id == rhs.id
+    }
+
+    // MARK: - Coding
+
+    enum CodingKeys {
+        case id
+        case url = "img_url"
+        case author
+        case created = "dt_create"
+        case updated = "dt_update"
     }
 
 
