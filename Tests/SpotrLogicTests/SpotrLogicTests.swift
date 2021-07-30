@@ -10,7 +10,7 @@ final class SpotrLogicTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        configureFirebase(with: fileURL(named: "GoogleService-Info", extention: "plist"), testing: true)
+        configure(firebase: fileURL(named: "GoogleService-Info", extention: "plist"), testing: true)
     }
 
     func testExample() {
