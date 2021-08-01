@@ -17,7 +17,7 @@ let package = Package(
         // 🔥 Firebase
         .package(name: "Firebase",
                  url: "https://github.com/firebase/firebase-ios-sdk.git",
-                 .upToNextMinor(from: "8.2.0")),
+                 .exact("8.2.0")),
 
         // 📃 Log
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
@@ -35,6 +35,7 @@ let package = Package(
             ]),
         .testTarget(
             name: "SpotrLogicTests",
-            dependencies: ["SpotrLogic"]),
+            dependencies: ["SpotrLogic"],
+            resources: [.process("GoogleService-Info.plist")]),
     ]
 )

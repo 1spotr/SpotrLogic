@@ -28,7 +28,7 @@ final class SpotrLogicTests: XCTestCase {
                 case .success(let areas):
                     logger.info("areas: \(areas.count)")
                 case .failure(let error):
-                    logger.error("\(error)")
+                    XCTFail("\(error.localizedDescription).\nError: \(error)")
             }
 
             expectation.fulfill()
