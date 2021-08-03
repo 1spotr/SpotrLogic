@@ -12,13 +12,12 @@ import Logging
 // Firebase
 import FirebaseFirestoreSwift
 import FirebaseAuth
-import FirebaseFunctions
 
 public class SpotrLogic {
 
     public let logger: Logger
 
-    private var functions = Functions.functions(region: Function.Regions.europeWest.rawValue)
+//    private var functions = Functions.functions(region: Function.Regions.europeWest.rawValue)
 
     public init(logger: Logger) {
         self.logger = logger
@@ -51,7 +50,7 @@ public class SpotrLogic {
         }
     }
 
-    /// Login with user credential (email & password
+    /// Login with user credential (email & password)
     /// - Parameters:
     ///   - credential: The user credentials (email & password)
     ///   - completion: The auth completion response
