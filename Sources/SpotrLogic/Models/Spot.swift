@@ -19,9 +19,9 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot location description.
     public let location: Location
     /// The spot creation date.
-    public let created: Timestamp
+//    public let created: Timestamp
     /// The spot updated date.
-    public let updated: Timestamp
+//    public let updated: Timestamp
 
 
     // MARK: Tag
@@ -39,8 +39,8 @@ public struct Spot: Identifiable, Codable, Hashable {
         case id
         case name
         case location
-        case created = "dt_create"
-        case updated = "dt_update"
+//        case created = "dt_create"
+//        case updated = "dt_update"
         case tags
 
 //        case likeCount
