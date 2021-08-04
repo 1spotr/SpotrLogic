@@ -12,7 +12,10 @@ import FirebaseFirestoreSwift
 // MARK: - Tag
 
 public struct Tag: Identifiable, Codable, Hashable {
-    public let id: String?
+
+    public typealias ID = String
+
+    public let id: ID?
     public let name: String
     public let index: Int?
     public let picture: Picture?

@@ -12,18 +12,23 @@ import FirebaseFirestoreSwift
 
 public struct Spot: Identifiable, Codable, Hashable {
 
-    public private(set) var identifier : String?
-
-    public var id: String? {
-        (identifier ?? "") + (documentID ?? "") 
-    }
-    private let documentID : String?
-
-
+    /// The spot id.
+    public var id: String?
+    /// The spot name.
     public let name : String
+    /// The spot location description.
     public let location: Location
+    /// The spot creation date.
     public let created: Date
+    /// The spot updated date.
     public let updated: Date
+
+
+    // MARK: Tag
+    public let tags : [Tag.ID]
+
+
+
 //    public let likeCount: Int?
 //    public let latestLikeAuthor: User?
 
@@ -33,10 +38,11 @@ public struct Spot: Identifiable, Codable, Hashable {
     enum CodingKeys: String, CodingKey, CaseIterable {
         case identifier = "id"
         case name
-        case documentID = "_id"
         case location
         case created = "dt_create"
         case updated = "dt_update"
+        case tags
+
 //        case likeCount
 //        case latestLikeAuthor
     }
@@ -46,5 +52,5 @@ public struct Spot: Identifiable, Codable, Hashable {
 
     // MARK: Collection
 
-    static let collection = firestore.collection("spots")
+    static let collection = firestore.collection("projection_spots_lists_spots")
 }

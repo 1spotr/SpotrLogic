@@ -17,7 +17,6 @@ public class SpotrLogic {
 
     public let logger: Logger
 
-//    private var functions = Functions.functions(region: Function.Regions.europeWest.rawValue)
 
     public init(logger: Logger) {
         self.logger = logger
