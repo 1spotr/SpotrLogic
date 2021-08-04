@@ -12,7 +12,6 @@ import FirebaseFirestoreSwift
 /// Call this fontion to configure _Firebase_
 public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> Void {
 
-//    FirebaseApp.configure(options: .init(googleAppID: <#T##String#>, gcmSenderID: <#T##String#>))
 
     if let file = file, let options = FirebaseOptions(contentsOfFile: file.path) {
         FirebaseApp.configure(options: options)
@@ -21,6 +20,7 @@ public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> V
     }
 
 
+    #if DEBUG
     if testing {
         let settings = Firestore.firestore().settings
         settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
@@ -28,6 +28,7 @@ public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> V
         settings.isSSLEnabled = false
         firestore.settings = settings
     }
+    #endif
 
 }
 
