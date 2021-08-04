@@ -15,7 +15,8 @@ public struct Tag: Identifiable, Codable, Hashable {
 
     public typealias ID = String
 
-    public let id: ID?
+    public var id: String
+
     public let name: String
     public let index: Int?
     public let picture: Picture?

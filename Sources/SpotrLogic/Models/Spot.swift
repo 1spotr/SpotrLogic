@@ -36,7 +36,7 @@ public struct Spot: Identifiable, Codable, Hashable {
     // MARK: Coding
 
     enum CodingKeys: String, CodingKey, CaseIterable {
-        case identifier = "id"
+        case id
         case name
         case location
         case created = "dt_create"
