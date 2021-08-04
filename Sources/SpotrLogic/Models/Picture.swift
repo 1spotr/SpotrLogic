@@ -15,8 +15,8 @@ public struct Picture: Identifiable, Codable, Hashable {
     public private(set) var id: String?
     public let url: URL?
     public let author: User?
-    public let created: Date
-    public let updated: Date
+    public let created: Timestamp
+    public let updated: Timestamp
 
 
     // MARK: Equtable

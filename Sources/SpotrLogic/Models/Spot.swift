@@ -19,9 +19,9 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot location description.
     public let location: Location
     /// The spot creation date.
-    public let created: Date
+    public let created: Timestamp
     /// The spot updated date.
-    public let updated: Date
+    public let updated: Timestamp
 
 
     // MARK: Tag
