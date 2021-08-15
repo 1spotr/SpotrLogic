@@ -27,6 +27,15 @@ public class SpotrLogic {
 
     private var auth : Auth? = nil
 
+    public var isLogged : Bool {
+        auth?.currentUser != nil
+    }
+
+    /// Restore properties
+    public func restore() -> Void {
+        auth = Auth.auth()
+    }
+
     /// Login anonymously.
     public func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
         let loginAuth = Auth.auth()
@@ -80,6 +89,41 @@ public class SpotrLogic {
             }
         }
     }
+
+    // MARK: - Local User
+
+
+    // MARK: Favorites
+
+    public func listenUserFavorites(completion: @escaping(Result<[Spot], Error>)->Void) throws -> Void {
+        guard let localUser = auth?.currentUser else {
+            throw AuthErrors.notAuthenticated
+        }
+
+
+        Interaction.collection
+            .whereField("hidden", isEqualTo: false)
+            .whereField("type", isEqualTo: Interaction.Types.favorite.rawValue)
+            .whereField("author.id", isEqualTo: localUser.uid)
+            .addSnapshotListener { (query, error) in
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let documents = query?.documents else { throw QueryErrors.noDocuments }
+
+                    let result = try documents.compactMap({ try $0.data(as: Interaction.self) })
+
+                    completion(.success(result.map(\.spot)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+
+            }
+    }
+
 
 
     // MARK: - Areas
@@ -200,6 +244,7 @@ public class SpotrLogic {
     public enum AuthErrors: Error {
         case failed
         case missingCredentials
+        case notAuthenticated
     }
 
     public enum QueryErrors: Error {
