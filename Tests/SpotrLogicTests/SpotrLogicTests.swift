@@ -10,7 +10,7 @@ final class SpotrLogicTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        configure(firebase: fileURL(named: "GoogleService-Info", extention: "plist"), testing: true)
+       _ = configured
     }
 
     func testExample() {
@@ -39,6 +39,13 @@ final class SpotrLogicTests: XCTestCase {
 }
 
 // MARK: - Test Resources
+
+
+/// Call this lazy value to configure the package once.
+let configured : Bool = {
+    configure(firebase: fileURL(named: "GoogleService-Info", extention: "plist"), testing: true)
+    return true
+}()
 
 internal let resourceFolder : URL = {
     var url = URL(fileURLWithPath: #file)
