@@ -20,7 +20,7 @@ public struct Interaction: Identifiable, Hashable, Codable {
     public let spot: Spot
     public let text: String?
     public let type: Types
-    public let author: User
+//    public let author: User
 //    public let timestamp: Timestamp
 
 
