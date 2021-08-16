@@ -18,7 +18,7 @@ public struct Interaction: Identifiable, Hashable, Codable {
 //    public let mentionedTags: [Tag]
 //    public let mentionedUsers: [User]
     public let spot: Spot
-    public let text: String
+    public let text: String?
     public let type: Types
     public let author: User
 //    public let timestamp: Timestamp
