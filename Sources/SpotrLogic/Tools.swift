@@ -8,7 +8,7 @@
 import Foundation
 
 
-func configure(firebase firebaseConfig: URL?, testing: Bool = false) -> Void {
+public func configure(firebase firebaseConfig: URL?, testing: Bool = false) -> Void {
 
     configureFirebase(with: firebaseConfig, testing: testing)
 }
