@@ -25,7 +25,7 @@ public struct Spot: Identifiable, Codable, Hashable {
 
 
     // MARK: Tag
-    public let tags : [Tag.ID]
+    public let tags : [Tag.ID]?
 
 
 
