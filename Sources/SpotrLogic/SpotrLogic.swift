@@ -12,6 +12,7 @@ import Logging
 // Firebase
 import FirebaseFirestoreSwift
 import FirebaseAuth
+import CryptoKit
 
 public class SpotrLogic {
 
@@ -36,32 +37,88 @@ public class SpotrLogic {
         auth = Auth.auth()
     }
 
+    public enum Authentication {
+        case apple(token: String)
+        case facebook(accessToken: String)
+    }
+
+    private let nonce : String? = {
+        let nonce = AES.GCM.Nonce()
+        let nonceData = Data(nonce)
+        let text = String(data: nonceData, encoding: .utf8)
+        return text
+    }()
+
+    private func credentials(_ authentication: Authentication) -> AuthCredential {
+        switch authentication {
+            case .apple(let token):
+                return OAuthProvider.credential(withProviderID: "apple.com", idToken: token, rawNonce: nonce)
+            case .facebook(let accessToken):
+                return FacebookAuthProvider.credential(withAccessToken: accessToken)
+        }
+    }
+
+    /// Handle an authencation (or error) result.
+    /// - Parameters:
+    ///   - currentAuth: The auth used.
+    ///   - authResult: The authentication result.
+    ///   - error: The authentication error
+    ///   - completion: The callback to call.
+    private func handleAuthResult(currentAuth: Auth,
+                                  authResult: AuthDataResult?, error: Error?,
+                                  completion: @escaping(Result<Void, Error>)-> Void) {
+        do {
+            // Check if the query resolved with an error
+            if let error = error {
+                throw error
+            }
+            if authResult == nil {
+                throw AuthErrors.failed
+            }
+
+            self.auth = currentAuth
+            completion(.success(()))
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+
+    /// Authenticate an user using a third-party.
+    /// - Parameters:
+    ///   - authentication: The third party auth result.
+    ///   - completion: The auth completion response.
+    func OAuth(_ authentication: Authentication,
+               completion: @escaping(Result<Void, Error>)-> Void) {
+
+        let creds = credentials(authentication)
+
+        let remoteAuth = Auth.auth()
+
+        remoteAuth.signIn(with: creds) { authResult, error in
+            self.handleAuthResult(currentAuth: remoteAuth,
+                             authResult: authResult, error: error,
+                             completion: completion)
+        }
+    }
+
     // MARK: Sign
 
+    /// Sign an user.
+    /// - Parameters:
+    ///   - credential: The credentials to use for the user.
+    ///   - completion: The auth completion response.
     public func sign(with credential: URLCredential,
-                     completion: @escaping(Result<Void, Error>)-> Void) throws -> Void {
-        guard let email = credential.user, let password = credential.password else {
-            throw AuthErrors.missingCredentials
-        }
+                     completion: @escaping(Result<Void, Error>)-> Void) throws {
+            guard let email = credential.user, let password = credential.password else {
+                throw AuthErrors.missingCredentials
+            }
 
         let signAuth = Auth.auth()
 
         signAuth.createUser(withEmail: email, password: password) { authResult, error in
-            do {
-                // Check if the query resolved with an error
-                if let error = error {
-                    throw error
-                }
-
-                if authResult == nil {
-                    throw AuthErrors.failed
-                }
-
-                self.auth = signAuth
-                completion(.success(()))
-            } catch {
-                completion(.failure(self.handle(error: error)))
-            }
+            self.handleAuthResult(currentAuth: signAuth,
+                                  authResult: authResult, error: error,
+                                  completion: completion)
         }
     }
 
@@ -72,30 +129,19 @@ public class SpotrLogic {
     public func loginAnonymously(completion: @escaping(Result<Void, Error>)-> Void) -> Void {
         let loginAuth = Auth.auth()
 
-        loginAuth.signInAnonymously { authData, error in
-            do {
-                // Check if the query resolved with an error
-                if let error = error {
-                    throw error
-                }
-
-                if authData == nil {
-                    throw AuthErrors.failed
-                }
-                self.auth = loginAuth
-                completion(.success(()))
-            } catch {
-                completion(.failure(self.handle(error: error)))
-            }
+        loginAuth.signInAnonymously { authResult, error in
+            self.handleAuthResult(currentAuth: loginAuth,
+                                  authResult: authResult, error: error,
+                                  completion: completion)
         }
     }
 
-    /// Login with user credential (email & password)
+    /// Login with user credential (email & password).
     /// - Parameters:
-    ///   - credential: The user credentials (email & password)
-    ///   - completion: The auth completion response
+    ///   - credential: The user credentials (email & password).
+    ///   - completion: The auth completion response.
     public func login(with credential: URLCredential,
-                      completion: @escaping(Result<Void, Error>)-> Void) throws -> Void {
+                      completion: @escaping(Result<Void, Error>)-> Void) throws {
 
         guard let email = credential.user, let password = credential.password else {
             throw AuthErrors.missingCredentials
@@ -104,21 +150,9 @@ public class SpotrLogic {
         let loginAuth = Auth.auth()
 
         loginAuth.signIn(withEmail: email, password: password) { authResult, error in
-            do {
-                // Check if the query resolved with an error
-                if let error = error {
-                    throw error
-                }
-
-                if authResult == nil {
-                    throw AuthErrors.failed
-                }
-
-                self.auth = loginAuth
-                completion(.success(()))
-            } catch {
-                completion(.failure(self.handle(error: error)))
-            }
+            self.handleAuthResult(currentAuth: loginAuth,
+                                  authResult: authResult, error: error,
+                                  completion: completion)
         }
     }
 
@@ -215,6 +249,7 @@ public class SpotrLogic {
 
         Spot.collection
             .whereField("areas_ids", arrayContains: areaID)
+            .whereField("discover", isEqualTo: true)
             .order(by: "dt_update", descending: true)
             .limit(to: limit)
             .getDocuments { query, error in
