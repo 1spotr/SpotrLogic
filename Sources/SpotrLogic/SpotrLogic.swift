@@ -87,7 +87,7 @@ public class SpotrLogic {
     /// - Parameters:
     ///   - authentication: The third party auth result.
     ///   - completion: The auth completion response.
-    func OAuth(_ authentication: Authentication,
+    public func OAuth(_ authentication: Authentication,
                completion: @escaping(Result<Void, Error>)-> Void) {
 
         let creds = credentials(authentication)
