@@ -42,7 +42,7 @@ public class SpotrLogic {
         case facebook(accessToken: String)
     }
 
-    private let nonce : String? = {
+    public let nonce : String? = {
         let nonce = AES.GCM.Nonce()
         let nonceData = Data(nonce)
         let text = String(data: nonceData, encoding: .utf8)
