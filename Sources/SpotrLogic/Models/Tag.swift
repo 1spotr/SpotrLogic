@@ -19,7 +19,8 @@ public struct Tag: Identifiable, Codable, Hashable {
 
     public let name: String
     public let index: Int?
-    public let picture: Picture?
+    public let picture: Tag.Picture?
+
 
     public init(id: String, name: String, picture: Picture? = nil) {
         self.id = id
@@ -27,6 +28,35 @@ public struct Tag: Identifiable, Codable, Hashable {
         self.index = nil
         self.picture = picture
     }
+
+    // MARK: - Tag Picture
+
+    public struct Picture: Identifiable, Codable, Hashable {
+
+        public private(set) var id: String?
+        public let url: URL?
+        public let author: User?
+        //    public let created: Timestamp
+        //    public let updated: Timestamp
+
+
+        // MARK: Equtable
+
+        public static func == (lhs: Picture, rhs: Picture) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        // MARK: - Coding
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case url
+            case author
+            //        case created = "dt_create"
+            //        case updated = "dt_update"
+        }
+    }
+
 
     // MARK: - Tags
 
