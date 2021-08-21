@@ -12,7 +12,7 @@ public struct Area: Codable, Identifiable, Hashable {
 
     public private(set) var id: String?
     public let name: String
-    public let pictures: [Picture]
+    public let pictures: [Area.Picture]
 //    let pin_geolocation: GeoPoint
     public let locations: [Location]
 
@@ -58,4 +58,32 @@ public struct Area: Codable, Identifiable, Hashable {
 
     static let collection = firestore.collection("areas")
 
+
+    // MARK: - Area Picture
+
+    public struct Picture: Identifiable, Codable, Hashable {
+
+        public private(set) var id: String?
+        public let url: URL?
+        public let author: User?
+        //    public let created: Timestamp
+        //    public let updated: Timestamp
+
+
+        // MARK: Equtable
+
+        public static func == (lhs: Picture, rhs: Picture) -> Bool {
+            lhs.id == rhs.id
+        }
+
+        // MARK: - Coding
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case url
+            case author
+            //        case created = "dt_create"
+            //        case updated = "dt_update"
+        }
+    }
 }
