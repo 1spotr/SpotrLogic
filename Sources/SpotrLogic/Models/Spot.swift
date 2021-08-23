@@ -30,7 +30,7 @@ public struct Spot: Identifiable, Codable, Hashable {
 
     public let authors : [User]
 
-    public let interest : Int?
+//    public let interest : Double?
 
 
 //    public let likeCount: Int?
@@ -47,7 +47,7 @@ public struct Spot: Identifiable, Codable, Hashable {
 //        case created = "dt_create"
 //        case updated = "dt_update"
         case tags
-        case interest = "interest_score"
+//        case interest = "interest_score"
 
         case authors
 //        case likeCount
