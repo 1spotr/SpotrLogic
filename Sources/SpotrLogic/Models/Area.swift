@@ -10,9 +10,7 @@ import FirebaseFirestoreSwift
 
 public struct Area: Codable, Identifiable, Hashable {
 
-    public var id: String? {
-        name
-    }
+    public private(set) var id: String?
     public let name: String
     public let pictures: [Area.Picture]
 //    let pin_geolocation: GeoPoint
