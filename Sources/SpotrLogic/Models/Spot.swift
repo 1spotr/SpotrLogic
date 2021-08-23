@@ -23,7 +23,7 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot updated date.
 //    public let updated: Timestamp
 
-    public let picture : [Picture]?
+    public let picture : Picture?
 
     // MARK: Tag
     public let tags : [Tag.ID]?
