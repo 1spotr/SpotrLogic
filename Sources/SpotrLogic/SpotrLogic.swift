@@ -191,6 +191,20 @@ public class SpotrLogic {
     }
 
 
+    // MARK: - Favorites
+
+    func addToFavorite(spot: Spot) -> Void {
+        let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
+        let command = CreateFavoriteCommand(data: payload)
+
+        firestore
+            .collection(command.collection)
+            .document(UUID().uuidString)
+            .setData(CommandService(command: command).export()) { error in
+                
+            }
+    }
+
 
     // MARK: - Areas
 
@@ -240,7 +254,7 @@ public class SpotrLogic {
 
     // MARK: - Spots
 
-    public func featuredSpots(for area: Area, limit : Int = 5,
+    public func newSpots(for area: Area, limit : Int = 5,
                               completion: @escaping(Result<[Spot], Error>) -> Void) throws {
 
         guard let areaID = area.id else { throw  QueryErrors.noGetterID }
@@ -268,8 +282,39 @@ public class SpotrLogic {
                     completion(.failure(self.handle(error: error)))
                 }
             }
+    }
+
+    public func popularSpots(for area: Area, limit : Int = 5,
+                             completion: @escaping(Result<[Spot], Error>) -> Void) throws {
+
+        guard let areaID = area.id else { throw  QueryErrors.noGetterID }
+
+
+
+        Spot.collection
+            .whereField("areas_ids", arrayContains: areaID)
+            .whereField("discover", isEqualTo: true)
+            .order(by: "interest_score", descending: true)
+            .limit(to: limit)
+            .getDocuments { query, error in
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let documents = query?.documents else { throw QueryErrors.noDocuments }
+
+                    let result = try documents.compactMap({ try $0.data(as: Spot.self) })
+
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
 
     }
+
 
 
     // MARK: - Pictures

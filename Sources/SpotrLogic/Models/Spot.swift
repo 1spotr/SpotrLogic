@@ -23,10 +23,14 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot updated date.
 //    public let updated: Timestamp
 
+    public let picture : [Picture]?
 
     // MARK: Tag
     public let tags : [Tag.ID]?
 
+    public let authors : [User]
+
+    public let interest : Int?
 
 
 //    public let likeCount: Int?
@@ -39,10 +43,13 @@ public struct Spot: Identifiable, Codable, Hashable {
         case id
         case name
         case location
+        case picture
 //        case created = "dt_create"
 //        case updated = "dt_update"
         case tags
+        case interest = "interest_score"
 
+        case authors
 //        case likeCount
 //        case latestLikeAuthor
     }
