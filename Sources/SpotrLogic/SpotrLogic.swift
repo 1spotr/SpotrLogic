@@ -193,17 +193,17 @@ public class SpotrLogic {
 
     // MARK: - Favorites
 
-    func addToFavorite(spot: Spot) -> Void {
-        let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
-        let command = CreateFavoriteCommand(data: payload)
-
-        firestore
-            .collection(command.collection)
-            .document(UUID().uuidString)
-            .setData(CommandService(command: command).export()) { error in
-                
-            }
-    }
+//    func addToFavorite(spot: Spot) -> Void {
+//        let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
+//        let command = CreateFavoriteCommand(data: payload)
+//
+//        firestore
+//            .collection(command.collection)
+//            .document(UUID().uuidString)
+//            .setData(CommandService(command: command).export()) { error in
+//                
+//            }
+//    }
 
 
     // MARK: - Areas
