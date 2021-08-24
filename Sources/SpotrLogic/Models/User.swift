@@ -20,7 +20,7 @@ public class User: Identifiable, Codable, Hashable {
 	enum CodingKeys: String, CodingKey {
 		case id
 		case username
-		case profilePictureURL = "profilePictureUrl"
+		case profilePictureURL = "profile_picture_url"
 	}
 
     // MARK: Equatable
