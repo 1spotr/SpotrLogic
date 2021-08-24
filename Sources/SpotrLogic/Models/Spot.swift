@@ -28,7 +28,7 @@ public struct Spot: Identifiable, Codable, Hashable {
     // MARK: Tag
     public let tags : [Tag.ID]?
 
-    public let authors : [User]
+    public let authors : [User]?
 
 //    public let interest : Double?
 
