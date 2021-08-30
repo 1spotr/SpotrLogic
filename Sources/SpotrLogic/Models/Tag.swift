@@ -29,7 +29,7 @@ public struct Tag: Identifiable, Codable, Hashable {
 
     public let siblingsIDs : [ID]?
 
-    internal init(id: String, name: String,
+    public init(id: String, name: String,
                   childrenIDs: [Tag.ID]? = nil,
                   parentsIDs: [Tag.ID]? = nil,
                   relativesIDs: [Tag.ID]? = nil,
