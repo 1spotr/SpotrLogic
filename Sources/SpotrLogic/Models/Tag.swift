@@ -18,15 +18,33 @@ public struct Tag: Identifiable, Codable, Hashable {
     public var id: String
 
     public let name: String
-    public let index: Int?
-    public let picture: Picture?
 
+    // MARK: Relations
+
+    public let childrenIDs : [ID]?
+
+    public let parentsIDs : [ID]?
+
+    public let relativesIDs : [ID]?
+
+    public let siblingsIDs : [ID]?
 
     public init(id: String, name: String, picture: Picture? = nil) {
         self.id = id
         self.name = name
         self.index = nil
         self.picture = picture
+    }
+
+    // MARK: Coding
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case childrenIDs = "children_ids"
+        case parentsIDs = "parents_ids"
+        case relativesIDs = "relatives_ids"
+        case siblingsIDs = "siblings_ids"
     }
 
 
