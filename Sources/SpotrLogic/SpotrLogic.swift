@@ -229,7 +229,7 @@ public class SpotrLogic {
 
     // MARK: - Tag
 
-    public func tags(for area: Area, completion: @escaping(Result<Set<Tag>, Error>) -> Void) throws {
+    public func tags(for area: Area, completion: @escaping(Result<Set<TagGrid.Tag>, Error>) -> Void) throws {
         guard let areaID = area.id else { throw  QueryErrors.noGetterID }
 
         TagGrid.collection.document(areaID).getDocument { document, error in
@@ -251,6 +251,61 @@ public class SpotrLogic {
             }
         }
     }
+
+
+    public func tag(for id: Tag.ID, completion: @escaping(Result<Tag, Error>) -> Void) -> Void {
+
+        Tag.collection.document(id).getDocument { documentResult, error in
+            do {
+                // Check if the query resolved with an error
+                if let error = error {
+                    throw error
+                }
+
+                guard let documentResult = documentResult else { throw QueryErrors.noDocuments }
+
+                guard let result = try documentResult.data(as: Tag.self) else {
+                    throw QueryErrors.undecodable(document: id)
+                }
+
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+
+    }
+
+    public func newSpot(for tag: Tag, in area: Area, limit : Int = 5,
+                 completion: @escaping(Result<[Spot], Error>) -> Void) throws  -> Void {
+
+        guard let areaID = area.id else { throw  QueryErrors.noGetterID }
+
+        Spot.collection
+            .whereField("areas_ids", arrayContains: areaID)
+            .whereField("tags", arrayContains: tag.id)
+            .whereField("discover", isEqualTo: true)
+            .order(by: "dt_update", descending: true)
+            .limit(to: limit)
+            .getDocuments { query, error in
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let documents = query?.documents else { throw QueryErrors.noDocuments }
+
+                    let result = try documents.compactMap({ try $0.data(as: Spot.self) })
+
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
+    }
+
+
 
     // MARK: - Spots
 

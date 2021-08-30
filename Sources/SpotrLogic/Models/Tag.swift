@@ -29,11 +29,17 @@ public struct Tag: Identifiable, Codable, Hashable {
 
     public let siblingsIDs : [ID]?
 
-    public init(id: String, name: String, picture: Picture? = nil) {
+    internal init(id: String, name: String,
+                  childrenIDs: [Tag.ID]? = nil,
+                  parentsIDs: [Tag.ID]? = nil,
+                  relativesIDs: [Tag.ID]? = nil,
+                  siblingsIDs: [Tag.ID]? = nil) {
         self.id = id
         self.name = name
-        self.index = nil
-        self.picture = picture
+        self.childrenIDs = childrenIDs
+        self.parentsIDs = parentsIDs
+        self.relativesIDs = relativesIDs
+        self.siblingsIDs = siblingsIDs
     }
 
     // MARK: Coding
