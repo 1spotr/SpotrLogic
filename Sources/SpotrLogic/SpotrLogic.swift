@@ -193,7 +193,7 @@ public class SpotrLogic {
 
     // MARK: - Favorites
 
-    public func addToFavorite(spot: Spot) throws -> Void {
+    public func addToFavorite(spot: Spot, completion: @escaping(Result<Void, Error>)->Void) throws -> Void {
         let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
         let command = CreateFavoriteCommand(data: payload)
 
@@ -201,7 +201,11 @@ public class SpotrLogic {
             .collection(command.collection)
             .document(UUID().uuidString)
             .setData(from: command) { error in
-
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    completion(.success(()))
+                }
             }
     }
 
