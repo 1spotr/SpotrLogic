@@ -233,7 +233,7 @@ public class SpotrLogic {
 
     // MARK: - Tag
 
-    public func tags(for area: Area, completion: @escaping(Result<Set<TagGrid.Tag>, Error>) -> Void) throws {
+    public func tags(for area: Area, completion: @escaping(Result<[TagGrid.Tag], Error>) -> Void) throws {
         guard let areaID = area.id else { throw  QueryErrors.noGetterID }
 
         TagGrid.collection.document(areaID).getDocument { document, error in
@@ -249,7 +249,7 @@ public class SpotrLogic {
                     throw QueryErrors.undecodable(document: document.documentID)
                 }
 
-                completion(.success(.init(result.tags)))
+                completion(.success(result.tags))
             } catch {
                 completion(.failure(self.handle(error: error)))
             }
