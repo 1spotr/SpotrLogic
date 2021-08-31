@@ -193,14 +193,14 @@ public class SpotrLogic {
 
     // MARK: - Favorites
 
-    public func addToFavorite(spot: Spot) -> Void {
+    public func addToFavorite(spot: Spot) throws -> Void {
         let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
         let command = CreateFavoriteCommand(data: payload)
 
-        firestore
+        try firestore
             .collection(command.collection)
             .document(UUID().uuidString)
-            .setData(CommandService(command: command).export()) { error in
+            .setData(from: command) { error in
 
             }
     }
