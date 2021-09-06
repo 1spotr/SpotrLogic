@@ -60,13 +60,18 @@ public struct Spot: Identifiable, Codable, Hashable {
         id = try container.decodeIfPresent(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         location = try container.decode(Location.self, forKey: .location)
-        picture = try container.decode(Picture.self, forKey: .picture)
+        picture = try container.decodeIfPresent(Picture.self, forKey: .picture)
 
         // Firebase timestamp decoding
-        let createdTimestamp = try container.decode(Timestamp.self, forKey: .created)
+        let createdTimestamp = try container.decode(Timestamp.self,
+                                                    forKey: .created)
         created = createdTimestamp.dateValue()
-        let updatedTimestamp = try container.decode(Timestamp.self, forKey: .created)
+        let updatedTimestamp = try container.decode(Timestamp.self,
+                                                    forKey: .created)
         updated = updatedTimestamp.dateValue()
+
+        tags = try container.decodeIfPresent([Tag.ID].self, forKey: .tags)
+        authors = try container.decodeIfPresent([User].self, forKey: .authors)
     }
 
 
