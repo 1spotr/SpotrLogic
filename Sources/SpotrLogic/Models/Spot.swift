@@ -19,9 +19,9 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot location description.
     public let location: Location
     /// The spot creation date.
-//    public let created: Timestamp
+    public let created: Date
     /// The spot updated date.
-//    public let updated: Timestamp
+    public let updated: Date
 
     public let picture : Picture?
 
@@ -44,14 +44,29 @@ public struct Spot: Identifiable, Codable, Hashable {
         case name
         case location
         case picture
-//        case created = "dt_create"
-//        case updated = "dt_update"
+        case created = "dt_create"
+        case updated = "dt_update"
         case tags
 //        case interest = "interest_score"
 
         case authors
 //        case likeCount
 //        case latestLikeAuthor
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decodeIfPresent(String.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        location = try container.decode(Location.self, forKey: .location)
+        picture = try container.decode(Picture.self, forKey: .picture)
+
+        // Firebase timestamp decoding
+        let createdTimestamp = try container.decode(Timestamp.self, forKey: .created)
+        created = createdTimestamp.dateValue()
+        let updatedTimestamp = try container.decode(Timestamp.self, forKey: .created)
+        updated = updatedTimestamp.dateValue()
     }
 
 
