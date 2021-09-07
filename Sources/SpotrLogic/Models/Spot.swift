@@ -75,9 +75,9 @@ public struct Spot: Identifiable, Codable, Hashable {
     }
 
     public func encode(to encoder: Encoder) throws {
-        var container = try encoder.container(keyedBy: CodingKeys.self)
+        var container = encoder.container(keyedBy: CodingKeys.self)
 
-        try container.encodeifPresent(id, forKey: .id)
+        try container.encodeIfPresent(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(location, forKey: .location)
         try container.encodeIfPresent(picture, forKey: .picture)
