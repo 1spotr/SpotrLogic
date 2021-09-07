@@ -74,6 +74,25 @@ public struct Spot: Identifiable, Codable, Hashable {
         authors = try container.decodeIfPresent([User].self, forKey: .authors)
     }
 
+    public func encode(to encoder: Encoder) throws {
+        var container = try encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encodeifPresent(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(location, forKey: .location)
+        try container.encodeIfPresent(picture, forKey: .picture)
+
+        // Firebase timestamp encoding
+        let createdTimestamp = Timestamp(date: created)
+        try container.encode(createdTimestamp, forKey: .created)
+
+        let updatedTimestamp = Timestamp(date: updated)
+        try container.encode(updatedTimestamp, forKey: .updated)
+
+        try container.encodeIfPresent(tags, forKey: .tags)
+        try container.encodeIfPresent(authors, forKey: .authors)
+    }
+
 
     // MARK: - Spots
 
