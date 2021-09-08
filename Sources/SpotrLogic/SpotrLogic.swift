@@ -156,6 +156,10 @@ public class SpotrLogic {
         }
     }
 
+//    public func logout() -> {
+//        Firebase
+//    }
+
     // MARK: - Local User
 
 
@@ -200,7 +204,7 @@ public class SpotrLogic {
         try firestore
             .collection(command.collection)
             .document(UUID().uuidString)
-            .setData(from: command) { error in
+            .setData(from: command.data) { error in
                 if let error = error {
                     completion(.failure(self.handle(error: error)))
                 } else {

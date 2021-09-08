@@ -27,7 +27,7 @@ final class CreateFavoriteCommandData: CommandDataProtocol {
     }
 }
 
-final class CreateFavoriteCommand: CommandProtocol, Encodable {
+final class CreateFavoriteCommand: CommandProtocol {
 
     typealias CommandDate = CreateFavoriteCommandData
 

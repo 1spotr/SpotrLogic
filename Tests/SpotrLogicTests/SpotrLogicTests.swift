@@ -77,3 +77,18 @@ internal func fileURL(named name: String, extention: String? = "json", in folder
 
     return url
 }
+
+
+// MARK: Coding
+
+let decoder : JSONDecoder = {
+    let coder = JSONDecoder()
+    coder.dateDecodingStrategy = .secondsSince1970
+    return coder
+}()
+
+let encoder : JSONEncoder = {
+    let coder = JSONEncoder()
+    coder.dateEncodingStrategy = .secondsSince1970
+    return coder
+}()
