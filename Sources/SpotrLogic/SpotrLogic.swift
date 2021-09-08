@@ -201,10 +201,14 @@ public class SpotrLogic {
         let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
         let command = CreateFavoriteCommand(data: payload)
 
+        let data = try JSONEncoder().encode(command.data)
+        let dic = try encoderFirestore.encode(data)
+        logger.debug("data dict: \(dic.debugDescription)")
+        logger.debug("data to be sent: \(String(data: data, encoding: .utf8))")
         try firestore
             .collection(command.collection)
             .document(UUID().uuidString)
-            .setData(from: command.data) { error in
+            .setData(from: command.data, encoder: encoderFirestore) { error in
                 if let error = error {
                     completion(.failure(self.handle(error: error)))
                 } else {

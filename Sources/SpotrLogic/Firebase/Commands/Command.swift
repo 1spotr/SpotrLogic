@@ -43,10 +43,11 @@ extension CommandDataProtocol {
         "ios"
     }
     var origin_version: Int? {
-        guard let str = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String else {
-            return nil
-        }
-        return Int(str)
+        113
+//        guard let str = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String else {
+//            return nil
+//        }
+//        return Int(str)
     }
 }
 
