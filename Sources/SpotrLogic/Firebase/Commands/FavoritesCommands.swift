@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
-final class CreateFavoriteCommandData: CommandDataProtocol {
+struct FavoriteCommand: Encodable {
 
     typealias PayloadType = Payload
 
@@ -22,19 +24,28 @@ final class CreateFavoriteCommandData: CommandDataProtocol {
     let version: String = "1.0.0"
     let payload: Payload
 
+    var id: String = "\(Date().timeIntervalSince1970)_\(UUID().uuidString)"
+    var timestamp: Timestamp = Timestamp(date: Date())
+
+    var trace_id: String = UUID().uuidString
+    var event_id: String? = nil
+    var origin: String = "ios"
+    var origin_version: Int? = 144
+
     init(id: String, author_id: String, spot_id: String) {
         self.payload = Payload(id: id, author_id: author_id, spot_id: spot_id)
     }
 }
 
-final class CreateFavoriteCommand: CommandProtocol {
 
-    typealias CommandDate = CreateFavoriteCommandData
+struct FavoritePayload: Encodable {
 
-    let collection: String = "commands_social_interactions"
-    let data: CreateFavoriteCommandData
+    /// A V4 UUID generated at creation by the client
+    let `id`: String
+    let author_id: String
+    let spot_id: String
 
-    init(data: CreateFavoriteCommandData) {
-        self.data = data
-    }
+    // MARK: - Favorites
+
+    static let collection = firestore.collection("commands_social_interactions")
 }

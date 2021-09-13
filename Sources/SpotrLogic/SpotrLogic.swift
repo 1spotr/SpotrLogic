@@ -198,17 +198,11 @@ public class SpotrLogic {
     // MARK: - Favorites
 
     public func addToFavorite(spot: Spot, completion: @escaping(Result<Void, Error>)->Void) throws -> Void {
-        let payload = CreateFavoriteCommandData(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
-        let command = CreateFavoriteCommand(data: payload)
+        let favoriteCommand = FavoriteCommand(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
 
-        let data = try JSONEncoder().encode(command.data)
-        let dic = try encoderFirestore.encode(data)
-        logger.debug("data dict: \(dic.debugDescription)")
-        logger.debug("data to be sent: \(String(data: data, encoding: .utf8))")
-        try firestore
-            .collection(command.collection)
+        try FavoritePayload.collection
             .document(UUID().uuidString)
-            .setData(from: command.data, encoder: encoderFirestore) { error in
+            .setData(from: favoriteCommand, encoder: encoderFirestore) { error in
                 if let error = error {
                     completion(.failure(self.handle(error: error)))
                 } else {
