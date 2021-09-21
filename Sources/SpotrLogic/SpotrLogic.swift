@@ -200,7 +200,22 @@ public class SpotrLogic {
     public func addToFavorite(spot: Spot, completion: @escaping(Result<Void, Error>)->Void) throws -> Void {
         let favoriteCommand = FavoriteCommand(id: UUID().uuidString, author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
 
-        try FavoritePayload.collection
+        try FavoriteCommand.collection
+            .document(UUID().uuidString)
+            .setData(from: favoriteCommand, encoder: encoderFirestore) { error in
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            }
+    }
+
+
+    public func removeFromFavorite(spot: Spot, completion: @escaping(Result<Void, Error>)->Void) throws -> Void {
+        let favoriteCommand = DeleteFavoriteCommand(author_id: auth?.currentUser?.uid ?? "", spot_id: spot.id ?? "")
+
+        try DeleteFavoriteCommand.collection
             .document(UUID().uuidString)
             .setData(from: favoriteCommand, encoder: encoderFirestore) { error in
                 if let error = error {

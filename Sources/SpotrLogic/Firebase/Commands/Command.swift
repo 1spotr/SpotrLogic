@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Command.swift
 //  
 //
 //  Created by Marcus on 23/08/2021.
@@ -59,7 +59,8 @@ struct Command: Encodable {
 
         switch type {
             case "social_interactions.favorites.create":
-                try container.encode(payload as! FavoritePayload, forKey: .payload)
+                break
+//                try container.encode(payload as! FavoritePayload, forKey: .payload)
 
             default:
                 break
