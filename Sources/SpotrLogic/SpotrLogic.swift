@@ -248,6 +248,25 @@ public class SpotrLogic {
         }
     }
 
+
+    public func setResidence(area: Area, completion: @escaping(Result<Void, Error>) -> Void) throws {
+        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+
+        guard let areaId = area.id else { throw QueryErrors.noGetterID }
+
+        let areaCommand = AreaCommand(user_id: id, area_id: areaId)
+
+        try AreaCommand.collection
+            .document(UUID().uuidString)
+            .setData(from: areaCommand, encoder: encoderFirestore) { error in
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            }
+    }
+
     // MARK: - Tag
 
     public func tags(for area: Area, completion: @escaping(Result<[TagGrid.Tag], Error>) -> Void) throws {
