@@ -249,6 +249,10 @@ public class SpotrLogic {
     }
 
 
+    /// Set the user residence area in the user private metadata
+    /// - Parameters:
+    ///   - area: The seleted area.
+    ///   - completion: The completion callbac
     public func setResidence(area: Area, completion: @escaping(Result<Void, Error>) -> Void) throws {
         guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
 

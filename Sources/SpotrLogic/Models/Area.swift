@@ -28,7 +28,7 @@ public struct Area: Codable, Identifiable, Hashable {
     /// Get the the best area for the user region locales
     /// - Parameter areas: The set of areas to search
     /// - Returns: The best area.
-    private static func areaForRegion(in areas: [Area]) -> Area? {
+    public static func areaForRegion(in areas: [Area]) -> Area? {
         let locale = Locale.autoupdatingCurrent
 
         var city : String? = nil
