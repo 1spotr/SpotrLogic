@@ -1,13 +1,13 @@
 //
 //  AreaCommand.swift
-//  
+//  SpotrLogic
 //
 //  Created by Marcus on 29/10/2021.
 //
 
 import Foundation
 
-final class AreaCommand: Encodable {
+struct AreaCommand: Encodable {
 
     typealias PayloadType = Payload
 

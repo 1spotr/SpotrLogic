@@ -163,6 +163,26 @@ public class SpotrLogic {
     // MARK: - Local User
 
 
+    /// Set the local user instagram username.
+    /// - Parameters:
+    ///   - username: The instagram user name to set.
+    ///   - completion: The completion result.
+    func setInstagram(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
+        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+
+        let areaCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
+
+        try SetUsernameInstagramCommand.collection
+            .document(UUID().uuidString)
+            .setData(from: areaCommand, encoder: encoderFirestore) { error in
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            }
+    }
+
     // MARK: Favorites
 
     public func listenUserFavorites(completion: @escaping(Result<[Spot], Error>)->Void) throws -> Void {
