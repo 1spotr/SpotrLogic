@@ -167,7 +167,7 @@ public class SpotrLogic {
     /// - Parameters:
     ///   - username: The instagram user name to set.
     ///   - completion: The completion result.
-    func setInstagram(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
+    public func setInstagram(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
         guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
 
         let areaCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
