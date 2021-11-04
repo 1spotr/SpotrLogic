@@ -438,7 +438,7 @@ public class SpotrLogic {
     /// - Parameters:
     ///   - user: The user
     ///   - completion: The completion result.
-    func spots(for user: User?, completion: @escaping(Result<[Spot], Error>) -> Void) throws {
+    public func spots(for user: User?, completion: @escaping(Result<[Spot], Error>) -> Void) throws {
         guard let id = user?.id ?? self.auth?.currentUser?.uid else { return }
 
         Interaction.collection
