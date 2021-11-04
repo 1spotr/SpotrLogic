@@ -431,7 +431,36 @@ public class SpotrLogic {
                     completion(.failure(self.handle(error: error)))
                 }
             }
+    }
 
+
+    /// Fetch the spot that the user contributed to.
+    /// - Parameters:
+    ///   - user: The user
+    ///   - completion: The completion result.
+    func spots(for user: User?, completion: @escaping(Result<[Spot], Error>) -> Void) throws {
+        guard let id = user?.id ?? self.auth?.currentUser?.uid else { return }
+
+        Interaction.collection
+            .whereField("hidden", isEqualTo: false)
+            .whereField("type", isEqualTo: Interaction.Types.favorite.rawValue)
+            .whereField("author.id", isEqualTo: id)
+            .getDocuments { query, error in
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let documents = query?.documents else { throw QueryErrors.noDocuments }
+
+                    let result = try documents.compactMap({ try $0.data(as: Spot.self) })
+
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
     }
 
 
