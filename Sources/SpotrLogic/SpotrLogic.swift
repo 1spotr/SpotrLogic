@@ -38,8 +38,9 @@ public class SpotrLogic {
     }
 
     /// Restore properties
-    public func restore() -> Void {
+    public func restore() throws -> Void {
         auth = Auth.auth()
+        try loadLoggedUser()
     }
 
     public enum Authentication {
@@ -83,6 +84,7 @@ public class SpotrLogic {
 
             self.auth = currentAuth
             completion(.success(()))
+            try self.loadLoggedUser()
         } catch {
             completion(.failure(self.handle(error: error)))
         }
@@ -174,14 +176,39 @@ public class SpotrLogic {
 
     // MARK: - Logged User
 
-    public  func listenLoggedUserchanges() throws -> Void {
+    private func loadLoggedUser() throws -> Void {
+        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+        
+        User.collection
+            .document(id)
+            .getDocument { document, error in
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let document = document else { throw QueryErrors.noDocuments }
+
+                    guard let result = try document.data(as: LoggedUser.self) else {
+                        throw QueryErrors.undecodable(document: document.documentID)
+                    }
+                    self.loggedUser = result
+                    try self.listenLoggedUserChanges()
+                } catch {
+                    _ = self.handle(error: error)
+                }
+            }
+    }
+    
+    public  func listenLoggedUserChanges() throws -> Void {
 
         try listenLoggedUserPrivateMetadata()
     }
 
 
     func listenLoggedUserPrivateMetadata() throws -> Void {
-        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+        guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
 
         let registration = PrivateMetadata.collection
             .document(id)

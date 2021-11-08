@@ -34,5 +34,10 @@ public class User: Identifiable, Codable, Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+    
+    // MARK: - Users
+    
+    // MARK: Collection
+    static let collection = firestore.collection("users")
 
 }
