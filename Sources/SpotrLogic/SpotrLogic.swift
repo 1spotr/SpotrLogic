@@ -10,8 +10,11 @@ import Foundation
 import Logging
 
 // Firebase
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseAuth
+
+// Crypto
 import CryptoKit
 
 public class SpotrLogic {
@@ -27,6 +30,8 @@ public class SpotrLogic {
     // MARK: - Authentications
 
     private var auth : Auth? = nil
+
+    public private(set) var loggedUser : LoggedUser?
 
     public var isLogged : Bool {
         auth?.currentUser != nil
@@ -156,11 +161,49 @@ public class SpotrLogic {
         }
     }
 
-//    public func logout() -> {
-//        Firebase
-//    }
+    /// Logout the Auth and remove the listenters.
+    public func logout() throws -> Void {
+        removeListeners()
 
-    // MARK: - Local User
+        do {
+            try auth?.signOut()
+        } catch {
+            throw handle(error: error)
+        }
+    }
+
+    // MARK: - Logged User
+
+    public  func listenLoggedUserchanges() throws -> Void {
+
+        try listenLoggedUserPrivateMetadata()
+    }
+
+
+    func listenLoggedUserPrivateMetadata() throws -> Void {
+        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+
+        let registration = PrivateMetadata.collection
+            .document(id)
+            .addSnapshotListener { document, error in
+                do {
+                    // Check if the query resolved with an error
+                    if let error = error {
+                        throw error
+                    }
+
+                    guard let document = document else { throw QueryErrors.noDocuments }
+
+                    let result = try document.data(as: PrivateMetadata.self)
+                    self.loggedUser?.privateMetadata = result
+
+                } catch {
+                    _ = self.handle(error: error)
+                }
+            }
+
+        registrations.append(registration)
+    }
 
 
     /// Set the local user instagram username.
@@ -191,7 +234,7 @@ public class SpotrLogic {
         }
 
 
-        Interaction.collection
+        let registration = Interaction.collection
             .whereField("hidden", isEqualTo: false)
             .whereField("type", isEqualTo: Interaction.Types.favorite.rawValue)
             .whereField("author.id", isEqualTo: localUser.uid)
@@ -210,8 +253,9 @@ public class SpotrLogic {
                 } catch {
                     completion(.failure(self.handle(error: error)))
                 }
-
             }
+
+        registrations.append(registration)
     }
 
 
@@ -467,7 +511,7 @@ public class SpotrLogic {
 
     // MARK: - Pictures
 
-    public func pictures(for spot: Spot,
+    public func pictures(for spot: Spot, limit: Int = 10,
                   completion: @escaping(Result<[Picture], Error>) -> Void) throws {
 
         guard let spotID = spot.id else { throw QueryErrors.noGetterID }
@@ -477,7 +521,7 @@ public class SpotrLogic {
             .whereField("spot_id", isEqualTo: spotID)
             .whereField("valid", isEqualTo: true)
             .order(by: "dt_update", descending: true)
-            .limit(to: 10)
+            .limit(to: limit)
             .getDocuments { query, error in
 
                 do {
@@ -517,4 +561,20 @@ public class SpotrLogic {
         error
     }
 
+
+    // MARK: - Listeners
+
+    private var registrations : [ListenerRegistration] = []
+
+    public func removeListeners() -> Void {
+        registrations.forEach { registration in
+            registration.remove()
+        }
+    }
+
+    // MARK: - Tear down
+
+    deinit {
+        removeListeners()
+    }
 }
