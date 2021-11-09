@@ -6,8 +6,17 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
-struct AreaCommand: Encodable {
+struct AreaCommand: Command, Decodable {
+
+    var event_id: String? = nil
+
+    var id: String = "\(Date().timeIntervalSince1970)_\(UUID().uuidString)"
+    var timestamp: Timestamp = Timestamp(date: Date())
+    var trace_id: String = UUID().uuidString
+    var origin: String = "ios"
+    var origin_version: Int?
 
     typealias PayloadType = Payload
 

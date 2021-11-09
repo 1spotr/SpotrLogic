@@ -1,6 +1,7 @@
 import XCTest
 import Logging
 @testable import SpotrLogic
+import FirebaseFirestore
 
 let logger = Logger(label: "test.app.spotr.spotr_logic")
 
@@ -80,6 +81,8 @@ internal func fileURL(named name: String, extention: String? = "json", in folder
 
 
 // MARK: Coding
+
+let testingFirestore = Firestore.firestore()
 
 let decoder : JSONDecoder = {
     let coder = JSONDecoder()
