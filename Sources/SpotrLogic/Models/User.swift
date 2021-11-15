@@ -38,6 +38,6 @@ public class User: Identifiable, Codable, Hashable {
     // MARK: - Users
     
     // MARK: Collection
-    static let collection = firestore.collection("users")
+    static let collection = firestore.collection("users_public_metadata")
 
 }
