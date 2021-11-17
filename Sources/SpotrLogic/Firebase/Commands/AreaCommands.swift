@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct AreaCommand: Command, Decodable {
+struct AreaCommand: Command {
 
     var event_id: String? = nil
 

@@ -45,10 +45,10 @@ class AreasTests: XCTestCase {
     func testSetResidenceArea() throws {
 
         waitForAnonymousSign()
+        /// Random test area
+        let area = Area(id: Int.random(in: Int.min...Int.max).description, name: "testing",
+                        pictures: [], locations: [])
 
-        let file  = try file(named: "area", in: testFolder)
-
-        let area = try decoder.decode(Area.self, from: file)
 
 
         let expectation = XCTestExpectation(description: "Residence creation")
@@ -72,19 +72,21 @@ class AreasTests: XCTestCase {
 
 
         if let userID = Auth.auth().currentUser?.uid {
-            testingFirestore.collection("commands_users")
+            // Verifying last command for user
 
+            testingFirestore.collection("commands_users")
+                .whereField("type", isEqualTo: "users.settings.area.update")
+                .whereField("payload.user_id", isEqualTo: userID)
+                .order(by: "timestamp", descending: true)
                 .getDocuments { query, error in
                     if let error = error {
                         XCTFail(error.localizedDescription)
                     }
 
                     if let document = query?.documents.first {
-                        let command = try? document.data(as: AreaCommand.self)
-                        XCTAssertEqual(command?.payload.user_id, userID)
                         CommandTests.verifyCommand(document)
-                        XCTAssertEqual(document.value(forKeyPath: "payload.user_id") as? String, userID)
-                        XCTAssertEqual(document.value(forKey: "payload.area_id") as? String, area.id)
+                        XCTAssertEqual(document.get("payload.user_id") as? String, userID)
+                        XCTAssertEqual(document.get("payload.area_id") as? String, area.id)
                     }
 
 
