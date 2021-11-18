@@ -51,5 +51,26 @@ class FavoritesTests: XCTestCase {
 
         wait(for: [expectation], timeout: 10)
     }
+    
+    func testRemoveFavorite() throws -> Void {
+        
+        let file = try file(named: "spot")
+        let spot = try decoder.decode(Spot.self, from: file)
+        
+        let expectation = XCTestExpectation(description: "Delete Favorite")
+        
+        try logic.removeFromFavorite(spot: spot) { result in
+            switch result {
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+            
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10)
+    }
 
 }

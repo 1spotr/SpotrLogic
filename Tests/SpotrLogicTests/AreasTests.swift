@@ -46,10 +46,8 @@ class AreasTests: XCTestCase {
 
         waitForAnonymousSign()
         /// Random test area
-        let area = Area(id: Int.random(in: Int.min...Int.max).description, name: "testing",
+        let area = Area(id: UUID().description, name: "testing",
                         pictures: [], locations: [])
-
-
 
         let expectation = XCTestExpectation(description: "Residence creation")
 
