@@ -22,6 +22,7 @@ public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> V
 
     #if DEBUG
     if testing {
+        Auth.auth().useEmulator(withHost: "localhost", port: 9099)
         let settings = Firestore.firestore().settings
         settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
         settings.isPersistenceEnabled = false
