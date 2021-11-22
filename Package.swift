@@ -36,11 +36,7 @@ let package = Package(
             name: "SpotrLogicTests",
             dependencies: ["SpotrLogic"],
             resources: [
-                .process("./Resources/GoogleService-Info.plist"),
-                .process("./Resources/spot.json"),
-                .process("./Resources/tag.json"),
-                .process("./Resources/area_singapore.json"),
-                .process("./Resources/Areas/area.json")
+                .process("./Resources/")
             ]),
     ]
 )
