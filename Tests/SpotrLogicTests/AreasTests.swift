@@ -44,7 +44,8 @@ class AreasTests: XCTestCase {
 
     func testSetResidenceArea() throws {
 
-        waitForAnonymousSign()
+        wait(for: [anonymousSign(for: logic)], timeout: 10)
+
         /// Random test area
         let area = Area(id: UUID().description, name: "testing",
                         pictures: [], locations: [])
@@ -95,23 +96,6 @@ class AreasTests: XCTestCase {
         }
 
         wait(for: [verifcationExpectation], timeout: 10)
-    }
-
-
-    func waitForAnonymousSign() -> Void {
-        let expectation = XCTestExpectation(description: "Anonymous sign")
-        logic.loginAnonymously { result in
-            switch result {
-                case .success:
-                    break
-                case .failure(let error):
-                    XCTFail(error.localizedDescription)
-            }
-
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 10)
     }
 
 }

@@ -12,7 +12,7 @@ import FirebaseFirestoreSwift
 
 public struct TagGrid: Identifiable, Codable, Hashable {
 
-    public let id: String?
+    public let id: Area.ID?
 
     public let tags: [TagGrid.Tag]
 

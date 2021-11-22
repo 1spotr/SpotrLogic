@@ -11,7 +11,9 @@ import FirebaseFirestoreSwift
 
 public class User: Identifiable, Codable, Hashable {
 
-    public private(set) var id : String?
+    public typealias ID = String?
+
+    public private(set) var id : ID
     public let username : String
     public let profilePictureURL : URL?
 
@@ -40,4 +42,10 @@ public class User: Identifiable, Codable, Hashable {
     // MARK: Collection
     static let collection = firestore.collection("users_public_metadata")
 
+
+    init() {
+        id = "null"
+        username = "null"
+        profilePictureURL = nil
+    }
 }

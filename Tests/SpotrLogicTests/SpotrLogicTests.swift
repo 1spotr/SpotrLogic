@@ -95,3 +95,36 @@ let encoder : JSONEncoder = {
     coder.dateEncodingStrategy = .secondsSince1970
     return coder
 }()
+
+
+func anonymousSign(for logic: SpotrLogic) -> XCTestExpectation {
+    let expectation = XCTestExpectation(description: "Anonymous sign")
+    logic.loginAnonymously { result in
+        switch result {
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+        }
+
+        expectation.fulfill()
+    }
+
+    return expectation
+}
+
+func login(for logic: SpotrLogic, with credential: URLCredential) throws -> XCTestExpectation {
+    let expectation = XCTestExpectation(description: "Login")
+    try logic.login(with: credential) { result in
+        switch result {
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+        }
+
+        expectation.fulfill()
+    }
+
+    return expectation
+}

@@ -8,13 +8,17 @@
 import Foundation
 import FirebaseFirestore
 
-public struct PrivateMetadata: Codable {
+public struct PrivateMetadata: Decodable {
 
-    struct Settings: Decodable {
-        let selected_area_id: String?
+    public struct Settings: Decodable {
+        public let selectedAreaId: String?
+
+        enum CodingKeys: String, CodingKey {
+            case selectedAreaId = "selected_area_id"
+        }
     }
 
-    struct Subscription: Codable {
+    public struct Subscription: Codable {
         let start: Date
         let end: Date
         let type: String
@@ -25,7 +29,7 @@ public struct PrivateMetadata: Codable {
             case type
         }
 
-        init(from decoder: Decoder) throws {
+        public init(from decoder: Decoder) throws {
 
             let container = try decoder.container(keyedBy: CodingKeys.self)
             type = try container.decode(String.self, forKey: .type)
@@ -38,7 +42,7 @@ public struct PrivateMetadata: Codable {
 
         }
 
-        func encode(to encoder: Encoder) throws {
+        public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
 
             try container.encode(type, forKey: .type)
@@ -49,7 +53,7 @@ public struct PrivateMetadata: Codable {
         }
     }
 
-    struct Billing: Codable {
+    public struct Billing: Decodable {
         let latestSubscription: Subscription?
 
         enum CodingKeys: String, CodingKey {
@@ -57,14 +61,15 @@ public struct PrivateMetadata: Codable {
         }
     }
 
-    struct Social: Codable {
+    public struct Social: Decodable {
         let blocked_users: [String]?
     }
 
     // let preferences: FirestoreUserPreferences?
-    let social: Social
-    // let settings: Settings?
-    let billing: Billing?
+    //public let social: Social?
+    public let settings: Settings?
+    public let billing: Billing?
+
 
 
 

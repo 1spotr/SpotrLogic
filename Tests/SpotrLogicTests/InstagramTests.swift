@@ -34,7 +34,7 @@ class InstagramTests: XCTestCase {
 
     func testSetInstagram() throws {
 
-        waitForAnonymousSign()
+        wait(for: [anonymousSign(for: logic)], timeout: 10)
 
         let username = "instragra_username\(Int.random(in: -100...100))_\(Int.random(in: -100...100))"
 
@@ -52,23 +52,6 @@ class InstagramTests: XCTestCase {
             expectation.fulfill()
         })
 
-    }
-
-
-    func waitForAnonymousSign() -> Void {
-        let expectation = XCTestExpectation(description: "Anonymous sign")
-        logic.loginAnonymously { result in
-            switch result {
-                case .success:
-                    break
-                case .failure(let error):
-                    XCTFail(error.localizedDescription)
-            }
-
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 10)
     }
 
 }
