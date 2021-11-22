@@ -35,6 +35,8 @@ let package = Package(
         .testTarget(
             name: "SpotrLogicTests",
             dependencies: ["SpotrLogic"],
-            resources: [.process("GoogleService-Info.plist")]),
+            resources: [
+                .process("./Resources/")
+            ]),
     ]
 )

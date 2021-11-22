@@ -32,7 +32,7 @@ class InstagramTests: XCTestCase {
     // MARK: - Tests
 
 
-    func testSetResidenceArea() throws {
+    func testSetInstagram() throws {
 
         waitForAnonymousSign()
 
