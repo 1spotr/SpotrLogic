@@ -31,6 +31,8 @@ class UserTests: XCTestCase {
     
     // MARK: - Tests
     
+    // MARK: Send Email Verification
+    
     func testSendEmailVerification() throws {
         let loginCredentials = URLCredential(user: "test@test.spotr.app", password: "Testing", persistence: .none)
         
@@ -54,6 +56,8 @@ class UserTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
     
+    // MARK: Update User Email
+    
     func testUpdateUserEmail() throws {
         let password = "Testing"
         let newEmail = "usertest2@test.spotr.app"
@@ -61,23 +65,83 @@ class UserTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Waiting for update user email")
         
-        try logic.login(with: loginCredentials, completion: { result in
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        try logic.updateUserEmail(password: password, newEmail: newEmail) { result in
             switch result {
             case .success:
-                self.logic.updateUserEmail(password: password, newEmail: newEmail) { error in
-                    if let error = error {
-                        XCTFail(error.localizedDescription)
-                    } else {
-                        expectation.fulfill()
-                    }
-                }
+                expectation.fulfill()
             case .failure(let error):
                 XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testUpdateUserEmailWithNoUser() {
+        
+        let expectation = XCTestExpectation(description: "Waiting for update user email")
+        
+        do {
+            try logic.updateUserEmail(password: "", newEmail: "", completion: { result in
+                switch result {
+                case .success:
+                    break
+                case .failure:
+                    break
+                }
+            })
+        } catch {
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testUpdateUserEmailWithBadPassword() throws {
+        let password = "Testin"
+        let newEmail = "usererrortest2@test.spotr.app"
+        let loginCredentials = URLCredential(user: "usererrortest@test.spotr.app", password: "Testing", persistence: .none)
+        
+        let expectation = XCTestExpectation(description: "Waiting for update user email")
+        
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        try logic.updateUserEmail(password: password, newEmail: newEmail, completion: { result in
+            switch result {
+            case .success:
+                break
+            case .failure:
+                expectation.fulfill()
             }
         })
         
         wait(for: [expectation], timeout: 5)
     }
+    
+    func testUpdateUserEmailWithSameEmail() throws {
+        let password = "Testing"
+        let newEmail = "test@test.spotr.app"
+        let loginCredentials = URLCredential(user: "usererrortest@test.spotr.app", password: "Testing", persistence: .none)
+        
+        let expectation = XCTestExpectation(description: "Waiting for update user email")
+        
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        try logic.updateUserEmail(password: password, newEmail: newEmail, completion: { result in
+            switch result {
+            case .success:
+                break
+            case .failure:
+                expectation.fulfill()
+            }
+        })
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    // MARK: Update User Password
     
     func testUpdateUserPassword() throws {
         let newPassword = "Testing1"
@@ -86,18 +150,75 @@ class UserTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Waiting for update user password")
         
-        try logic.login(with: loginCredentials, completion: { result in
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        try logic.updateUserPassword(password: actualPassword, newPassword: newPassword) { result in
             switch result {
             case .success:
-                self.logic.updateUserPassword(password: actualPassword, newPassword: newPassword) { error in
-                    if let error = error {
-                        XCTFail(error.localizedDescription)
-                    } else {
-                        expectation.fulfill()
-                    }
-                }
+                expectation.fulfill()
             case .failure(let error):
                 XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testUpdateUserPasswordWithNoUser() {
+        
+        let expectation = XCTestExpectation(description: "Waiting for update user email")
+        
+        do {
+            try logic.updateUserPassword(password: "", newPassword: "", completion: { result in
+                switch result {
+                case .success:
+                    break
+                case .failure:
+                    break
+                }
+            })
+        } catch {
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testUpdateUserPasswordWithBadPassword() throws {
+        let password = "Testin"
+        let loginCredentials = URLCredential(user: "usererrortest@test.spotr.app", password: "Testing", persistence: .none)
+        
+        let expectation = XCTestExpectation(description: "Waiting for update user email")
+        
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        try logic.updateUserPassword(password: password, newPassword: "", completion: { result in
+            switch result {
+            case .success:
+                break
+            case .failure:
+                expectation.fulfill()
+            }
+        })
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testUpdateUserPasswordWithWeakNewPassword() throws {
+        let password = "Testing"
+        let newPassword = "123"
+        let loginCredentials = URLCredential(user: "usererrortest@test.spotr.app", password: "Testing", persistence: .none)
+        
+        let expectation = XCTestExpectation(description: "Waiting for update user email")
+        
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        try logic.updateUserPassword(password: password, newPassword: newPassword, completion: { result in
+            switch result {
+            case .success:
+                break
+            case .failure:
+                expectation.fulfill()
             }
         })
         
