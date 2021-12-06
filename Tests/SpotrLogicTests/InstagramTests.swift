@@ -54,7 +54,7 @@ class InstagramTests: XCTestCase {
 
     }
     
-    func testInstagramUsernameAvailable() {
+    func testInstagramUsernameUnavailable() {
         let username = "testing"
         
         let expectation = XCTestExpectation(description: "Check Instagram username available")
@@ -63,6 +63,24 @@ class InstagramTests: XCTestCase {
             switch result {
             case .success(let available):
                 XCTAssertFalse(available)
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testInstagramUsernameAvailable() {
+        let username = "testing\(Int.random(in: 1...1000))"
+        
+        let expectation = XCTestExpectation(description: "Check Instagram username available")
+        
+        logic.checkInstagramUsernameAvailable(username: username) { result in
+            switch result {
+            case .success(let available):
+                XCTAssertTrue(available)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail(error.localizedDescription)
