@@ -218,17 +218,38 @@ public class SpotrLogic {
     public func setInstagram(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
         guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
 
-        let areaCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
+        let usernameCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
 
         try SetUsernameInstagramCommand.collection
             .document(UUID().uuidString)
-            .setData(from: areaCommand, encoder: encoderFirestore) { error in
+            .setData(from: usernameCommand, encoder: encoderFirestore) { error in
                 if let error = error {
                     completion(.failure(self.handle(error: error)))
                 } else {
                     completion(.success(()))
                 }
             }
+    }
+    
+    /// Set the local user username.
+    /// - Parameters:
+    ///   - username: The username to set.
+    ///   - completion: The completion result.
+    public func setUsername(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
+        guard let id = auth?.currentUser?.uid else {
+            throw AuthErrors.notAuthenticated }
+        
+        let usernameCommand = SetUsernameCommand(user_id: id, username: username)
+        
+        try SetUsernameCommand.collection
+            .document(UUID().uuidString)
+            .setData(from: usernameCommand, encoder: encoderFirestore, completion: { error in
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            })
     }
     
     /// Check if the Instagram username is available.

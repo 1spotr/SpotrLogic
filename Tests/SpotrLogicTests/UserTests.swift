@@ -261,4 +261,47 @@ class UserTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
     
+    // Set Username
+    func testSetUsername() throws {
+
+        wait(for: [anonymousSign(for: logic)], timeout: 10)
+
+        let username = "username\(Int.random(in: -100...100))_\(Int.random(in: -100...100))"
+
+        let expectation = XCTestExpectation(description: "Username creation")
+
+
+        try logic.setUsername(username: username, completion: { result in
+            switch result {
+                case .success:
+                expectation.fulfill()
+                break
+                case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        })
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testSetUsernameNotAuth() throws {
+
+        let expectation = XCTestExpectation(description: "Username creation")
+
+        do {
+            try logic.setUsername(username: "test", completion: { result in
+            switch result {
+                case .success:
+                break
+                case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        })
+        } catch {
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
 }

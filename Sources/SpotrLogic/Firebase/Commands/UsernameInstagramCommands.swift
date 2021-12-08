@@ -26,3 +26,23 @@ struct SetUsernameInstagramCommand: Encodable {
 
     static let collection = firestore.collection("commands_users")
 }
+
+struct SetUsernameCommand: Encodable {
+    
+    typealias PayloadType = Payload
+
+    struct Payload: Codable {
+        let user_id: String
+        let username: String
+    }
+
+    let type: String = "users.username_update"
+    let version: String = "1.0.0"
+    let payload: Payload
+
+    init(user_id: String, username: String) {
+        self.payload = Payload(user_id: user_id, username: username)
+    }
+
+    static let collection = firestore.collection("commands_users")
+}

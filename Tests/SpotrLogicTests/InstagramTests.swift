@@ -38,7 +38,7 @@ class InstagramTests: XCTestCase {
 
         let username = "instragra_username\(Int.random(in: -100...100))_\(Int.random(in: -100...100))"
 
-        let expectation = XCTestExpectation(description: "Residence creation")
+        let expectation = XCTestExpectation(description: "Instagram username creation")
 
 
         try logic.setInstagram(username: username, completion: { result in
