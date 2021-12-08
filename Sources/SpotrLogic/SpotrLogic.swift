@@ -231,6 +231,44 @@ public class SpotrLogic {
             }
     }
     
+    /// Check if the Instagram username is available.
+    /// - Parameters:
+    ///   - username: The username to compare with.
+    ///   - completion: The completion result.
+    public func checkInstagramUsernameAvailable(username: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        User.collection
+            .whereField("social.instagram.username", isEqualTo: username)
+            .getDocuments(completion: { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+                guard let snapshot = snapshot else {
+                    completion(.success(false))
+                    return
+                }
+                completion(.success(snapshot.isEmpty))
+            })
+    }
+    
+    /// Check if the username is available.
+    /// - Parameters:
+    ///   - username: The username to compare with.
+    ///   - completion: The completion result.
+    public func checkUsernameAvailable(username: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        User.collection
+            .whereField("username", isEqualTo: username)
+            .getDocuments(completion: { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                }
+                guard let snapshot = snapshot else {
+                    completion(.success(false))
+                    return
+                }
+                completion(.success(snapshot.isEmpty))
+            })
+    }
+    
     // MARK: Settings
     
     /// Send email verification to user.

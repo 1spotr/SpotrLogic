@@ -14,22 +14,58 @@ class UserTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-
+        
         _ = configured
-
+        
         logic = .init(logger: logger)
     }
-
+    
     private var logic : SpotrLogic!
-
-
+    
+    
     override func tearDown() {
         super.tearDown()
-
+        
         logic = nil
     }
     
     // MARK: - Tests
+    
+    func testUsernameUnavailable() {
+        let username = "test"
+        
+        let expectation = XCTestExpectation(description: "Check username available")
+        
+        logic.checkUsernameAvailable(username: username) { result in
+            switch result {
+            case .success(let available):
+                XCTAssertFalse(available)
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testUsernameAvailable() {
+        let username = "test\(Int.random(in: 1...100))"
+        
+        let expectation = XCTestExpectation(description: "Check username available")
+        
+        logic.checkUsernameAvailable(username: username) { result in
+            switch result {
+            case .success(let available):
+                XCTAssertTrue(available)
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
     
     // MARK: Send Email Verification
     
@@ -224,4 +260,5 @@ class UserTests: XCTestCase {
         
         wait(for: [expectation], timeout: 5)
     }
+    
 }
