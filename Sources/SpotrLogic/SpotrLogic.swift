@@ -268,6 +268,84 @@ public class SpotrLogic {
                 completion(.success(snapshot.isEmpty))
             })
     }
+    
+    // MARK: Settings
+    
+    /// Send email verification to user.
+    /// - Parameter completion: The completion error result.
+    public func sendEmailVerification(completion: @escaping (Error?) -> Void) {
+        auth?.currentUser?.sendEmailVerification(completion: { error in
+            if let error = error {
+                completion(error)
+            } else {
+                completion(nil)
+            }
+        })
+    }
+    
+    /// Update user email.
+    /// - Parameters:
+    ///   - password: The actual user password.
+    ///   - newEmail: The user's new email.
+    ///   - completion: The completion error result.
+    public func updateUserEmail(password: String, newEmail: String, completion: @escaping (Result<Void, Error>) -> Void) throws {
+        guard let currentUser = auth?.currentUser, let email = currentUser.email else {
+            throw UserErrors.noCurrentUser
+        }
+        reauthenticate(with: email, password: password) { result in
+            switch result {
+            case .success:
+                currentUser.updateEmail(to: newEmail) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    }
+                    completion(.success(()))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Update user password.
+    /// - Parameters:
+    ///   - password: The actual user password.
+    ///   - newPassword: The new user password.
+    ///   - completion: The completion error result.
+    public func updateUserPassword(password: String, newPassword: String, completion: @escaping (Result<Void, Error>) -> Void) throws {
+        guard let currentUser = auth?.currentUser, let email = currentUser.email else {
+            throw UserErrors.noCurrentUser
+        }
+        reauthenticate(with: email, password: password) { result in
+            switch result {
+            case .success:
+                currentUser.updatePassword(to: newPassword) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                    }
+                    completion(.success(()))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Reauthenticate the user to confirm provide credential.
+    /// - Parameters:
+    ///   - email: The user email.
+    ///   - password: The user password.
+    ///   - completion: The completion error result.
+    private func reauthenticate(with email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        let signAuth = Auth.auth()
+        
+        auth?.currentUser?.reauthenticate(with: credential, completion: { authResult, error in
+            self.handleAuthResult(currentAuth: signAuth,
+                                  authResult: authResult, error: error,
+                                  completion: completion)
+        })
+    }
 
     // MARK: Favorites
 
@@ -598,6 +676,10 @@ public class SpotrLogic {
         case noDocuments
         case noGetterID
         case undecodable(document: String?)
+    }
+    
+    public enum UserErrors: Error {
+        case noCurrentUser
     }
 
     private func handle(error: Error) -> Error {
