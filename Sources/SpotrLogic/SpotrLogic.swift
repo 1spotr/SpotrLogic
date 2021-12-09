@@ -294,12 +294,28 @@ public class SpotrLogic {
     
     /// Send email verification to user.
     /// - Parameter completion: The completion error result.
-    public func sendEmailVerification(completion: @escaping (Error?) -> Void) {
+    public func sendEmailVerification(completion: @escaping (Result<Void, Error>) -> Void) {
         auth?.currentUser?.sendEmailVerification(completion: { error in
             if let error = error {
-                completion(error)
+                completion(.failure(error))
             } else {
-                completion(nil)
+                completion(.success(()))
+            }
+        })
+    }
+    
+    /// Send email for password reset.
+    /// - Parameters:
+    ///   - email: The entered email.
+    ///   - completion: The completion error result.
+    public func sendPasswordResetEmail(email: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let resetAuth = Auth.auth()
+        
+        resetAuth.sendPasswordReset(withEmail: email, completion: { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
             }
         })
     }
