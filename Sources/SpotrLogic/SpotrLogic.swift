@@ -317,13 +317,13 @@ public class SpotrLogic {
             switch result {
             case .success:
                 currentUser.updateEmail(to: newEmail) { error in
-                    if let error = error {
-                        completion(.failure(error))
+                    if error != nil {
+                        completion(.failure(UpdateUserErrors.invalidEmail))
                     }
                     completion(.success(()))
                 }
-            case .failure(let error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(UpdateUserErrors.failReauthenticate))
             }
         }
     }
@@ -341,13 +341,13 @@ public class SpotrLogic {
             switch result {
             case .success:
                 currentUser.updatePassword(to: newPassword) { error in
-                    if let error = error {
-                        completion(.failure(error))
+                    if error != nil {
+                        completion(.failure(UpdateUserErrors.weakPassword))
                     }
                     completion(.success(()))
                 }
-            case .failure(let error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(UpdateUserErrors.failReauthenticate))
             }
         }
     }
@@ -701,6 +701,12 @@ public class SpotrLogic {
     
     public enum UserErrors: Error {
         case noCurrentUser
+    }
+    
+    public enum UpdateUserErrors: Error {
+        case weakPassword
+        case invalidEmail
+        case failReauthenticate
     }
 
     private func handle(error: Error) -> Error {
