@@ -218,17 +218,38 @@ public class SpotrLogic {
     public func setInstagram(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
         guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
 
-        let areaCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
+        let usernameCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
 
         try SetUsernameInstagramCommand.collection
             .document(UUID().uuidString)
-            .setData(from: areaCommand, encoder: encoderFirestore) { error in
+            .setData(from: usernameCommand, encoder: encoderFirestore) { error in
                 if let error = error {
                     completion(.failure(self.handle(error: error)))
                 } else {
                     completion(.success(()))
                 }
             }
+    }
+    
+    /// Set the local user username.
+    /// - Parameters:
+    ///   - username: The username to set.
+    ///   - completion: The completion result.
+    public func setUsername(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
+        guard let id = auth?.currentUser?.uid else {
+            throw AuthErrors.notAuthenticated }
+        
+        let usernameCommand = SetUsernameCommand(user_id: id, username: username)
+        
+        try SetUsernameCommand.collection
+            .document(UUID().uuidString)
+            .setData(from: usernameCommand, encoder: encoderFirestore, completion: { error in
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    completion(.success(()))
+                }
+            })
     }
     
     /// Check if the Instagram username is available.
@@ -273,12 +294,28 @@ public class SpotrLogic {
     
     /// Send email verification to user.
     /// - Parameter completion: The completion error result.
-    public func sendEmailVerification(completion: @escaping (Error?) -> Void) {
+    public func sendEmailVerification(completion: @escaping (Result<Void, Error>) -> Void) {
         auth?.currentUser?.sendEmailVerification(completion: { error in
             if let error = error {
-                completion(error)
+                completion(.failure(error))
             } else {
-                completion(nil)
+                completion(.success(()))
+            }
+        })
+    }
+    
+    /// Send email for password reset.
+    /// - Parameters:
+    ///   - email: The entered email.
+    ///   - completion: The completion error result.
+    public func sendPasswordResetEmail(email: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let resetAuth = Auth.auth()
+        
+        resetAuth.sendPasswordReset(withEmail: email, completion: { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
             }
         })
     }
@@ -296,13 +333,13 @@ public class SpotrLogic {
             switch result {
             case .success:
                 currentUser.updateEmail(to: newEmail) { error in
-                    if let error = error {
-                        completion(.failure(error))
+                    if error != nil {
+                        completion(.failure(UpdateUserErrors.invalidEmail))
                     }
                     completion(.success(()))
                 }
-            case .failure(let error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(UpdateUserErrors.failReauthenticate))
             }
         }
     }
@@ -320,13 +357,13 @@ public class SpotrLogic {
             switch result {
             case .success:
                 currentUser.updatePassword(to: newPassword) { error in
-                    if let error = error {
-                        completion(.failure(error))
+                    if error != nil {
+                        completion(.failure(UpdateUserErrors.weakPassword))
                     }
                     completion(.success(()))
                 }
-            case .failure(let error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(UpdateUserErrors.failReauthenticate))
             }
         }
     }
@@ -680,6 +717,12 @@ public class SpotrLogic {
     
     public enum UserErrors: Error {
         case noCurrentUser
+    }
+    
+    public enum UpdateUserErrors: Error {
+        case weakPassword
+        case invalidEmail
+        case failReauthenticate
     }
 
     private func handle(error: Error) -> Error {

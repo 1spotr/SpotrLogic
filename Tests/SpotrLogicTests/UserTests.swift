@@ -74,20 +74,52 @@ class UserTests: XCTestCase {
         
         let expectation = XCTestExpectation(description: "Wait for sending email verification")
         
-        try logic.login(with: loginCredentials, completion: { result in
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        logic.sendEmailVerification { result in
             switch result {
             case .success:
-                self.logic.sendEmailVerification { error in
-                    if let error = error {
-                        XCTFail(error.localizedDescription)
-                    } else {
-                        expectation.fulfill()
-                    }
-                }
+                expectation.fulfill()
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
-        })
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    // MARK: Send Password Reset Email
+    
+    func testSendPasswordResetEmail() {
+        let email = "test@test.spotr.app"
+        
+        let expectation = XCTestExpectation(description: "Wait for sending password reset email")
+        
+        logic.sendPasswordResetEmail(email: email) { result in
+            switch result {
+            case .success:
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testSendPasswordResetBadEmail() {
+        let email = "noemail@noemail.com"
+        
+        let expectation = XCTestExpectation(description: "Wait for sending password reset email")
+        
+        logic.sendPasswordResetEmail(email: email) { result in
+            switch result {
+            case .success:
+                break
+            case .failure:
+                expectation.fulfill()
+            }
+        }
         
         wait(for: [expectation], timeout: 5)
     }
@@ -257,6 +289,49 @@ class UserTests: XCTestCase {
                 expectation.fulfill()
             }
         })
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    // MARK: Set Username
+    func testSetUsername() throws {
+
+        wait(for: [anonymousSign(for: logic)], timeout: 10)
+
+        let username = "username\(Int.random(in: -100...100))_\(Int.random(in: -100...100))"
+
+        let expectation = XCTestExpectation(description: "Username creation")
+
+
+        try logic.setUsername(username: username, completion: { result in
+            switch result {
+                case .success:
+                expectation.fulfill()
+                break
+                case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        })
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testSetUsernameNotAuth() {
+
+        let expectation = XCTestExpectation(description: "Username creation")
+
+        do {
+            try logic.setUsername(username: "test", completion: { result in
+            switch result {
+                case .success:
+                break
+                case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        })
+        } catch {
+            expectation.fulfill()
+        }
         
         wait(for: [expectation], timeout: 5)
     }
