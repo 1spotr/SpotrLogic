@@ -683,7 +683,7 @@ public class SpotrLogic {
                         
                     }
                     
-                    let result = try documents.compactMap({ try $0.data(as: Notification.self )})
+                    let result = try documents.compactMap({ try $0.data(as: SpotrNotification.self )})
                     
                     completion(.success(.init(result)))
                 } catch {
@@ -726,7 +726,7 @@ public class SpotrLogic {
                         throw QueryErrors.noDocuments
                     }
                     
-                    let result = try documents.compactMap({ try $0.data(as: Notification.self)})
+                    let result = try documents.compactMap({ try $0.data(as: SpotrNotification.self)})
                     
                     completion(.success(.init(result)))
                 } catch {
