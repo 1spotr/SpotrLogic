@@ -664,6 +664,76 @@ public class SpotrLogic {
                 }
             }
     }
+    
+    // MARK: - Notifications
+    
+    /// Get all notifications from notifications collection.
+    /// - Parameter completion: The completion result.
+    public func allNotifications(completion: @escaping (Result<[Notification], Error>) -> Void) throws {
+        Notification.notificationsCollection
+            .order(by: "dt_create", descending: true)
+            .getDocuments { query, error in
+                do {
+                    if let error = error {
+                        throw error
+                    }
+                    
+                    guard let documents = query?.documents else {
+                        throw QueryErrors.noDocuments
+                        
+                    }
+                    
+                    let result = try documents.compactMap({ try $0.data(as: Notification.self )})
+                    
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
+    }
+    
+    /// Check if user has unread notification.
+    /// - Parameter completion: The completion result.
+    public func hasUnreadNotification(completion: @escaping (Result<Bool, Error>) -> Void) throws {
+        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+        Notification.notificationsCollectionForCurrentUser(id: id)
+            .whereField("viewed", isEqualTo: false)
+            .getDocuments { query, error in
+                do {
+                    if let error = error {
+                        throw error
+                    }
+                    completion(.success(query?.count ?? 0 > 0))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
+    }
+    
+    /// Get all notifications for logged user.
+    /// - Parameter completion: The completion result.
+    public func notificationsForLoggedUser(completion: @escaping (Result<[Notification], Error>) -> Void) throws {
+        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+        Notification.notificationsCollectionForCurrentUser(id: id)
+            .order(by: "dt_create", descending: true)
+            .getDocuments { query, error in
+                do {
+                    if let error = error {
+                        throw error
+                    }
+                    
+                    guard let documents = query?.documents else {
+                        throw QueryErrors.noDocuments
+                    }
+                    
+                    let result = try documents.compactMap({ try $0.data(as: Notification.self)})
+                    
+                    completion(.success(.init(result)))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
+                }
+            }
+    }
 
 
 
