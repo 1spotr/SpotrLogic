@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestoreSwift
 import FirebaseFirestore
 
-public struct Notification: Identifiable, Codable, Hashable {
+public struct SpotrNotification: Identifiable, Codable, Hashable {
     
     public let deeplinkUrl: String
     public let created: Date
