@@ -1,5 +1,5 @@
 //
-//  Notification.swift
+//  SpotrNotification.swift
 //  SpotrLogic
 //
 //  Created by Johann Petzold on 14/12/2021.
