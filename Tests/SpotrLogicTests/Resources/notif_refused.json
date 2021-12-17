@@ -1,0 +1,15 @@
+{
+    "url":"deeplink",
+    "dt_create":{"seconds":1625481751,"nanoseconds":303999900},
+    "id":"7f66f636-7f36-49ea-8074-dfc11954ed29",
+    "mentioned_tags":[],
+    "mentioned_users":[],
+    "title":"Votre spot à été refusé 😞",
+    "text":"Les photos partagés ne respectent pas nos Conditions d'Usage relatifs au contenu inapproprié ou offensant.",
+    "type":"pictures_suggestion_rejected",
+    "author":{
+        "id" : "spotter_id",
+        "profile_picture_url" : "https://firebasestorage.googleapis.com/v0/b/grand-lamp-195821.appspot.com/o/profile_pictures%2F1K9AssDgSSc0aWvNbdU2HPzGoB22.jpg?alt=media&token=0a178133-92e0-4374-af96-8314e55b0096",
+        "username" : "Spotter"
+    }
+}
