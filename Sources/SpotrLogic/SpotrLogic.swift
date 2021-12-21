@@ -179,10 +179,12 @@ public class SpotrLogic {
     
     public func listenLoggedUserChanges() throws -> Void {
         loggedUser = .init()
+        try listenLoggedUserPublicMetadata()
         try listenLoggedUserPrivateMetadata()
     }
 
-
+    
+    /// Listen for logged user private metadata.
     func listenLoggedUserPrivateMetadata() throws -> Void {
         guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
 
@@ -207,6 +209,32 @@ public class SpotrLogic {
                 }
             }
 
+        registrations.append(registration)
+    }
+    
+    /// Listen for logged user public metadata.
+    func listenLoggedUserPublicMetadata() throws -> Void {
+        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+        
+        let registration = User.collection
+            .document(id)
+            .addSnapshotListener { document, error in
+                do {
+                    if let error = error {
+                        throw error
+                    }
+                    
+                    guard let document = document else { throw QueryErrors.noDocuments }
+                    
+                    guard let result = try document.data(as: User.self) else {
+                        throw QueryErrors.undecodable(document: document.documentID)
+                    }
+                    self.loggedUser = LoggedUser(user: result)
+                } catch {
+                    _ = self.handle(error: error)
+                }
+            }
+        
         registrations.append(registration)
     }
 

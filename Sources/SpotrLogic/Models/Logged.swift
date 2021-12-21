@@ -12,7 +12,6 @@ import FirebaseFirestore
 
 public class LoggedUser: User, ObservableObject {
 
-
     /// The user status (type).
     enum Status {
         /// A Free `User` is a user without a `SpotrPro` subscription.
@@ -21,10 +20,8 @@ public class LoggedUser: User, ObservableObject {
         case pro
     }
 
-
     @Published
     public internal(set) var privateMetadata: PrivateMetadata?
-
 
     var status : Status? {
         guard let metadata = privateMetadata else { return nil }
@@ -37,10 +34,14 @@ public class LoggedUser: User, ObservableObject {
             return .free
         }
     }
-
-
-
-
+    
+    init() { }
+    
+    init(user: User) {
+        self.id = user.id
+        self.username = user.username
+        self.profilePictureURL = user.profilePictureURL
+    }
 }
 
 
