@@ -83,6 +83,10 @@ public class SpotrLogic {
             }
 
             self.auth = currentAuth
+            guard let id = self.auth?.currentUser?.uid else {
+                throw AuthErrors.missingID
+            }
+            self.loggedUser = LoggedUser(id: id)
             completion(.success(()))
             try listenLoggedUserChanges()
         } catch {
@@ -178,13 +182,14 @@ public class SpotrLogic {
 
     
     public func listenLoggedUserChanges() throws -> Void {
-        loggedUser = .init()
+        try listenLoggedUserPublicMetadata()
         try listenLoggedUserPrivateMetadata()
     }
 
-
+    
+    /// Listen for logged user private metadata.
     func listenLoggedUserPrivateMetadata() throws -> Void {
-        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+        guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
 
         let registration = PrivateMetadata.collection
             .document(id)
@@ -209,6 +214,32 @@ public class SpotrLogic {
 
         registrations.append(registration)
     }
+    
+    /// Listen for logged user public metadata.
+    func listenLoggedUserPublicMetadata() throws -> Void {
+        guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
+        
+        let registration = User.collection
+            .document(id)
+            .addSnapshotListener { document, error in
+                do {
+                    if let error = error {
+                        throw error
+                    }
+                    
+                    guard let document = document else { throw QueryErrors.noDocuments }
+                    
+                    guard let result = try document.data(as: User.self) else {
+                        throw QueryErrors.undecodable(document: document.documentID)
+                    }
+                    self.loggedUser?.publicMetadata = result
+                } catch {
+                    _ = self.handle(error: error)
+                }
+            }
+        
+        registrations.append(registration)
+    }
 
 
     /// Set the local user instagram username.
@@ -216,7 +247,7 @@ public class SpotrLogic {
     ///   - username: The instagram user name to set.
     ///   - completion: The completion result.
     public func setInstagram(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
-        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+        guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
 
         let usernameCommand = SetUsernameInstagramCommand(user_id: id, instagram_username: username)
 
@@ -236,7 +267,7 @@ public class SpotrLogic {
     ///   - username: The username to set.
     ///   - completion: The completion result.
     public func setUsername(username: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
-        guard let id = auth?.currentUser?.uid else {
+        guard let id = loggedUser?.id else {
             throw AuthErrors.notAuthenticated }
         
         let usernameCommand = SetUsernameCommand(user_id: id, username: username)
@@ -288,6 +319,23 @@ public class SpotrLogic {
                 }
                 completion(.success(snapshot.isEmpty))
             })
+    }
+    
+    // MARK: User
+    
+    /// Get User public metadata.
+    /// - Parameter id: User id.
+    /// - Returns: User.
+    public func getUserPublicData(from id: String) async throws -> User {
+        guard !id.isEmpty else { throw UserErrors.emptyId }
+        
+        do {
+            let snapshot = try await User.collection.document(id).getDocument()
+            guard let user = try snapshot.data(as: User.self) else { throw UserErrors.incorrectUserData }
+            return user
+        } catch {
+            throw handle(error: error)
+        }
     }
     
     // MARK: Settings
@@ -476,7 +524,7 @@ public class SpotrLogic {
     ///   - area: The seleted area.
     ///   - completion: The completion callbac
     public func setResidence(area: Area, completion: @escaping(Result<Void, Error>) -> Void) throws {
-        guard let id = auth?.currentUser?.uid else { throw AuthErrors.notAuthenticated }
+        guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
 
         guard let areaId = area.id else { throw QueryErrors.noGetterID }
 
@@ -641,7 +689,7 @@ public class SpotrLogic {
     ///   - user: The user
     ///   - completion: The completion result.
     public func spots(for user: User?, completion: @escaping(Result<[Spot], Error>) -> Void) throws {
-        guard let id = user?.id ?? self.auth?.currentUser?.uid else { return }
+        guard let id = user?.id ?? loggedUser?.id else { return }
 
         Interaction.collection
             .whereField("hidden", isEqualTo: false)
@@ -777,6 +825,7 @@ public class SpotrLogic {
         case failed
         case missingCredentials
         case notAuthenticated
+        case missingID
     }
 
     public enum QueryErrors: Error {
@@ -787,6 +836,8 @@ public class SpotrLogic {
     
     public enum UserErrors: Error {
         case noCurrentUser
+        case emptyId
+        case incorrectUserData
     }
     
     public enum UpdateUserErrors: Error {
