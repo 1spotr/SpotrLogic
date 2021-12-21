@@ -10,7 +10,12 @@ import FirebaseFirestore
 
 
 
-public class LoggedUser: User, ObservableObject {
+public class LoggedUser: ObservableObject {
+
+    public let id : String
+    
+    @Published public internal(set) var privateMetadata: PrivateMetadata?
+    @Published public internal(set) var publicMetadata: User?
 
     /// The user status (type).
     enum Status {
@@ -19,10 +24,7 @@ public class LoggedUser: User, ObservableObject {
         /// A `Pro User` is an user who unlock all premium services of Spotr.
         case pro
     }
-
-    @Published
-    public internal(set) var privateMetadata: PrivateMetadata?
-
+    
     var status : Status? {
         guard let metadata = privateMetadata else { return nil }
 
@@ -35,12 +37,10 @@ public class LoggedUser: User, ObservableObject {
         }
     }
     
-    init() { }
-    
-    init(user: User) {
-        self.id = user.id
-        self.username = user.username
-        self.profilePictureURL = user.profilePictureURL
+    init(id: String) {
+        self.id = id
+        self.privateMetadata = nil
+        self.publicMetadata = nil
     }
 }
 

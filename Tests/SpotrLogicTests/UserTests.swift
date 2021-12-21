@@ -11,21 +11,20 @@ import XCTest
 class UserTests: XCTestCase {
     
     // MARK: - Config
-
-    override func setUp() {
-        super.setUp()
+    
+    override func setUpWithError() throws {
+        try super.setUpWithError()
         
         _ = configured
-        
         logic = .init(logger: logger)
     }
     
     private var logic : SpotrLogic!
     
-    
-    override func tearDown() {
-        super.tearDown()
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
         
+        try logic.logout()
         logic = nil
     }
     
@@ -35,6 +34,8 @@ class UserTests: XCTestCase {
         let username = "test"
         
         let expectation = XCTestExpectation(description: "Check username available")
+        
+        wait(for: [anonymousSign(for: logic)], timeout: 5)
         
         logic.checkUsernameAvailable(username: username) { result in
             switch result {
@@ -53,6 +54,8 @@ class UserTests: XCTestCase {
         let username = "test\(Int.random(in: 1...100))"
         
         let expectation = XCTestExpectation(description: "Check username available")
+        
+        wait(for: [anonymousSign(for: logic)], timeout: 5)
         
         logic.checkUsernameAvailable(username: username) { result in
             switch result {
@@ -149,18 +152,17 @@ class UserTests: XCTestCase {
     
     func testUpdateUserEmailWithNoUser() {
         
+        try? logic.logout()
+        
         let expectation = XCTestExpectation(description: "Waiting for update user email")
         
         do {
             try logic.updateUserEmail(password: "", newEmail: "", completion: { result in
-                switch result {
-                case .success:
-                    break
-                case .failure:
-                    break
-                }
+                XCTFail("Completion result must not be called")
+                expectation.fulfill()
             })
         } catch {
+            XCTAssertEqual(error as! SpotrLogic.UserErrors, .noCurrentUser)
             expectation.fulfill()
         }
         
@@ -234,16 +236,14 @@ class UserTests: XCTestCase {
     
     func testUpdateUserPasswordWithNoUser() {
         
+        try? logic.logout()
+        
         let expectation = XCTestExpectation(description: "Waiting for update user email")
         
         do {
             try logic.updateUserPassword(password: "", newPassword: "", completion: { result in
-                switch result {
-                case .success:
-                    break
-                case .failure:
-                    break
-                }
+                XCTFail("Completion result must not be called")
+                expectation.fulfill()
             })
         } catch {
             expectation.fulfill()
@@ -318,6 +318,8 @@ class UserTests: XCTestCase {
     
     func testSetUsernameNotAuth() {
 
+        try? logic.logout()
+        
         let expectation = XCTestExpectation(description: "Username creation")
 
         do {
