@@ -40,6 +40,10 @@ public class SpotrLogic {
     /// Restore properties
     public func restore() throws -> Void {
         auth = Auth.auth()
+        guard let id = self.auth?.currentUser?.uid else {
+            throw AuthErrors.missingID
+        }
+        self.loggedUser = LoggedUser(id: id)
         try listenLoggedUserChanges()
     }
 
