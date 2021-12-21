@@ -8,14 +8,12 @@
 import Foundation
 import FirebaseFirestore
 
+public class LoggedUser: ObservableObject, Codable {
 
-
-public class LoggedUser: ObservableObject {
-
-    public let id : String
+    public var id : String
     
-    @Published public internal(set) var privateMetadata: PrivateMetadata?
-    @Published public internal(set) var publicMetadata: User?
+    @Published public internal(set) var privateMetadata: PrivateMetadata? = nil
+    @Published public internal(set) var publicMetadata: User? = nil
 
     /// The user status (type).
     enum Status {
@@ -37,10 +35,29 @@ public class LoggedUser: ObservableObject {
         }
     }
     
+    enum CodingKeys: String, CodingKey {
+        case id
+        case privateMetadata
+        case publicMetadata
+    }
+    
+    
     init(id: String) {
         self.id = id
-        self.privateMetadata = nil
-        self.publicMetadata = nil
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(privateMetadata, forKey: .privateMetadata)
+        try container.encode(publicMetadata, forKey: .publicMetadata)
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        privateMetadata = try container.decode(PrivateMetadata.self, forKey: .privateMetadata)
+        publicMetadata = try container.decode(User.self, forKey: .publicMetadata)
     }
 }
 

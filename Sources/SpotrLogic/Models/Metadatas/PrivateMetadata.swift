@@ -8,9 +8,9 @@
 import Foundation
 import FirebaseFirestore
 
-public struct PrivateMetadata: Decodable {
+public struct PrivateMetadata: Codable {
 
-    public struct Settings: Decodable {
+    public struct Settings: Codable {
         public let selectedAreaId: String?
 
         enum CodingKeys: String, CodingKey {
@@ -53,7 +53,7 @@ public struct PrivateMetadata: Decodable {
         }
     }
 
-    public struct Billing: Decodable {
+    public struct Billing: Codable {
         let latestSubscription: Subscription?
 
         enum CodingKeys: String, CodingKey {
@@ -61,7 +61,7 @@ public struct PrivateMetadata: Decodable {
         }
     }
 
-    public struct Social: Decodable {
+    public struct Social: Codable {
         let blocked_users: [String]?
     }
 
