@@ -48,7 +48,7 @@ class AreasTests: XCTestCase {
 
         /// Random test area
         let area = Area(id: UUID().description, name: "testing",
-                        pictures: [], locations: [])
+                        pictures: [], geolocation: .init(latitude: 0, longitude: 0), locations: [])
 
         let expectation = XCTestExpectation(description: "Residence creation")
 
