@@ -41,7 +41,30 @@ class AreasTests: XCTestCase {
 
     // MARK: - Tests
 
+    
+    // MARK: Coding
+    
+    func testAreaDecodingWithGeolocation() throws {
+        
+        let file = try file(named: "area_singapore")
+        
+        var area: Area? = nil
+        
+        XCTAssertNoThrow(area = try decoder.decode(Area.self, from: file))
+        
+        guard let area = area else {
+            XCTFail("No decoding area")
+            return
+        }
+        
+        XCTAssertEqual(area.id, "1aab0e35-6e44-47af-826b-3ab1c0ef6107")
+        XCTAssertEqual(area.name, "Singapore")
+        XCTAssertEqual(area.geolocation.longitude, 48.0)
+        XCTAssertEqual(area.geolocation.latitude, 2.0)
+    }
 
+    // MARK: Requests
+    
     func testSetResidenceArea() throws {
 
         wait(for: [anonymousSign(for: logic)], timeout: 10)
