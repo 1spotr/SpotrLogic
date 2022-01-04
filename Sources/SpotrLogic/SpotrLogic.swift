@@ -691,7 +691,7 @@ public class SpotrLogic {
         do {
             let snapshot = try await Spot.collection
                 .whereField("location.locality.long_name", isEqualTo: location)
-                .limit(to: 20)
+                .limit(to: 100)
                 .getDocuments()
             let result = try snapshot.documents.compactMap({ try $0.data(as: Spot.self) })
             return result
