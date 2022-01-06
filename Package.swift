@@ -33,13 +33,23 @@ let package = Package(
                 .product(name: "FirebaseAuth", package: "Firebase"),
                 .product(name: "FirebaseFirestore", package: "Firebase"),
                 .product(name: "Logging", package: "swift-log"),
-            ]),
+            ],
+												swiftSettings: [
+																.unsafeFlags([
+//																				"-Xfrontend", "-enable-experimental-concurrency",
+																				"-Xfrontend", "-disable-availability-checking",
+																])
+												]
+								),
 
 												.binaryTarget(name: "FirebaseFirestoreSwift", path: "Firebase/FirebaseFirestoreSwift/FirebaseFirestoreSwift.xcframework"),
 
         .testTarget(
             name: "SpotrLogicTests",
-            dependencies: ["SpotrLogic"],
+            dependencies: [
+																"SpotrLogic",
+//																"FirebaseFirestoreSwift",
+												],
             resources: [
                 .process("./Resources/")
             ]),

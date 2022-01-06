@@ -10,9 +10,8 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-/// Call this fontion to configure _Firebase_
+/// Call this fonction to configure _Firebase_
 public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> Void {
-
 
     if let file = file, let options = FirebaseOptions(contentsOfFile: file.path) {
         FirebaseApp.configure(options: options)
