@@ -19,7 +19,6 @@ jobs:
       - checkout
       - run: curl -sL https://firebase.tools | bash
       - run: firebase emulators:start --import=./emulator_data/ &
-      - run: swift build
       - run: swift test
 
 # Invoke jobs via workflows
