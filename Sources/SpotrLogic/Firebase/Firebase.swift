@@ -6,6 +6,7 @@
 //
 
 import Firebase
+import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
@@ -13,27 +14,41 @@ import FirebaseFirestoreSwift
 public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> Void {
 
 
-    if let file = file, let options = FirebaseOptions(contentsOfFile: file.path) {
+    if let file = file, var options = FirebaseOptions(contentsOfFile: file.path) {
         FirebaseApp.configure(options: options)
     } else {
-        FirebaseApp.configure()
+								FirebaseApp.configure()
     }
 
 
     #if DEBUG
     if testing {
         Auth.auth().useEmulator(withHost: "localhost", port: 9099)
-        let settings = Firestore.firestore().settings
-        settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
-        settings.isPersistenceEnabled = false
-        settings.isSSLEnabled = false
-        firestore.settings = settings
+//        let settings = Firestore.firestore().settings
+//        settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
+//        settings.isPersistenceEnabled = false
+////        settings.isSSLEnabled = false
+//								let fs = Firestore.firestore()
+//								fs.useEmulator(withHost: "localhost", port: 8080)
+//								let settings = fs.settings
+//								settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
+//								settings.isPersistenceEnabled = false
+//								settings.isSSLEnabled = false
+//								settings.dispatchQueue = .global(qos: .utility)
+
+//        firestore.settings = settings
+
     }
     #endif
 
 }
 
-let firestore : Firestore = Firestore.firestore()
+var firestore : Firestore = {
+				let store = Firestore.firestore()
+				store.useEmulator(withHost: "localhost", port: 8080)
+				store.settings.isSSLEnabled = false
+				return store
+}()
 
 
 // MARK: - Coding
