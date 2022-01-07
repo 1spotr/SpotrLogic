@@ -30,6 +30,8 @@ public struct Spot: Identifiable, Codable, Hashable {
 
     public let authors : [User]?
 
+    
+    public let geolocation: GeoPoint
 //    public let interest : Double?
 
 
@@ -47,9 +49,9 @@ public struct Spot: Identifiable, Codable, Hashable {
         case created = "dt_create"
         case updated = "dt_update"
         case tags
-//        case interest = "interest_score"
-
         case authors
+        case geolocation
+        //        case interest = "interest_score"
 //        case likeCount
 //        case latestLikeAuthor
     }
@@ -72,6 +74,8 @@ public struct Spot: Identifiable, Codable, Hashable {
 
         tags = try container.decodeIfPresent([Tag.ID].self, forKey: .tags)
         authors = try container.decodeIfPresent([User].self, forKey: .authors)
+        
+        geolocation = try container.decode(GeoPoint.self, forKey: .geolocation)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -91,6 +95,8 @@ public struct Spot: Identifiable, Codable, Hashable {
 
         try container.encodeIfPresent(tags, forKey: .tags)
         try container.encodeIfPresent(authors, forKey: .authors)
+        
+        try container.encodeIfPresent(geolocation, forKey: .geolocation)
     }
 
 

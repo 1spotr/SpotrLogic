@@ -689,7 +689,19 @@ public class SpotrLogic {
                 }
             }
     }
-
+    
+    public func mapSpots(location: String) async throws -> [Spot] {
+        do {
+            let snapshot = try await Spot.collection
+                .whereField("location.locality.long_name", isEqualTo: location)
+                .limit(to: 100)
+                .getDocuments()
+            let result = try snapshot.documents.compactMap({ try $0.data(as: Spot.self) })
+            return result
+        } catch {
+            throw handle(error: error)
+        }
+    }
 
     /// Fetch the spot that the user contributed to.
     /// - Parameters:

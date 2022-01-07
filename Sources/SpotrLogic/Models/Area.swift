@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 public struct Area: Codable, Identifiable, Hashable {
@@ -15,9 +16,18 @@ public struct Area: Codable, Identifiable, Hashable {
     public private(set) var id: ID
     public let name: String
     public let pictures: [Picture]
-//    let pin_geolocation: GeoPoint
+    public let geolocation: GeoPoint
     public let locations: [Location]
 
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case pictures
+        case geolocation = "pin_geolocation"
+        case locations
+    }
+    
     // MARK: Equatable
 
     public static func == (lhs: Area, rhs: Area) -> Bool {
