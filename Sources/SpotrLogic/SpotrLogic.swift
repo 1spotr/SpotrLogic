@@ -329,21 +329,21 @@ public class SpotrLogic {
     
     // MARK: User
     
-//    /// Get User public metadata.
-//    /// - Parameter id: User id.
-//    /// - Returns: User.
-//    public func getUserPublicData(from id: String) async throws -> User {
-//        guard !id.isEmpty else { throw UserErrors.emptyId }
-//
-//        do {
-//            let snapshot = try await User.collection.document(id).getDocument()
-//            guard let user = try snapshot.data(as: User.self) else { throw UserErrors.incorrectUserData }
-//            return user
-//        } catch {
-//            throw handle(error: error)
-//        }
-//    }
-//
+    /// Get User public metadata.
+    /// - Parameter id: User id.
+    /// - Returns: User.
+    public func getUserPublicData(from id: String) async throws -> User {
+        guard !id.isEmpty else { throw UserErrors.emptyId }
+
+        do {
+            let snapshot = try await User.collection.document(id).getDocument()
+            guard let user = try snapshot.data(as: User.self) else { throw UserErrors.incorrectUserData }
+            return user
+        } catch {
+            throw handle(error: error)
+        }
+    }
+
     // MARK: Settings
     
     /// Send email verification to user.

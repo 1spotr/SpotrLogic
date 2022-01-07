@@ -52,7 +52,7 @@ class InstagramTests: XCTestCase {
             expectation.fulfill()
         })
 
-								waitForExpectations(timeout: 10, handler: nil)
+								wait(for: [expectation], timeout: 5)
 
     }
     
