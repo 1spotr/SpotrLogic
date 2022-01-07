@@ -29,13 +29,23 @@ let package = Package(
 																"FirebaseFirestoreTarget",
 																"FirebaseFirestoreSwiftTarget",
 																.product(name: "Logging", package: "swift-log"),
-												]),
+												],
+												resources: [
+																.process("Resources/gRPCCertificates-Cpp.bundle")
+												],
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
+												]
+								),
 
 								/// 🔥 Firebase
 								/// Mapping
 								.target(
 												name: "Firebase",
-												publicHeadersPath: "./"
+												publicHeadersPath: "./",
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
+												]
 								),
 								.target(
 												name: "FirebaseAnalyticsTarget",
@@ -52,7 +62,10 @@ let package = Package(
 																"PromisesObjC",
 																"nanopb"
 												],
-												path: "Sources/FirebaseAnalytics"
+												path: "Sources/FirebaseAnalytics",
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
+												]
 								),
 								.target(
 												name: "FirebaseFirestoreTarget",
@@ -69,6 +82,9 @@ let package = Package(
 												path: "Sources/FirebaseFirestore",
 												resources: [
 																.process("Resources/gRPCCertificates-Cpp.bundle")
+												],
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
 												]
 								),
 								.target(
@@ -79,7 +95,10 @@ let package = Package(
 																"FirebaseAuth",
 																"GTMSessionFetcher"
 												],
-												path: "Sources/FirebaseAuth"
+												path: "Sources/FirebaseAuth",
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
+												]
 								),
 								.target(
 												name: "FirebaseFirestoreSwiftTarget",
@@ -90,6 +109,9 @@ let package = Package(
 												path: "Sources/FirebaseFirestoreSwift",
 												resources: [
 																.copy("Resources/gRPCCertificates-Cpp.bundle")
+												],
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
 												]
 								),
 
@@ -128,6 +150,10 @@ let package = Package(
 																dependencies: ["SpotrLogic",],
 																resources: [
 																				.process("./Resources/")
-																]),
+																],
+																linkerSettings: [
+																				.unsafeFlags(["-ObjC"])
+																]
+												),
 				]
 )

@@ -10,9 +10,11 @@ import Foundation
 import Logging
 
 // Firebase
+import Firebase
+import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
-import FirebaseAuth
+import FirebaseAnalytics
 
 // Crypto
 import CryptoKit
