@@ -10,9 +10,11 @@ import Foundation
 import Logging
 
 // Firebase
+import Firebase
+import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
-import FirebaseAuth
+import FirebaseAnalytics
 
 // Crypto
 import CryptoKit
@@ -332,7 +334,7 @@ public class SpotrLogic {
     /// - Returns: User.
     public func getUserPublicData(from id: String) async throws -> User {
         guard !id.isEmpty else { throw UserErrors.emptyId }
-        
+
         do {
             let snapshot = try await User.collection.document(id).getDocument()
             guard let user = try snapshot.data(as: User.self) else { throw UserErrors.incorrectUserData }
@@ -341,7 +343,7 @@ public class SpotrLogic {
             throw handle(error: error)
         }
     }
-    
+
     // MARK: Settings
     
     /// Send email verification to user.
@@ -534,15 +536,16 @@ public class SpotrLogic {
 
         let areaCommand = AreaCommand(user_id: id, area_id: areaId)
 
-        try AreaCommand.collection
-            .document(UUID().uuidString)
-            .setData(from: areaCommand, encoder: encoderFirestore) { error in
-                if let error = error {
-                    completion(.failure(self.handle(error: error)))
-                } else {
-                    completion(.success(()))
-                }
-            }
+								let data = try encoderFirestore.encode(areaCommand)
+								AreaCommand.collection
+												.document(UUID().uuidString)
+												.setData(data) { error in
+																if let error = error {
+																				completion(.failure(self.handle(error: error)))
+																} else {
+																				completion(.success(()))
+																}
+												}
     }
 
     // MARK: - Tag

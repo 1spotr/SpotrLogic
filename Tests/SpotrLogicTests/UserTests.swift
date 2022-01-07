@@ -341,9 +341,9 @@ class UserTests: XCTestCase {
     // MARK: Get User Public Metadata
     func testGetUserPublicData() async {
         let id = "peSMGms0yCi1tQ8AUxIMslnll5qb"
-        
+
         let expectation = XCTestExpectation(description: "Get User Public Data")
-        
+
         do {
             let user = try await logic.getUserPublicData(from: id)
             XCTAssertEqual(user.username, "test")
@@ -351,49 +351,49 @@ class UserTests: XCTestCase {
         } catch {
             XCTFail(error.localizedDescription)
         }
-        
+
         wait(for: [expectation], timeout: 5)
     }
-    
+
     func testGetUserPublicDataEmptyId() async {
         let id = ""
-        
+
         let expectation = XCTestExpectation(description: "Get User Public Data")
-        
+
         do {
             _ = try await logic.getUserPublicData(from: id)
         } catch {
             expectation.fulfill()
         }
-        
+
         wait(for: [expectation], timeout: 5)
     }
-    
+
     func testGetUserPublicDataWrongId() async {
         let id = "test"
-        
+
         let expectation = XCTestExpectation(description: "Get User Public Data")
-        
+
         do {
             _ = try await logic.getUserPublicData(from: id)
         } catch {
             expectation.fulfill()
         }
-        
+
         wait(for: [expectation], timeout: 5)
     }
-    
+
     func testGetUserPublicDataIncorrectData() async {
         let id = "test_user_incorrect"
-        
+
         let expectation = XCTestExpectation(description: "Get User Public Data")
-        
+
         do {
             _ = try await logic.getUserPublicData(from: id)
         } catch {
             expectation.fulfill()
         }
-        
+
         wait(for: [expectation], timeout: 5)
     }
 }

@@ -52,6 +52,7 @@ class InstagramTests: XCTestCase {
             expectation.fulfill()
         })
 
+        wait(for: [expectation], timeout: 5)
     }
     
     func testInstagramUsernameUnavailable() {

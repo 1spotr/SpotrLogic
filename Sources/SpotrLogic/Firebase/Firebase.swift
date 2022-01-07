@@ -6,8 +6,10 @@
 //
 
 import Firebase
+import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import FirebaseAnalytics
 
 /// Call this fontion to configure _Firebase_
 public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> Void {
@@ -16,24 +18,27 @@ public func configureFirebase(with file: URL? = nil, testing: Bool = false) -> V
     if let file = file, let options = FirebaseOptions(contentsOfFile: file.path) {
         FirebaseApp.configure(options: options)
     } else {
-        FirebaseApp.configure()
+								FirebaseApp.configure()
     }
 
 
     #if DEBUG
     if testing {
         Auth.auth().useEmulator(withHost: "localhost", port: 9099)
-        let settings = Firestore.firestore().settings
+								
+        let settings = firestore.settings
         settings.host = ProcessInfo.processInfo.environment["HOST"] ?? "localhost:8080"
         settings.isPersistenceEnabled = false
         settings.isSSLEnabled = false
-        firestore.settings = settings
+								firestore.settings = settings
+								firestore.useEmulator(withHost: "localhost", port: 8080)
+
     }
     #endif
 
 }
 
-let firestore : Firestore = Firestore.firestore()
+var firestore : Firestore = Firestore.firestore()
 
 
 // MARK: - Coding
