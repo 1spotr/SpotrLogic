@@ -68,7 +68,7 @@ let package = Package(
 												],
 												path: "Sources/FirebaseFirestore",
 												resources: [
-																.copy("Resources/gRPCCertificates-Cpp.bundle")
+																.process("Resources/gRPCCertificates-Cpp.bundle")
 												]
 								),
 								.target(
