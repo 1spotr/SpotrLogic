@@ -150,9 +150,6 @@ let package = Package(
 																dependencies: ["SpotrLogic",],
 																resources: [
 																				.process("./Resources/")
-																],
-																linkerSettings: [
-																				.unsafeFlags(["-ObjC"])
 																]
 												),
 				]
