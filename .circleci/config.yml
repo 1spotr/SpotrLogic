@@ -17,9 +17,16 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: curl -sL https://firebase.tools | bash
-      - run: firebase emulators:start --import=./emulator_data/ &
-      - run: swift test
+      - run:
+          name: Install Firebase Emulators
+          command: curl -sL https://firebase.tools | bash
+      - run:
+          name: Launch Firebase Emulators
+          command: firebase emulators:start --import=./emulator_data/
+          background: true      
+      - run:
+          name: Launch tests
+          command:swift test
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
