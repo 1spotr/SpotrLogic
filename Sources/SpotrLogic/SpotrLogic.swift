@@ -247,7 +247,6 @@ public class SpotrLogic {
         registrations.append(registration)
     }
 
-
     /// Set the local user instagram username.
     /// - Parameters:
     ///   - username: The instagram user name to set.
