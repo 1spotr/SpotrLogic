@@ -115,6 +115,19 @@ let package = Package(
 												]
 								),
 
+								.target(
+												name: "FirebaseStorageTarget",
+												dependencies: [
+																"Firebase",
+																"FirebaseStorage",
+																"GTMSessionFetcher",
+												],
+												path: "Sources/FirebaseStorage",
+												linkerSettings: [
+																.unsafeFlags(["-ObjC"])
+												]
+								),
+
 								/// Binaary
 								.binaryTarget(name: "FirebaseAnalytics", path: "Firebase/FirebaseAnalytics/FirebaseAnalytics.xcframework"),
 								.binaryTarget(name: "FirebaseAppCheck", path: "Firebase/FirebaseAppCheck/FirebaseAppCheck.xcframework"),
@@ -122,6 +135,7 @@ let package = Package(
 								.binaryTarget(name: "FirebaseAuth", path: "Firebase/FirebaseAuth/FirebaseAuth.xcframework"),
 								.binaryTarget(name: "FirebaseFirestore", path: "Firebase/FirebaseFirestore/FirebaseFirestore.xcframework"),
 								.binaryTarget(name: "FirebaseFirestoreSwift", path: "Firebase/FirebaseFirestoreSwift/FirebaseFirestoreSwift.xcframework"),
+								.binaryTarget(name: "FirebaseStorage", path: "Firebase/FirebaseStorage/FirebaseStorage.xcframework"),
 
 
 								/// 🥃 Dependencies
