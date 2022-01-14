@@ -52,7 +52,7 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
         let createdTimestamp = try container.decode(Timestamp.self, forKey: .created)
         created = createdTimestamp.dateValue()
         
-        id = try container.decode(String.self, forKey: .id)
+        id = try container.decodeIfPresent(String?.self, forKey: .id)
         
         mentionedTags = try container.decodeIfPresent([Tag.ID].self, forKey: .mentionedTags)
         
