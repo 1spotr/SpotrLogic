@@ -10,10 +10,11 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 public struct SpotrNotification: Identifiable, Codable, Hashable {
-    
+
+				@DocumentID public var docID : String?
     public let deeplinkUrl: String
     public let created: Date
-    public let id: String
+    public let id: String?
     public let mentionedTags: [Tag.ID]?
     public let mentionedUsers: [User]?
     public let spot: Spot?
