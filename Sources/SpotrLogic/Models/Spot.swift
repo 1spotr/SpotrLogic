@@ -17,11 +17,11 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot name.
     public let name : String
     /// The spot location description.
-    public let location: Location
+    public let location: Location?
     /// The spot creation date.
     public let created: Date
     /// The spot updated date.
-    public let updated: Date
+    public let updated: Date?
 
     public let picture : Picture?
 
@@ -61,16 +61,20 @@ public struct Spot: Identifiable, Codable, Hashable {
 
         id = try container.decodeIfPresent(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
-        location = try container.decode(Location.self, forKey: .location)
+        location = try container.decodeIfPresent(Location.self, forKey: .location)
         picture = try container.decodeIfPresent(Picture.self, forKey: .picture)
 
         // Firebase timestamp decoding
         let createdTimestamp = try container.decode(Timestamp.self,
                                                     forKey: .created)
         created = createdTimestamp.dateValue()
-        let updatedTimestamp = try container.decode(Timestamp.self,
-                                                    forKey: .created)
-        updated = updatedTimestamp.dateValue()
+        if let updatedTimestamp = try container.decodeIfPresent(Timestamp.self,
+																																																																forKey: .created) {
+												updated = updatedTimestamp.dateValue()
+								} else
+								{
+												updated = nil
+								}
 
         tags = try container.decodeIfPresent([Tag.ID].self, forKey: .tags)
         authors = try container.decodeIfPresent([User].self, forKey: .authors)
@@ -90,8 +94,12 @@ public struct Spot: Identifiable, Codable, Hashable {
         let createdTimestamp = Timestamp(date: created)
         try container.encode(createdTimestamp, forKey: .created)
 
-        let updatedTimestamp = Timestamp(date: updated)
-        try container.encode(updatedTimestamp, forKey: .updated)
+
+								if let updated = updated {
+												let updatedTimestamp = Timestamp(date: updated)
+												try container.encode(updatedTimestamp, forKey: .updated)
+
+								}
 
         try container.encodeIfPresent(tags, forKey: .tags)
         try container.encodeIfPresent(authors, forKey: .authors)
