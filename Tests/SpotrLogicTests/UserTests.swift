@@ -383,17 +383,42 @@ class UserTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
 
-    func testGetUserPublicDataIncorrectData() async {
-        let id = "test_user_incorrect"
-
-        let expectation = XCTestExpectation(description: "Get User Public Data")
-
-        do {
-            _ = try await logic.getUserPublicData(from: id)
-        } catch {
-            expectation.fulfill()
-        }
-
-        wait(for: [expectation], timeout: 5)
-    }
+//    func testGetUserPublicDataIncorrectData() async {
+//        let id = "test_user_incorrect"
+//
+//        let expectation = XCTestExpectation(description: "Get User Public Data")
+//
+//        do {
+//            _ = try await logic.getUserPublicData(from: id)
+//            XCTFail("Request must not succeed")
+//            expectation.fulfill()
+//        } catch {
+//            expectation.fulfill()
+//        }
+//
+//        wait(for: [expectation], timeout: 10)
+//    }
+    
+    // MARK: Update Profile Picture
+    // Write in emulator storage not working (but read is)
+//    func testUpdateProfilePicture() throws {
+//
+//        wait(for: [anonymousSign(for: logic)], timeout: 10)
+//
+//        let expectation = XCTestExpectation(description: "Upload Image")
+//
+//        let imageData = try file(named: "image1", extention: "jpg")
+//
+//        logic.updateProfilePicture(imageData: imageData, path: .profile) { result in
+//            switch result {
+//            case .success(let url):
+//                print(url)
+//                expectation.fulfill()
+//            case .failure(let error):
+//                XCTFail(error.localizedDescription)
+//            }
+//        }
+//
+//        wait(for: [expectation], timeout: 5)
+//    }
 }
