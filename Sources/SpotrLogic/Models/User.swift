@@ -14,7 +14,7 @@ public class User: Identifiable, Codable, Hashable {
     public typealias ID = String?
 
     public private(set) var id : ID
-    public let username : String
+    public let username : String?
     public let profilePictureURL : URL?
 
     // MARK: Codable
