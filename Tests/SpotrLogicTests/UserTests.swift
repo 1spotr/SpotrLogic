@@ -396,4 +396,27 @@ class UserTests: XCTestCase {
 
         wait(for: [expectation], timeout: 5)
     }
+    
+    // MARK: Update Profile Picture
+    // Write in emulator storage not working (but read is)
+//    func testUpdateProfilePicture() throws {
+//
+//        wait(for: [anonymousSign(for: logic)], timeout: 10)
+//
+//        let expectation = XCTestExpectation(description: "Upload Image")
+//
+//        let imageData = try file(named: "image1", extention: "jpg")
+//
+//        logic.updateProfilePicture(imageData: imageData, path: .profile) { result in
+//            switch result {
+//            case .success(let url):
+//                print(url)
+//                expectation.fulfill()
+//            case .failure(let error):
+//                XCTFail(error.localizedDescription)
+//            }
+//        }
+//
+//        wait(for: [expectation], timeout: 5)
+//    }
 }
