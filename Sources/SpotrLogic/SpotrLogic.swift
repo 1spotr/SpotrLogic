@@ -982,10 +982,10 @@ public class SpotrLogic {
                         }
                         if let urlString = url?.absoluteString {
                             payloadPictures.append(PayloadPicture(url: urlString, storage_id: storageId))
-                            dispatchGroup.leave()
                         } else {
                             completion(.failure(self.handle(error: StorageErrors.noUrl)))
                         }
+                        dispatchGroup.leave()
                     }
                 }
             }
