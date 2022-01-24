@@ -855,7 +855,10 @@ public class SpotrLogic {
     }
     
     private func updatePictureCommand(stringUrl: String, storageId: String?, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let loggedUser = loggedUser else { return }
+        guard let loggedUser = loggedUser else {
+            completion(.failure(self.handle(error: StorageErrors.noLoggedUser)))
+            return
+        }
         let updatePictureCommand = ProfilePictureCommand(user_id: loggedUser.id, profile_picture_url: stringUrl, profile_picture_storage_id: storageId)
         do {
             try ProfilePictureCommand.collection
@@ -872,11 +875,124 @@ public class SpotrLogic {
         }
     }
     
+    // MARK: - Add a Spot
+    
+    public func uploadSpotSuggestion(datas: [Data], name: String, latitude: Double, longitude: Double, completion: @escaping (Result<Void, Error>) -> Void) {
+        uploadPictures(datas: datas, path: .spot) { result in
+            switch result {
+            case .success(let payloads):
+                self.createSpotCommand(pictures: payloads, name: name, latitude: latitude, longitude: longitude) { result in
+                    switch result {
+                    case .success:
+                        completion(.success(()))
+                    case .failure(let error):
+                        completion(.failure(self.handle(error: error)))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+    }
+    
+    public func uploadPictureSuggestion(datas: [Data], spotId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        uploadPictures(datas: datas, path: .spot) { result in
+            switch result {
+            case .success(let payloads):
+                self.createPictureCommand(pictures: payloads, spotId: spotId) { result in
+                    switch result {
+                    case .success:
+                        completion(.success(()))
+                    case .failure(let error):
+                        completion(.failure(self.handle(error: error)))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+    }
+    
+    private func createSpotCommand(pictures: [PayloadPicture], name: String, latitude: Double, longitude: Double, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let loggedUser = loggedUser else {
+            completion(.failure(self.handle(error: StorageErrors.noLoggedUser)))
+            return
+        }
+        let id = UUID().uuidString
+        let createSpotCommand = CreateSpotSuggestionCommand(id: id, author_id: loggedUser.id, pictures: pictures, name: name, latitude: latitude, longitude: longitude)
+        do {
+            try CreateSpotSuggestionCommand.collection
+                .document(id)
+                .setData(from: createSpotCommand, encoder: encoderFirestore, completion: { error in
+                    if let error = error {
+                        completion(.failure(self.handle(error: error)))
+                    } else {
+                        completion(.success(()))
+                    }
+                })
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+    
+    private func createPictureCommand(pictures: [PayloadPicture], spotId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let loggedUser = loggedUser else {
+            completion(.failure(self.handle(error: StorageErrors.noLoggedUser)))
+            return
+        }
+        let id = UUID().uuidString
+        let createPictureCommand = CreatePictureSuggestionCommand(id: id, author_id: loggedUser.id, pictures: pictures, spot_id: spotId)
+        do {
+            try CreatePictureSuggestionCommand.collection
+                .document(id)
+                .setData(from: createPictureCommand, encoder: encoderFirestore, completion: { error in
+                    if let error = error {
+                        completion(.failure(self.handle(error: error)))
+                    } else {
+                        completion(.success(()))
+                    }
+                })
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+    
+    
     // MARK: - Storage
     
     public enum StoragePath: String {
         case spot = "spot_images/"
         case profile = "profile_pictures/"
+    }
+    
+    public func uploadPictures(datas: [Data], path: StoragePath, completion: @escaping (Result<[PayloadPicture], Error>) -> Void) {
+        let dispatchGroup = DispatchGroup()
+        var payloadPictures: [PayloadPicture] = []
+        for data in datas {
+            dispatchGroup.enter()
+            let storageId = getStorageId(path: path)
+            let imageRef = storage.child(storageId)
+            imageRef.putData(data, metadata: nil) { storageMetadata, error in
+                if let error = error {
+                    completion(.failure(self.handle(error: error)))
+                } else {
+                    imageRef.downloadURL { url, error in
+                        if let error = error {
+                            completion(.failure(self.handle(error: error)))
+                        }
+                        if let urlString = url?.absoluteString {
+                            payloadPictures.append(PayloadPicture(url: urlString, storage_id: storageId))
+                        } else {
+                            completion(.failure(self.handle(error: StorageErrors.noUrl)))
+                        }
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+        }
+        dispatchGroup.notify(queue: .global()) {
+            completion(.success(payloadPictures))
+        }
     }
     
     private func uploadPicture(imageData: Data, path: StoragePath, completion: @escaping (Result<(String, String), Error>) -> Void) {
