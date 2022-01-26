@@ -27,7 +27,7 @@ struct ProfilePictureCommand: Encodable {
     var timestamp: Timestamp = Timestamp(date: Date())
     var trace_id: String = UUID().uuidString
     var event_id: String? = "null"
-    var origin: String = "iOS"
+    var origin: String = "ios"
     var origin_version: Int? = 144
     
     init(user_id: String, profile_picture_url: String?, profile_picture_storage_id: String?) {
