@@ -16,6 +16,19 @@ public class User: Identifiable, Codable, Hashable {
     public private(set) var id : ID
     public let username : String?
     public let profilePictureURL : URL?
+    public let social: Social?
+    
+    public struct Social: Codable {
+        public let instagram: Instagram?
+
+        public struct Instagram: Codable {
+            public let username: String?
+
+            enum CodingKeys: String, CodingKey {
+                case username
+            }
+        }
+    }
 
     // MARK: Codable
 
@@ -23,6 +36,7 @@ public class User: Identifiable, Codable, Hashable {
 		case id
 		case username
 		case profilePictureURL = "profile_picture_url"
+        case social
 	}
 
     // MARK: Equatable

@@ -347,6 +347,7 @@ class UserTests: XCTestCase {
         do {
             let user = try await logic.getUserPublicData(from: id)
             XCTAssertEqual(user.username, "test")
+            XCTAssertEqual(user.social?.instagram?.username, "testing")
             expectation.fulfill()
         } catch {
             XCTFail(error.localizedDescription)
