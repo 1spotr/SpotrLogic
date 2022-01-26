@@ -27,7 +27,7 @@ struct FavoriteCommand: Encodable {
     var timestamp: Timestamp = Timestamp(date: Date())
 
     var trace_id: String = UUID().uuidString
-    var event_id: String? = nil
+    var event_id: String? = "null"
     var origin: String = "ios"
     var origin_version: Int? = 144
 

@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 struct SetUsernameInstagramCommand: Encodable {
 
@@ -19,6 +21,13 @@ struct SetUsernameInstagramCommand: Encodable {
     let type: String = "users.social.instagram.username_update"
     let version: String = "1.0.0"
     let payload: Payload
+    
+    var id: String = "\(Date().timeIntervalSince1970)_\(UUID().uuidString)"
+    var timestamp: Timestamp = Timestamp(date: Date())
+    var trace_id: String = UUID().uuidString
+    var event_id: String? = "null"
+    var origin: String = "iOS"
+    var origin_version: Int? = 144
 
     init(user_id: String, instagram_username: String) {
         self.payload = Payload(user_id: user_id, instagram_username: instagram_username)
@@ -39,6 +48,13 @@ struct SetUsernameCommand: Encodable {
     let type: String = "users.username_update"
     let version: String = "1.0.0"
     let payload: Payload
+    
+    var id: String = "\(Date().timeIntervalSince1970)_\(UUID().uuidString)"
+    var timestamp: Timestamp = Timestamp(date: Date())
+    var trace_id: String = UUID().uuidString
+    var event_id: String? = "null"
+    var origin: String = "iOS"
+    var origin_version: Int? = 144
 
     init(user_id: String, username: String) {
         self.payload = Payload(user_id: user_id, username: username)
