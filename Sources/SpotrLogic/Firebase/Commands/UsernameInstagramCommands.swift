@@ -25,7 +25,7 @@ struct SetUsernameInstagramCommand: Encodable {
     var id: String = "\(Date().timeIntervalSince1970)_\(UUID().uuidString)"
     var timestamp: Timestamp = Timestamp(date: Date())
     var trace_id: String = UUID().uuidString
-    var event_id: String?
+    var event_id: String? = "null"
     var origin: String = "ios"
     var origin_version: Int? = 144
 
