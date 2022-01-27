@@ -855,6 +855,30 @@ public class SpotrLogic {
             }
     }
     
+    /// Set user notifications to viewed.
+    public func setNotificationsToViewed(completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let id = loggedUser?.id else {
+            completion(.failure(self.handle(error: AuthErrors.notAuthenticated)))
+            return
+        }
+        
+        let setReadCommand = SetNotificationReadCommand(user_id: id)
+        
+        do {
+            try SetNotificationReadCommand.collection
+                .document(UUID().uuidString)
+                .setData(from: setReadCommand, encoder: encoderFirestore, completion: { error in
+                    if let error = error {
+                        completion(.failure(self.handle(error: error)))
+                    } else {
+                        completion(.success(()))
+                    }
+                })
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+    
     
     
     // MARK: - Pictures
