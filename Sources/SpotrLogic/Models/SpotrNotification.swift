@@ -32,10 +32,10 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
         public let id: String?
         public let name: String?
         public let geolocation: GeoPoint?
-        public let picture: Picture?
+        public let picture: NotificationPicture?
         public let tags: [Tag.ID]?
         
-        public struct Picture: Codable {
+        public struct NotificationPicture: Codable {
             public let id: String?
             public let url: String?
         }
