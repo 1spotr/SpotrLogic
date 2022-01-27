@@ -27,8 +27,8 @@ public struct PrivateMetadata: Codable {
         public let notifications: PrivateNotifications?
         
         public struct PrivateNotifications: Codable {
-            public let mentions: String?
-            public let moderation: String?
+            public let mentions: Bool?
+            public let moderation: Bool?
         }
     }
 
