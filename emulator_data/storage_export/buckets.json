@@ -1,9 +1,6 @@
 {
   "buckets": [
     {
-      "id": "spotr-staging.appspot.com"
-    },
-    {
       "id": "default-bucket"
     }
   ]

@@ -16,7 +16,7 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
     public let id: String
     public let mentionedTags: [Tag.ID]?
     public let mentionedUsers: [User]?
-    public let spot: Spot?
+    public let spot: NotificationSpot?
     public let title: String
     public let text: String
     public let type: NotificationType
@@ -26,6 +26,19 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
         case mention = "mention"
         case moderationAccepted = "pictures_suggestion_accepted"
         case moderationRefused = "pictures_suggestion_rejected"
+    }
+    
+    public struct NotificationSpot: Codable {
+        public let id: String?
+        public let name: String?
+        public let geolocation: GeoPoint?
+        public let picture: Picture?
+        public let tags: [Tag.ID]?
+        
+        public struct Picture: Codable {
+            public let id: String?
+            public let url: String?
+        }
     }
     
     // MARK: Coding Keys
@@ -57,7 +70,7 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
         
         mentionedUsers = try container.decodeIfPresent([User].self, forKey: .mentionedUsers)
         
-        spot = try container.decodeIfPresent(Spot.self, forKey: .spot)
+        spot = try container.decodeIfPresent(NotificationSpot.self, forKey: .spot)
         
         title = try container.decode(String.self, forKey: .title)
         
@@ -86,6 +99,18 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
         try container.encode(type.rawValue, forKey: .type)
         try container.encode(user, forKey: .user)
         
+    }
+    
+    // MARK: Equatable
+    
+    public static func == (lhs: SpotrNotification, rhs: SpotrNotification) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    // MARK: Hashable
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     // MARK: Collection

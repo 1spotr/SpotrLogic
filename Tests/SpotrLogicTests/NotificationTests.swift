@@ -36,4 +36,28 @@ class NotificationTests: XCTestCase {
         
         XCTAssertEqual(notification.id, "7f66f636-7f36-49ea-8074-dfc11954ed29")
     }
+    
+    func testNotification() throws -> Void {
+        let loginCredentials = URLCredential(user: "test@test.spotr.app", password: "Testing", persistence: .none)
+        
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        let expectation = XCTestExpectation(description: "Fetch Notification")
+        
+        try logic.notificationsForLoggedUser(completion: { result in
+            switch result {
+            case .success(let notifications):
+                if let first = notifications.first {
+                    XCTAssertEqual(first.id, "D3QN0d9WwXgN15jZ8XQX")
+                    expectation.fulfill()
+                } else {
+                    XCTFail("Nothing to fetch")
+                }
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+            }
+        })
+        
+        wait(for: [expectation], timeout: 10)
+    }
 }
