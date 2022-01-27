@@ -438,6 +438,59 @@ public class SpotrLogic {
         })
     }
     
+    /// Update user notifications preferences.
+    /// - Parameters:
+    ///   - mentions: Mentions preference.
+    ///   - moderation: Moderation preference.
+    public func updateNotificationsPreferences(mentions: Bool, moderation: Bool, completion: @escaping(Result<Void, Error>) -> Void) {
+        guard let id = loggedUser?.id else {
+            completion(.failure(self.handle(error: AuthErrors.notAuthenticated)))
+            return
+        }
+        
+        let preferencesCommand = PreferencesCommand(user_id: id, mentions: mentions, moderation: moderation)
+        
+        do {
+            try PreferencesCommand.collection
+                .document(UUID().uuidString)
+                .setData(from: preferencesCommand, encoder: encoderFirestore, completion: { error in
+                    if let error = error {
+                        completion(.failure(self.handle(error: error)))
+                    } else {
+                        completion(.success(()))
+                    }
+                })
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+    
+    /// Update language preferences.
+    /// - Parameters:
+    ///   - language: Language preference.
+    public func updateLanguage(language: String, completion: @escaping(Result<Void, Error>) -> Void) {
+        guard let id = loggedUser?.id else {
+            completion(.failure(self.handle(error: AuthErrors.notAuthenticated)))
+            return
+        }
+        
+        let languageCommand = LanguageCommand(user_id: id, language: language)
+        
+        do {
+            try PreferencesCommand.collection
+                .document(UUID().uuidString)
+                .setData(from: languageCommand, encoder: encoderFirestore, completion: { error in
+                    if let error = error {
+                        completion(.failure(self.handle(error: error)))
+                    } else {
+                        completion(.success(()))
+                    }
+                })
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+    
     // MARK: Favorites
     
     public func listenUserFavorites(completion: @escaping(Result<[Spot], Error>)->Void) throws -> Void {

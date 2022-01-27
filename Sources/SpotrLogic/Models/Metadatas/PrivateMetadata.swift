@@ -10,11 +10,25 @@ import FirebaseFirestore
 
 public struct PrivateMetadata: Codable {
 
+    public let settings: Settings?
+    public let preferences: PrivatePreferences?
+    public let billing: Billing?
+    
     public struct Settings: Codable {
         public let selectedAreaId: String?
 
         enum CodingKeys: String, CodingKey {
             case selectedAreaId = "selected_area_id"
+        }
+    }
+    
+    public struct PrivatePreferences: Codable {
+        public let language: String?
+        public let notifications: PrivateNotifications?
+        
+        public struct PrivateNotifications: Codable {
+            public let mentions: String?
+            public let moderation: String?
         }
     }
 
@@ -65,13 +79,9 @@ public struct PrivateMetadata: Codable {
         let blocked_users: [String]?
     }
 
-    // let preferences: FirestoreUserPreferences?
     //public let social: Social?
-    public let settings: Settings?
-    public let billing: Billing?
 
-
-
-
+    // MARK: Collection
+    
     static let collection = firestore.collection("users_private_metadata")
 }
