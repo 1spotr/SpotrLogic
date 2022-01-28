@@ -776,7 +776,8 @@ public class SpotrLogic {
                     
                     guard let documents = query?.documents else { throw QueryErrors.noDocuments }
                     
-                    let result = try documents.compactMap({ try $0.data(as: Spot.self) })
+                    let interactions = try documents.compactMap({ try $0.data(as: Interaction.self) })
+                    let result = interactions.compactMap({ $0.spot })
                     
                     completion(.success(.init(result)))
                 } catch {
