@@ -21,7 +21,7 @@ public struct Spot: Identifiable, Codable, Hashable {
     /// The spot creation date.
     public let created: Date
     /// The spot updated date.
-    public let updated: Date?
+    public let updated: Date
 
     public let picture : Picture?
 
@@ -68,12 +68,9 @@ public struct Spot: Identifiable, Codable, Hashable {
         let createdTimestamp = try container.decode(Timestamp.self,
                                                     forKey: .created)
         created = createdTimestamp.dateValue()
-        if let updatedTimestamp = try container.decodeIfPresent(Timestamp.self, forKey: .created) {
-            updated = updatedTimestamp.dateValue()
-        } else {
-            updated = nil
-        }
-        
+        let updatedTimestamp = try container.decode(Timestamp.self,
+                                                    forKey: .created)
+        updated = updatedTimestamp.dateValue()
 
         tags = try container.decodeIfPresent([Tag.ID].self, forKey: .tags)
         authors = try container.decodeIfPresent([User].self, forKey: .authors)
@@ -93,10 +90,8 @@ public struct Spot: Identifiable, Codable, Hashable {
         let createdTimestamp = Timestamp(date: created)
         try container.encode(createdTimestamp, forKey: .created)
 
-        if let updated = updated {
-            let updatedTimestamp = Timestamp(date: updated)
-            try container.encodeIfPresent(updatedTimestamp, forKey: .updated)
-        }
+        let updatedTimestamp = Timestamp(date: updated)
+        try container.encode(updatedTimestamp, forKey: .updated)
 
         try container.encodeIfPresent(tags, forKey: .tags)
         try container.encodeIfPresent(authors, forKey: .authors)
