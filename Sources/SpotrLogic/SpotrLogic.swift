@@ -760,12 +760,12 @@ public class SpotrLogic {
     /// - Parameters:
     ///   - user: The user
     ///   - completion: The completion result.
-    public func spots(for user: User?, completion: @escaping(Result<[Spot], Error>) -> Void) throws {
+    public func spots(for user: User?, type: Interaction.Types, completion: @escaping(Result<[Spot], Error>) -> Void) throws {
         guard let id = user?.id ?? loggedUser?.id else { return }
         
         Interaction.collection
             .whereField("hidden", isEqualTo: false)
-            .whereField("type", isEqualTo: Interaction.Types.favorite.rawValue)
+            .whereField("type", isEqualTo: type.rawValue)
             .whereField("author.id", isEqualTo: id)
             .getDocuments { query, error in
                 do {
