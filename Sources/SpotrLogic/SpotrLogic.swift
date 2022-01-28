@@ -817,6 +817,7 @@ public class SpotrLogic {
     /// - Parameter completion: The completion result.
     public func hasUnreadNotification(completion: @escaping (Result<Bool, Error>) -> Void) throws {
         guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+        
         SpotrNotification.notificationsCollectionForCurrentUser(id: id)
             .whereField("viewed", isEqualTo: false)
             .getDocuments { query, error in
@@ -829,6 +830,26 @@ public class SpotrLogic {
                     completion(.failure(self.handle(error: error)))
                 }
             }
+    }
+    
+    /// Listen for user's unread notification.
+    public func listenForUnreadNotification(completion: @escaping (Result<Bool, Error>) -> Void) throws {
+        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+        
+        let registration = SpotrNotification.notificationsCollectionForCurrentUser(id: id)
+            .whereField("viewed", isEqualTo: false)
+            .addSnapshotListener { query, error in
+            do {
+                if let error = error {
+                    throw error
+                }
+                completion(.success(query?.count ?? 0 > 0))
+            } catch {
+                completion(.failure(self.handle(error: error)))
+            }
+        }
+        
+        registrations.append(registration)
     }
     
     /// Get all notifications for logged user.
