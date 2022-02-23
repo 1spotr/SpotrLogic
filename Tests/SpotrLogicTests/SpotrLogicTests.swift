@@ -21,7 +21,7 @@ final class SpotrLogicTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Area fetching")
 
-        let logic = SpotrLogic(logger: logger)
+								let logic = SpotrLogic(logger: logger, protection: protectionSpace)
 
 
         logic.areas { result in

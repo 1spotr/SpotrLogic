@@ -16,7 +16,7 @@ class UserTests: XCTestCase {
         try super.setUpWithError()
         
         _ = configured
-        logic = .init(logger: logger)
+								logic = .init(logger: logger, protection: protectionSpace)
     }
     
     private var logic : SpotrLogic!

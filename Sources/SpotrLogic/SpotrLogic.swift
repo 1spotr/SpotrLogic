@@ -23,13 +23,82 @@ import CryptoKit
 public class SpotrLogic {
     
     public let logger: Logger
+
+				public let session : URLSession
+
+				public let operationQueue : OperationQueue
+
+				private let endpoints : Endpoints
+
     
-    
-    public init(logger: Logger) {
+				public init(logger: Logger,
+																operation queue: OperationQueue = .main,
+																protection space: URLProtectionSpace) {
         self.logger = logger
-        
+								self.endpoints = .init(protection: space)
+								operationQueue = queue
+								self.session = .init(configuration: .default, delegate: nil, delegateQueue: queue)
     }
-    
+
+				/// This function will check the callback of a DataTaskRequest and will verify the satuts code.
+				private func verify(_ response: URLResponse?, _ error: Error?, log: StaticString) throws -> HTTPURLResponse {
+
+								// If a error occurred throw it
+								if let error = error {
+												throw error
+								}
+
+								// Checking if the request have a response
+								guard response != nil else { throw RequestError.Response.noResponse }
+
+								// Checking if the response is a HTTP response
+								guard let answer = response as? HTTPURLResponse else { throw RequestError.Response.corrupted }
+
+								// TODO: Verify status code
+
+								return answer
+				}
+
+				private func validate<T: Codable>(response: HTTPURLResponse, data: Data?, for type: T.Type = T.self, log: StaticString) throws -> T {
+
+								guard let data = data else { throw RequestError.noData }
+
+								// Checking if the content body is the size expected in the header
+								guard data.count == Int(response.expectedContentLength) else {
+												throw RequestError.dataCorrupted(expected: Int(response.expectedContentLength), received: data.count)
+								}
+
+//								if let api = try? decoder.decode(ResponseError.self, from: data) {
+//												throw api
+//								} else {
+												return try decoder.decode(T.self, from: data)
+//								}
+				}
+
+				let localizationLog : StaticString = "Remote localization"
+
+				public func remoteLocalization(completion handler: @escaping(Result<[Localization], Error>) -> Void) -> Progress {
+								/// `/login`
+								let url : URL = endpoints.remote(.localizations)!
+
+								/// The data task for this request
+								let task = session.dataTask(with: url) { unsafeData, response, error in
+												do {
+																let httpResponse = try self.verify(response, error, log: self.localizationLog)
+
+																let localizations : [Localization] = try self.validate(response: httpResponse,
+																																																																												data: unsafeData, log: self.localizationLog)
+
+																handler(.success(localizations))
+
+												} catch {
+																handler(.failure(error))
+												}
+								}
+
+								return task.progress
+				}
+
     // MARK: - Authentications
     
     private var auth : Auth? = nil
@@ -1164,7 +1233,19 @@ public class SpotrLogic {
     private func handle(error: Error) -> Error {
         error
     }
-    
+
+
+				public enum RequestError: Error {
+								case noURL
+
+								public enum Response: Error {
+												case noResponse
+												case corrupted
+								}
+								case noData
+								case dataCorrupted(expected: Int, received: Int)
+				}
+
     // MARK: - Listeners
     
     private var registrations : [ListenerRegistration] = []

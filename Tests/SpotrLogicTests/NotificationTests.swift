@@ -17,7 +17,7 @@ class NotificationTests: XCTestCase {
         
         _ = configured
         
-        logic = .init(logger: logger)
+								logic = .init(logger: logger, protection: protectionSpace)
     }
     
     private var logic : SpotrLogic!
