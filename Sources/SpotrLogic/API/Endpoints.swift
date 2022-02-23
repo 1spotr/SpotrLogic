@@ -40,7 +40,7 @@ struct Endpoints {
 
 				func remote(_ endpoint: Remote) -> URL? {
 								var components = main
-								components.path = endpoint.rawValue
+								components.path =  "/remote" + endpoint.rawValue
 								return components.url
 				}
 }
