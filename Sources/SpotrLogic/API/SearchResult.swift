@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SearchResult: Codable {
+public struct SearchResult: Codable, Identifiable, Hashable {
 				public typealias ID = String
 
 				public enum Hit: String, Codable, CaseIterable {
