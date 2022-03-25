@@ -105,7 +105,7 @@ public class SpotrLogic {
 
 				let searchLog : StaticString = "Search"
 
-				public func search(search text: String, completion handler: @escaping(Result<[Localization], Error>) -> Void) -> Progress {
+				public func search(search text: String, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
 								/// `/search`
 								let url : URL = endpoints.search(.search, query: [.init(search: text)])!
 
@@ -114,7 +114,7 @@ public class SpotrLogic {
 												do {
 																let httpResponse = try self.verify(response, error, log: self.localizationLog)
 
-																let localizations : [Localization] = try self.validate(response: httpResponse,
+																let localizations : [SearchResult] = try self.validate(response: httpResponse,
 																																																																							data: unsafeData, log: self.searchLog)
 
 																handler(.success(localizations))
