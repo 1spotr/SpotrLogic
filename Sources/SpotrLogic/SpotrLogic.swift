@@ -75,6 +75,8 @@ public class SpotrLogic {
 //								}
 				}
 
+				// MARK: - Remote Location
+
 				let localizationLog : StaticString = "Remote localization"
 
 				public func remoteLocalization(completion handler: @escaping(Result<[Localization], Error>) -> Void) -> Progress {
@@ -87,10 +89,9 @@ public class SpotrLogic {
 																let httpResponse = try self.verify(response, error, log: self.localizationLog)
 
 																let localizations : [Localization] = try self.validate(response: httpResponse,
-																																																																												data: unsafeData, log: self.localizationLog)
+																																																																							data: unsafeData, log: self.localizationLog)
 
 																handler(.success(localizations))
-
 												} catch {
 																handler(.failure(error))
 												}
@@ -98,6 +99,33 @@ public class SpotrLogic {
 
 								return task.progress
 				}
+
+
+				// MARK: - Search
+
+				let searchLog : StaticString = "Search"
+
+				public func search(search text: String, completion handler: @escaping(Result<[Localization], Error>) -> Void) -> Progress {
+								/// `/search`
+								let url : URL = endpoints.search(.search, query: [.init(search: text)])!
+
+								/// The data task for this request
+								let task = session.dataTask(with: url) { unsafeData, response, error in
+												do {
+																let httpResponse = try self.verify(response, error, log: self.localizationLog)
+
+																let localizations : [Localization] = try self.validate(response: httpResponse,
+																																																																							data: unsafeData, log: self.searchLog)
+
+																handler(.success(localizations))
+												} catch {
+																handler(.failure(error))
+												}
+								}
+
+								return task.progress
+				}
+
 
     // MARK: - Authentications
     

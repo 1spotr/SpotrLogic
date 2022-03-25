@@ -43,4 +43,32 @@ struct Endpoints {
 								components.path =  "/remote" + endpoint.rawValue
 								return components.url
 				}
+
+				// MARK: - Search
+
+				/// Search endpoint
+				enum Search: String {
+								/// `./search`
+								case search = "/search"
+				}
+
+				func search(_ endpoint: Search, query items: Set<URLQueryItem>? = nil) -> URL? {
+								var components = main
+								components.path = endpoint.rawValue
+								if let items = items {
+												components.queryItems = Array(items)
+								}
+								return components.url
+				}
+
+
+}
+
+
+extension URLQueryItem {
+
+				init(search text: String) {
+								self = .init(name: "text", value: text)
+				}
+
 }
