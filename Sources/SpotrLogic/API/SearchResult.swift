@@ -7,21 +7,21 @@
 
 import Foundation
 
-struct SearchResult: Codable {
-				typealias ID = String
+public struct SearchResult: Codable {
+				public typealias ID = String
 
-				enum Hit: String, Codable, CaseIterable {
+				public enum Hit: String, Codable, CaseIterable {
 								case spot
 								case user
 								case tag
 								case area
 				}
 
-				let id: ID
-				let hit : Hit
+				public let id: ID
+				public let hit : Hit
 
-				let name: String
-				let values : Int?
-				let news : Int?
-				let thumbnail : URL?
+				public let name: String
+				public let values : Int?
+				public let news : Int?
+				public let thumbnail : URL?
 }
