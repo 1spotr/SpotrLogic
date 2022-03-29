@@ -12,35 +12,33 @@ import FirebaseAuth
 
 
 class AreasTests: XCTestCase {
-
+    
     // MARK: - Config
-
+    
+    private var logic : SpotrLogic!
+    
     override func setUp() {
         super.setUp()
-
+        
         _ = configured
-
-								logic = .init(logger: logger, protection: protectionSpace)
+        
+        logic = .init(logger: logger, protection: protectionSpace)
     }
-
-    private var logic : SpotrLogic!
-
-
+    
     override func tearDown() {
         super.tearDown()
-
+        
         logic = nil
     }
-
-
+    
     private let testFolder : URL = {
         var url = resourceFolder
         url.appendPathComponent("Areas")
         return url
     }()
-
+    
     // MARK: - Tests
-
+    
     
     // MARK: Coding
     
@@ -62,40 +60,40 @@ class AreasTests: XCTestCase {
         XCTAssertEqual(area.geolocation.longitude, 48.0)
         XCTAssertEqual(area.geolocation.latitude, 2.0)
     }
-
+    
     // MARK: Requests
     
     func testSetResidenceArea() throws {
-
+        
         wait(for: [anonymousSign(for: logic)], timeout: 10)
-
+        
         /// Random test area
         let area = Area(id: UUID().description, name: "testing",
                         pictures: [], geolocation: .init(latitude: 0, longitude: 0), locations: [])
-
+        
         let expectation = XCTestExpectation(description: "Residence creation")
-
-
+        
+        
         try logic.setResidence(area: area, completion: { result in
             switch result {
-                case .success:
-                    break
-                case .failure(let error):
-                    XCTFail(error.localizedDescription)
-
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+                
             }
             expectation.fulfill()
         })
-
-
+        
+        
         wait(for: [expectation], timeout: 10)
-
+        
         let verifcationExpectation = XCTestExpectation(description: "verification")
-
-
+        
+        
         if let userID = Auth.auth().currentUser?.uid {
             // Verifying last command for user
-
+            
             testingFirestore.collection("commands_users")
                 .whereField("type", isEqualTo: "users.settings.area.update")
                 .whereField("payload.user_id", isEqualTo: userID)
@@ -104,21 +102,21 @@ class AreasTests: XCTestCase {
                     if let error = error {
                         XCTFail(error.localizedDescription)
                     }
-
+                    
                     if let document = query?.documents.first {
                         CommandTests.verifyCommand(document)
                         XCTAssertEqual(document.get("payload.user_id") as? String, userID)
                         XCTAssertEqual(document.get("payload.area_id") as? String, area.id)
                     }
-
-
+                    
+                    
                     verifcationExpectation.fulfill()
                 }
         } else {
             XCTFail("No auth")
         }
-
+        
         wait(for: [verifcationExpectation], timeout: 10)
     }
-
+    
 }

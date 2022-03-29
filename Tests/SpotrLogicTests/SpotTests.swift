@@ -10,20 +10,19 @@ import XCTest
 
 class SpotTests: XCTestCase {
     
+    private var logic : SpotrLogic!
+    
     override func setUp() {
         super.setUp()
-
+        
         _ = configured
-
-								logic = .init(logger: logger, protection: protectionSpace)
+        
+        logic = .init(logger: logger, protection: protectionSpace)
     }
-
-    private var logic : SpotrLogic!
-
-
+    
     override func tearDown() {
         super.tearDown()
-
+        
         logic = nil
     }
     
@@ -40,13 +39,33 @@ class SpotTests: XCTestCase {
             case .success(let spots):
                 if let spot = spots.first {
                     XCTAssertEqual(spot.name, "17 Rue Vaugelas")
+                    expectation.fulfill()
                 }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
-            
-            expectation.fulfill()
         })
+        
+        wait(for: [expectation], timeout: 10)
+    }
+    
+    func testNewSpotsAsync() async throws -> Void {
+        let file = try file(named: "area_singapore")
+        let area = try decoder.decode(Area.self, from: file)
+        
+        let expectation = XCTestExpectation(description: "Spots fetching")
+        
+        do {
+            let spots = try await logic.newSpots(for: area)
+            if let spot = spots.first {
+                XCTAssertEqual(spot.name, "17 Rue Vaugelas")
+                expectation.fulfill()
+            } else {
+                XCTFail("No Spot")
+            }
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
         
         wait(for: [expectation], timeout: 10)
     }
@@ -63,14 +82,34 @@ class SpotTests: XCTestCase {
             switch result {
             case .success(let spots):
                 if let spot = spots.first {
-                    XCTAssertEqual(spot.name, "17 rue Vaugelas")
+                    XCTAssertEqual(spot.name, "17 Rue Vaugelas")
+                    expectation.fulfill()
                 }
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
-            
-            expectation.fulfill()
         })
+        
+        wait(for: [expectation], timeout: 10)
+    }
+    
+    func testPopularSpotsAsync() async throws -> Void {
+        let file = try file(named: "area_singapore")
+        let area = try decoder.decode(Area.self, from: file)
+        
+        let expectation = XCTestExpectation(description: "Popular Spots fetching")
+        
+        do {
+            let spots = try await logic.popularSpots(for: area)
+            if let spot = spots.first {
+                XCTAssertEqual(spot.name, "17 Rue Vaugelas")
+                expectation.fulfill()
+            } else {
+                XCTFail("No spot")
+            }
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
         
         wait(for: [expectation], timeout: 10)
     }

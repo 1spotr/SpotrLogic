@@ -23,110 +23,110 @@ import CryptoKit
 public class SpotrLogic {
     
     public let logger: Logger
-
-				public let session : URLSession
-
-				public let operationQueue : OperationQueue
-
-				private let endpoints : Endpoints
-
     
-				public init(logger: Logger,
-																operation queue: OperationQueue = .main,
-																protection space: URLProtectionSpace) {
+    public let session : URLSession
+    
+    public let operationQueue : OperationQueue
+    
+    private let endpoints : Endpoints
+    
+    
+    public init(logger: Logger,
+                operation queue: OperationQueue = .main,
+                protection space: URLProtectionSpace) {
         self.logger = logger
-								self.endpoints = .init(protection: space)
-								operationQueue = queue
-								self.session = .init(configuration: .default, delegate: nil, delegateQueue: queue)
+        self.endpoints = .init(protection: space)
+        operationQueue = queue
+        self.session = .init(configuration: .default, delegate: nil, delegateQueue: queue)
     }
-
-				/// This function will check the callback of a DataTaskRequest and will verify the satuts code.
-				private func verify(_ response: URLResponse?, _ error: Error?, log: StaticString) throws -> HTTPURLResponse {
-
-								// If a error occurred throw it
-								if let error = error {
-												throw error
-								}
-
-								// Checking if the request have a response
-								guard response != nil else { throw RequestError.Response.noResponse }
-
-								// Checking if the response is a HTTP response
-								guard let answer = response as? HTTPURLResponse else { throw RequestError.Response.corrupted }
-
-								// TODO: Verify status code
-
-								return answer
-				}
-
-				private func validate<T: Codable>(response: HTTPURLResponse, data: Data?, for type: T.Type = T.self, log: StaticString) throws -> T {
-
-								guard let data = data else { throw RequestError.noData }
-
-								// Checking if the content body is the size expected in the header
-								guard data.count == Int(response.expectedContentLength) else {
-												throw RequestError.dataCorrupted(expected: Int(response.expectedContentLength), received: data.count)
-								}
-
-//								if let api = try? decoder.decode(ResponseError.self, from: data) {
-//												throw api
-//								} else {
-												return try decoder.decode(T.self, from: data)
-//								}
-				}
-
-				// MARK: - Remote Location
-
-				let localizationLog : StaticString = "Remote localization"
-
-				public func remoteLocalization(completion handler: @escaping(Result<[Localization], Error>) -> Void) -> Progress {
-								/// `/login`
-								let url : URL = endpoints.remote(.localizations)!
-
-								/// The data task for this request
-								let task = session.dataTask(with: url) { unsafeData, response, error in
-												do {
-																let httpResponse = try self.verify(response, error, log: self.localizationLog)
-
-																let localizations : [Localization] = try self.validate(response: httpResponse,
-																																																																							data: unsafeData, log: self.localizationLog)
-
-																handler(.success(localizations))
-												} catch {
-																handler(.failure(error))
-												}
-								}
-
-								return task.progress
-				}
-
-
-				// MARK: - Search
-
-				let searchLog : StaticString = "Search"
-
-				public func search(search text: String, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
-								/// `/search`
-								let url : URL = endpoints.search(.search, query: [.init(search: text)])!
-
-								/// The data task for this request
-								let task = session.dataTask(with: url) { unsafeData, response, error in
-												do {
-																let httpResponse = try self.verify(response, error, log: self.localizationLog)
-
-																let localizations : [SearchResult] = try self.validate(response: httpResponse,
-																																																																							data: unsafeData, log: self.searchLog)
-
-																handler(.success(localizations))
-												} catch {
-																handler(.failure(error))
-												}
-								}
-
-								return task.progress
-				}
-
-
+    
+    /// This function will check the callback of a DataTaskRequest and will verify the satuts code.
+    private func verify(_ response: URLResponse?, _ error: Error?, log: StaticString) throws -> HTTPURLResponse {
+        
+        // If a error occurred throw it
+        if let error = error {
+            throw error
+        }
+        
+        // Checking if the request have a response
+        guard response != nil else { throw RequestError.Response.noResponse }
+        
+        // Checking if the response is a HTTP response
+        guard let answer = response as? HTTPURLResponse else { throw RequestError.Response.corrupted }
+        
+        // TODO: Verify status code
+        
+        return answer
+    }
+    
+    private func validate<T: Codable>(response: HTTPURLResponse, data: Data?, for type: T.Type = T.self, log: StaticString) throws -> T {
+        
+        guard let data = data else { throw RequestError.noData }
+        
+        // Checking if the content body is the size expected in the header
+        guard data.count == Int(response.expectedContentLength) else {
+            throw RequestError.dataCorrupted(expected: Int(response.expectedContentLength), received: data.count)
+        }
+        
+        //								if let api = try? decoder.decode(ResponseError.self, from: data) {
+        //												throw api
+        //								} else {
+        return try decoder.decode(T.self, from: data)
+        //								}
+    }
+    
+    // MARK: - Remote Location
+    
+    let localizationLog : StaticString = "Remote localization"
+    
+    public func remoteLocalization(completion handler: @escaping(Result<[Localization], Error>) -> Void) -> Progress {
+        /// `/login`
+        let url : URL = endpoints.remote(.localizations)!
+        
+        /// The data task for this request
+        let task = session.dataTask(with: url) { unsafeData, response, error in
+            do {
+                let httpResponse = try self.verify(response, error, log: self.localizationLog)
+                
+                let localizations : [Localization] = try self.validate(response: httpResponse,
+                                                                       data: unsafeData, log: self.localizationLog)
+                
+                handler(.success(localizations))
+            } catch {
+                handler(.failure(error))
+            }
+        }
+        
+        return task.progress
+    }
+    
+    
+    // MARK: - Search
+    
+    let searchLog : StaticString = "Search"
+    
+    public func search(search text: String, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
+        /// `/search`
+        let url : URL = endpoints.search(.search, query: [.init(search: text)])!
+        
+        /// The data task for this request
+        let task = session.dataTask(with: url) { unsafeData, response, error in
+            do {
+                let httpResponse = try self.verify(response, error, log: self.localizationLog)
+                
+                let localizations : [SearchResult] = try self.validate(response: httpResponse,
+                                                                       data: unsafeData, log: self.searchLog)
+                
+                handler(.success(localizations))
+            } catch {
+                handler(.failure(error))
+            }
+        }
+        
+        return task.progress
+    }
+    
+    
     // MARK: - Authentications
     
     private var auth : Auth? = nil
@@ -359,19 +359,22 @@ public class SpotrLogic {
         
         do {
             try SetUsernameInstagramCommand.collection
-            .document(UUID().uuidString)
-            .setData(from: usernameCommand, encoder: encoderFirestore) { error in
-                if let error = error {
-                    completion(.failure(self.handle(error: error)))
-                } else {
-                    completion(.success(()))
+                .document(UUID().uuidString)
+                .setData(from: usernameCommand, encoder: encoderFirestore) { error in
+                    if let error = error {
+                        completion(.failure(self.handle(error: error)))
+                    } else {
+                        completion(.success(()))
+                    }
                 }
-            }
         } catch {
             completion(.failure(self.handle(error: error)))
         }
     }
     
+    
+    /// Set the local user instagram username.
+    /// - Parameter username: The instagram user name to set.
     public func setInstagram(username: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             setInstagram(username: username) { result in
@@ -412,6 +415,8 @@ public class SpotrLogic {
         }
     }
     
+    /// Set the local user username.
+    /// - Parameter username: The username to set.
     public func setUsername(username: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             setUsername(username: username) { result in
@@ -444,6 +449,8 @@ public class SpotrLogic {
             })
     }
     
+    /// Check if the Instagram username is available.
+    /// - Parameter username: The username to compare with.
     public func checkInstagramUsernameAvailable(username: String) async throws -> Bool {
         let snapshot = try await User.collection
             .whereField("social.instagram.username", isEqualTo: username)
@@ -470,6 +477,8 @@ public class SpotrLogic {
             })
     }
     
+    /// Check if the username is available.
+    /// - Parameter username: The username to compare with.
     public func checkUsernameAvailable(username: String) async throws -> Bool {
         let snapshot = try await User.collection
             .whereField("username", isEqualTo: username)
@@ -508,6 +517,7 @@ public class SpotrLogic {
         })
     }
     
+    /// Send email verification to user.
     public func sendEmailVerification() async throws {
         try await auth?.currentUser?.sendEmailVerification()
     }
@@ -528,6 +538,8 @@ public class SpotrLogic {
         })
     }
     
+    /// Send email for password reset.
+    /// - Parameter email: The entered email.
     public func sendPasswordResetEmail(email: String) async throws {
         let resetAuth = Auth.auth()
         
@@ -625,6 +637,10 @@ public class SpotrLogic {
         }
     }
     
+    /// Update user notifications preferences.
+    /// - Parameters:
+    ///   - mentions: Mentions preference.
+    ///   - moderation: Moderation preference.
     public func updateNotificationsPreferences(mentions: Bool, moderation: Bool) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             updateNotificationsPreferences(mentions: mentions, moderation: moderation) { result in
@@ -664,6 +680,8 @@ public class SpotrLogic {
         }
     }
     
+    /// Update language preferences.
+    /// - Parameter language: Language preference.
     public func updateLanguage(language: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             updateLanguage(language: language) { result in
@@ -805,7 +823,7 @@ public class SpotrLogic {
         }
     }
     
-    /// Set the user residence area in the user private metadata
+    /// Set the user residence area in the user private metadata.
     /// - Parameters:
     ///   - area: The seleted area.
     ///   - completion: The completion callbac
@@ -828,6 +846,8 @@ public class SpotrLogic {
             }
     }
     
+    /// Set the user residence area in the user private metadata.
+    /// - Parameter area: The seleted area.
     public func setResidence(area: Area) async throws {
         guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
         guard let areaId = area.id else { throw QueryErrors.noGetterID }
@@ -979,7 +999,7 @@ public class SpotrLogic {
         
         
         Spot.collection
-            .whereField("areas_ids", arrayContains: areaID)
+            .whereField("areas_id", arrayContains: areaID)
             .whereField("discover", isEqualTo: true)
             .order(by: "dt_update", descending: true)
             .limit(to: limit)
@@ -1006,7 +1026,7 @@ public class SpotrLogic {
         
         do {
             let query = try await Spot.collection
-                .whereField("areas_ids", arrayContains: areaID)
+                .whereField("areas_id", arrayContains: areaID)
                 .whereField("discover", isEqualTo: true)
                 .order(by: "dt_update", descending: true)
                 .limit(to: limit)
@@ -1026,7 +1046,7 @@ public class SpotrLogic {
         
         
         Spot.collection
-            .whereField("areas_ids", arrayContains: areaID)
+            .whereField("areas_id", arrayContains: areaID)
             .whereField("discover", isEqualTo: true)
             .order(by: "interest_score", descending: true)
             .limit(to: limit)
@@ -1053,7 +1073,7 @@ public class SpotrLogic {
         
         do {
             let query = try await Spot.collection
-                .whereField("areas_ids", arrayContains: areaID)
+                .whereField("areas_id", arrayContains: areaID)
                 .whereField("discover", isEqualTo: true)
                 .order(by: "interest_score", descending: true)
                 .limit(to: limit)
@@ -1108,6 +1128,11 @@ public class SpotrLogic {
             }
     }
     
+    /// Fetch the spot that the user contributed to.
+    /// - Parameters:
+    ///   - user: The user.
+    ///   - type: Interaction types.
+    /// - Returns: Array of Spots.
     public func spots(for user: User?, type: Interaction.Types) async throws -> [Spot] {
         guard let id = user?.id ?? loggedUser?.id else { throw QueryErrors.noGetterID }
         
@@ -1152,6 +1177,8 @@ public class SpotrLogic {
             }
     }
     
+    /// Get all notifications from notifications collection.
+    /// - Returns: Array of `SpotrNotification`.
     public func allNotifications() async throws -> [SpotrNotification] {
         do {
             let query = try await SpotrNotification.notificationsCollection
@@ -1184,6 +1211,7 @@ public class SpotrLogic {
             }
     }
     
+    /// Check if user has unread notification.
     public func hasUnreadNotification() async throws -> Bool {
         guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
         do {
@@ -1203,15 +1231,15 @@ public class SpotrLogic {
         let registration = SpotrNotification.notificationsCollectionForCurrentUser(id: id)
             .whereField("viewed", isEqualTo: false)
             .addSnapshotListener { query, error in
-            do {
-                if let error = error {
-                    throw error
+                do {
+                    if let error = error {
+                        throw error
+                    }
+                    completion(.success(query?.count ?? 0 > 0))
+                } catch {
+                    completion(.failure(self.handle(error: error)))
                 }
-                completion(.success(query?.count ?? 0 > 0))
-            } catch {
-                completion(.failure(self.handle(error: error)))
             }
-        }
         
         registrations.append(registration)
     }
@@ -1241,6 +1269,7 @@ public class SpotrLogic {
             }
     }
     
+    /// Get all notifications for logged user.
     public func notificationsForLoggedUser() async throws -> [SpotrNotification] {
         guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
         
@@ -1279,6 +1308,7 @@ public class SpotrLogic {
         }
     }
     
+    /// Set user notifications to viewed.
     public func setNotificationsToViewed() async throws {
         return try await withCheckedThrowingContinuation { continuation in
             setNotificationsToViewed { result in
@@ -1632,19 +1662,18 @@ public class SpotrLogic {
     private func handle(error: Error) -> Error {
         error
     }
-
-
-				public enum RequestError: Error {
-								case noURL
-
-								public enum Response: Error {
-												case noResponse
-												case corrupted
-								}
-								case noData
-								case dataCorrupted(expected: Int, received: Int)
-				}
-
+    
+    public enum RequestError: Error {
+        case noURL
+        
+        public enum Response: Error {
+            case noResponse
+            case corrupted
+        }
+        case noData
+        case dataCorrupted(expected: Int, received: Int)
+    }
+    
     // MARK: - Listeners
     
     private var registrations : [ListenerRegistration] = []

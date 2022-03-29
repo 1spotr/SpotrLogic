@@ -9,50 +9,64 @@ import XCTest
 @testable import SpotrLogic
 
 class InstagramTests: XCTestCase {
-
+    
     // MARK: - Config
-
+    
     override func setUp() {
         super.setUp()
-
+        
         _ = configured
-
-								logic = .init(logger: logger, protection: protectionSpace)
+        
+        logic = .init(logger: logger, protection: protectionSpace)
     }
-
+    
     private var logic : SpotrLogic!
-
-
+    
+    
     override func tearDown() {
         super.tearDown()
-
+        
         logic = nil
     }
-
+    
     // MARK: - Tests
-
-
+    
+    
     func testSetInstagram() throws {
-
         wait(for: [anonymousSign(for: logic)], timeout: 10)
-
+        
         let username = "instragra_username\(Int.random(in: -100...100))_\(Int.random(in: -100...100))"
-
         let expectation = XCTestExpectation(description: "Instagram username creation")
-
-
-        try logic.setInstagram(username: username, completion: { result in
+        
+        
+        logic.setInstagram(username: username, completion: { result in
             switch result {
-                case .success:
-                    break
-                case .failure(let error):
-                    XCTFail(error.localizedDescription)
-
+            case .success:
+                break
+            case .failure(let error):
+                XCTFail(error.localizedDescription)
+                
             }
             expectation.fulfill()
         })
-
+        
         wait(for: [expectation], timeout: 5)
+    }
+    
+    func testSetInstagramAsync() async throws {
+        wait(for: [anonymousSign(for: logic)], timeout: 10)
+        
+        let username = "instragra_username\(Int.random(in: -100...100))_\(Int.random(in: -100...100))"
+        let expectation = XCTestExpectation(description: "Instagram username creation")
+        
+        do {
+            try await logic.setInstagram(username: username)
+            expectation.fulfill()
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+        
+        wait(for: [expectation], timeout: 10)
     }
     
     func testInstagramUsernameUnavailable() {
@@ -73,6 +87,22 @@ class InstagramTests: XCTestCase {
         wait(for: [expectation], timeout: 5)
     }
     
+    func testInstagramUsernameUnavailableAsync() async {
+        let username = "testing"
+        
+        let expectation = XCTestExpectation(description: "Check Instagram username available")
+        
+        do {
+            let available = try await logic.checkInstagramUsernameAvailable(username: username)
+            XCTAssertFalse(available)
+            expectation.fulfill()
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
     func testInstagramUsernameAvailable() {
         let username = "testing\(Int.random(in: 1...1000))"
         
@@ -86,6 +116,22 @@ class InstagramTests: XCTestCase {
             case .failure(let error):
                 XCTFail(error.localizedDescription)
             }
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+    
+    func testInstagramUsernameAvailableAsync() async {
+        let username = "testing\(Int.random(in: 1...1000))"
+        
+        let expectation = XCTestExpectation(description: "Check Instagram username available")
+        
+        do {
+            let available = try await logic.checkInstagramUsernameAvailable(username: username)
+            XCTAssertTrue(available)
+            expectation.fulfill()
+        } catch {
+            XCTFail(error.localizedDescription)
         }
         
         wait(for: [expectation], timeout: 5)
