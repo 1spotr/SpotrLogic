@@ -36,7 +36,7 @@ class EndpointsTests: XCTestCase {
     
     // MARK: - Remote
     func testRemoteLocalizations() {
-        let urlPath = "/localizations"
+        let urlPath = "/remote/localizations"
         
         guard let url = endpoints.remote(.localizations) else {
             failedTorCreate(url: Endpoints.Remote.localizations.rawValue)
