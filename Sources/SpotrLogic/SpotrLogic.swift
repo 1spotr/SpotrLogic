@@ -999,7 +999,7 @@ public class SpotrLogic {
         
         
         Spot.collection
-            .whereField("areas_id", arrayContains: areaID)
+            .whereField("areas_ids", arrayContains: areaID)
             .whereField("discover", isEqualTo: true)
             .order(by: "dt_update", descending: true)
             .limit(to: limit)
@@ -1026,7 +1026,7 @@ public class SpotrLogic {
         
         do {
             let query = try await Spot.collection
-                .whereField("areas_id", arrayContains: areaID)
+                .whereField("areas_ids", arrayContains: areaID)
                 .whereField("discover", isEqualTo: true)
                 .order(by: "dt_update", descending: true)
                 .limit(to: limit)
@@ -1046,7 +1046,7 @@ public class SpotrLogic {
         
         
         Spot.collection
-            .whereField("areas_id", arrayContains: areaID)
+            .whereField("areas_ids", arrayContains: areaID)
             .whereField("discover", isEqualTo: true)
             .order(by: "interest_score", descending: true)
             .limit(to: limit)
@@ -1073,7 +1073,7 @@ public class SpotrLogic {
         
         do {
             let query = try await Spot.collection
-                .whereField("areas_id", arrayContains: areaID)
+                .whereField("areas_ids", arrayContains: areaID)
                 .whereField("discover", isEqualTo: true)
                 .order(by: "interest_score", descending: true)
                 .limit(to: limit)
