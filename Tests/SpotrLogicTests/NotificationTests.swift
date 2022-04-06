@@ -11,17 +11,16 @@ import XCTest
 class NotificationTests: XCTestCase {
     
     // MARK: - Config
-
+    
+    private var logic : SpotrLogic!
+    
     override func setUp() {
         super.setUp()
         
         _ = configured
         
-								logic = .init(logger: logger, protection: protectionSpace)
+        logic = .init(logger: logger, protection: protectionSpace)
     }
-    
-    private var logic : SpotrLogic!
-    
     
     override func tearDown() {
         super.tearDown()
@@ -57,6 +56,28 @@ class NotificationTests: XCTestCase {
                 XCTFail(error.localizedDescription)
             }
         })
+        
+        wait(for: [expectation], timeout: 10)
+    }
+    
+    func testNotificationAsync() async throws -> Void {
+        let loginCredentials = URLCredential(user: "test@test.spotr.app", password: "Testing", persistence: .none)
+        
+        wait(for: [try login(for: logic, with: loginCredentials)], timeout: 10)
+        
+        let expectation = XCTestExpectation(description: "Fetch Notification")
+        
+        do {
+            let notifications = try await logic.notificationsForLoggedUser()
+            if let first = notifications.first {
+                XCTAssertEqual(first.id, "D3QN0d9WwXgN15jZ8XQX")
+                expectation.fulfill()
+            } else {
+                XCTFail("No notification")
+            }
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
         
         wait(for: [expectation], timeout: 10)
     }
