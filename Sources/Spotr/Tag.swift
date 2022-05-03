@@ -8,14 +8,14 @@
 import Foundation
 
 public struct Tag: Identifiable, Codable, Hashable {
-				internal init(id: Tag.ID, name: String, childrenIDs: [Tag.ID]?, parentIDS: [Tag.ID]?, siblingsIDs: [Tag.ID]?) {
+				public init(id: Tag.ID, name: String, childrenIDs: [Tag.ID]?, parentIDS: [Tag.ID]?, siblingsIDs: [Tag.ID]?) {
 								self.id = id
 								self.name = name
 								self.childrenIDs = childrenIDs
 								self.parentIDS = parentIDS
 								self.siblingsIDs = siblingsIDs
 				}
-				
+
 
 				public typealias ID = String
 
