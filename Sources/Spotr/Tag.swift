@@ -8,11 +8,11 @@
 import Foundation
 
 public struct Tag: Identifiable, Codable, Hashable {
-				public init(id: Tag.ID, name: String, childrenIDs: [Tag.ID]?, parentIDS: [Tag.ID]?, siblingsIDs: [Tag.ID]?) {
+				public init(id: Tag.ID, name: String, childrenIDs: [Tag.ID]?, parentIDs: [Tag.ID]?, siblingsIDs: [Tag.ID]?) {
 								self.id = id
 								self.name = name
 								self.childrenIDs = childrenIDs
-								self.parentIDS = parentIDS
+								self.parentIDs = parentIDs
 								self.siblingsIDs = siblingsIDs
 				}
 
@@ -25,7 +25,7 @@ public struct Tag: Identifiable, Codable, Hashable {
 
 				public let childrenIDs : [ID]?
 
-				public let parentIDS : [ID]?
+				public let parentIDs : [ID]?
 
 				public let siblingsIDs : [ID]?
 }
