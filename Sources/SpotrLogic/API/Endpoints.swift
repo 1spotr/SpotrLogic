@@ -61,6 +61,27 @@ struct Endpoints {
 								return components.url
 				}
 
+				enum Tags: String {
+								case parents = "/parents"
+				}
+
+				func tags(_ endpoint: Tags, query items: Set<URLQueryItem>? = nil) -> URL? {
+								var components = main
+								components.path = "/tags" + endpoint.rawValue
+								return components.url
+				}
+
+				enum Tag: String {
+								case children = "/children"
+								case thumbnail = "/thumbnail"
+				}
+
+				func tag(id: String, _ endpoint: Tag) -> URL? {
+								var components = main
+								components.path = "/tags" + "/\(id)" + endpoint.rawValue
+								return components.url
+				}
+
 
 }
 

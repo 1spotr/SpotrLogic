@@ -125,6 +125,53 @@ public class SpotrLogic {
         
         return task.progress
     }
+
+
+				// MARK: - Tag
+
+				let tagParentsLog : StaticString = "TagParents"
+
+
+				public func tagParents(completion handler: @escaping(Result<[Tag], Error>) -> Void) -> Progress {
+								let url : URL = endpoints.tags(.parents)!
+
+								let task = session.dataTask(with: url) { unsafeData, response, error in
+												do {
+																let httpResponse = try self.verify(response, error, log: self.tagParentsLog)
+
+																let parentTags : [Tag] = try self.validate(response: httpResponse,
+																																																																							data: unsafeData, log: self.tagParentsLog)
+
+																handler(.success(parentTags))
+												} catch {
+																handler(.failure(error))
+												}
+								}
+
+								return task.progress
+				}
+
+				let tagChildrenLog : StaticString = "TagChildren"
+
+
+				public func children(tag: Tag, completion handler: @escaping(Result<[Tag], Error>) -> Void) -> Progress {
+								let url : URL = endpoints.tag(id: tag.id, .children)!
+
+								let task = session.dataTask(with: url) { unsafeData, response, error in
+												do {
+																let httpResponse = try self.verify(response, error, log: self.tagChildrenLog)
+
+																let parentTags : [Tag] = try self.validate(response: httpResponse,
+																																																											data: unsafeData, log: self.tagChildrenLog)
+
+																handler(.success(parentTags))
+												} catch {
+																handler(.failure(error))
+												}
+								}
+
+								return task.progress
+				}
     
     
     // MARK: - Authentications
