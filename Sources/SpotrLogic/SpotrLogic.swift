@@ -172,6 +172,10 @@ public class SpotrLogic {
 
 								return task.progress
 				}
+
+				public func thumbnail(tag: Tag) -> URL? {
+								return endpoints.tag(id: tag.id, .thumbnail)
+				}
     
     
     // MARK: - Authentications
