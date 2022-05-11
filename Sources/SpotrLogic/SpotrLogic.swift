@@ -14,8 +14,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
-import FirebaseAnalytics
-@_exported import FirebaseStorage
+@_exported import FirebaseAnalytics
 
 
 // Crypto
