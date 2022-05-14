@@ -13,4 +13,4 @@ public protocol Entity: Identifiable {
 }
 
 
-public typealias ID = String
+public typealias ID = String?
