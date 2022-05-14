@@ -9,7 +9,7 @@ import Foundation
 
 public protocol Entity: Identifiable, Hashable {
 
-				var id: ID { get }
+				var id: EntityID { get }
 }
 
 
