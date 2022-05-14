@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Entity: Identifiable {
+public protocol Entity: Identifiable, Hashable {
 
 				var id: ID { get }
 }
