@@ -11,6 +11,9 @@ public protocol Tag: Entity {
 
 				var name: String { get }
 
+				associatedtype Thumbnail = Picture
+				var thumbnail: Thumbnail? { get }
+
 				var children: [Self]? { get }
 
 				var parents: [Self]? { get }
