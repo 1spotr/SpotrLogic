@@ -13,4 +13,4 @@ public protocol Entity: Identifiable, Hashable {
 }
 
 
-public typealias ID = String?
+public typealias EntityID = String?
