@@ -9,8 +9,6 @@ import Foundation
 import CoreLocation
 
 public protocol Area: Entity {
-				// The area ID.
-				var id: ID { get }
 
 				// The area name
 				var name: String { get }

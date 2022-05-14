@@ -10,9 +10,6 @@ import Foundation
 
 public protocol Spot: Entity {
 
-				/// The spot id.
-				var id: ID { get }
-
 				/// The spot name.
 				var name: String { get }
 
