@@ -7,35 +7,15 @@
 
 import Foundation
 
-public struct Tag: Identifiable, Codable, Hashable {
-				public init(id: Tag.ID, name: String, childrenIDs: [Tag.ID]?, parentsIDs: [Tag.ID]?, siblingsIDs: [Tag.ID]?) {
-								self.id = id
-								self.name = name
-								self.childrenIDs = childrenIDs
-								self.parentsIDs = parentsIDs
-								self.siblingsIDs = siblingsIDs
-				}
+public protocol Tag: Entity {
 
+				var name: String { get }
 
-				public typealias ID = String
+				var children: [Self]? { get }
 
-				public let id: ID
+				var parents: [Self]? { get }
 
-				public let name: String
+				var relatives: [Self]? { get }
 
-				public let childrenIDs : [ID]?
-
-				public let parentsIDs : [ID]?
-
-				public let siblingsIDs : [ID]?
-
-				// MARK: Coding
-
-				enum CodingKeys: String, CodingKey {
-								case id
-								case name
-								case childrenIDs = "children_ids"
-								case parentsIDs = "parents_ids"
-								case siblingsIDs = "siblings_ids"
-				}
+				var siblings: [Self]? { get }
 }
