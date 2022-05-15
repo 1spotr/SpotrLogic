@@ -13,10 +13,17 @@ public protocol User: Entity {
 
 				var username: String? { get }
 				var profilePictureURL: URL? { get }
-				var social: Social { get }
+				var social: Social? { get }
 }
 
 public protocol UserSocial: Codable, Hashable {
 				var instagram: String? { get }
 }
 
+/// Optional fields
+public extension User {
+
+				var social: Social? {
+								nil
+				}
+}

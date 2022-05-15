@@ -22,3 +22,28 @@ public protocol Tag: Entity {
 
 				var siblings: [Self]? { get }
 }
+
+
+// Optional fields
+public extension Tag {
+
+				var thumbnail: URL? {
+								nil
+				}
+
+				var children: [Self]? {
+								nil
+				}
+
+				var parents: [Self]? {
+								nil
+				}
+
+				var relatives: [Self]? {
+								nil
+				}
+
+				var siblings: [Self]? {
+								nil
+				}
+}
