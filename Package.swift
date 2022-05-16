@@ -7,7 +7,7 @@ let package = Package(
     name: "SpotrLogic",
     platforms: [.iOS(.v13), .macOS(.v10_15)],
     products: [
-								.library(name: "Spotr", targets: ["Spotr"]),
+								.library(name: "SpotrVerse", targets: ["SpotrVerse"]),
 
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -21,10 +21,10 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-log.git", from: "1.4.2"),
     ],
     targets: [
-								.target(name: "Spotr", dependencies: []),
+								.target(name: "SpotrVerse", dependencies: []),
 
-								.testTarget(name: "SpotrTests",
-																				dependencies: ["Spotr"]),
+								.testTarget(name: "SpotrVerseTests",
+																				dependencies: ["SpotrVerse"]),
 
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         .target(
