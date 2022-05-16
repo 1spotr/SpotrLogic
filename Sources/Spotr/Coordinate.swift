@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol Coordinate: Codable, Hashable {
+public protocol CoordinateValue: Codable, Hashable {
 
 				associatedtype FloatingValue = BinaryFloatingPoint
 				var latitude: FloatingValue { get }

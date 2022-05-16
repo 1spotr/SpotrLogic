@@ -8,7 +8,7 @@
 import Foundation
 
 
-public protocol Spot: Entity {
+public protocol SpotEntity: Entity {
 
 				/// The spot name.
 				var name: String { get }
@@ -19,19 +19,19 @@ public protocol Spot: Entity {
 				/// The spot updated date.
 				var updated: Date { get }
 
-				associatedtype SpotLocation = Location
+				associatedtype SpotLocation = LocationValue
 				/// The spot location description.
 				var location: SpotLocation? { get }
 
-				associatedtype SpotPicture = Picture
+				associatedtype SpotPicture = PictureEntity
 				var picture: SpotPicture? { get }
 
-				associatedtype SpotTag = Tag
+				associatedtype SpotTag = TagEntity
 				var tags: [SpotTag]? { get }
 
-				associatedtype SpotAuthor = User
+				associatedtype SpotAuthor = UserEntity
 				var authors: [SpotAuthor]? { get }
 
-				associatedtype SpotCoordinate = Coordinate
+				associatedtype SpotCoordinate = CoordinateValue
 				var coordinate: SpotCoordinate { get }
 }

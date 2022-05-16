@@ -7,21 +7,21 @@
 
 import Foundation
 
-public protocol User: Entity {
+public protocol UserEntity: Entity {
 
-				associatedtype Social = UserSocial
+				associatedtype Social = UserSocialValue
 
 				var username: String? { get }
 				var profilePictureURL: URL? { get }
 				var social: Social? { get }
 }
 
-public protocol UserSocial: Codable, Hashable {
+public protocol UserSocialValue: Codable, Hashable {
 				var instagram: String? { get }
 }
 
 /// Optional fields
-public extension User {
+public extension UserEntity {
 
 				var social: Social? {
 								nil

@@ -9,11 +9,12 @@ import Foundation
 
 // MARK: - Picture
 
-public protocol Picture: Entity {
+public protocol PictureEntity: Entity {
 
 				var url: URL? { get }
 
-				associatedtype Author = User
+				associatedtype Author = UserEntity
+
 				var author: Author? { get }
 
 				var created: Date { get }

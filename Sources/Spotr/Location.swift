@@ -8,9 +8,9 @@
 import Foundation
 
 
-public protocol Location: Codable, Hashable {
+public protocol LocationValue: Codable, Hashable {
 
-				associatedtype Names = LocationNames?
+				associatedtype Names = LocationNamesValue?
 				var neighbourhood: Names { get }
 				var city: Names { get }
 				var region: Names { get }
@@ -20,6 +20,6 @@ public protocol Location: Codable, Hashable {
 
 // MARK: - Location Names
 
-public protocol LocationNames: Codable, Hashable {
+public protocol LocationNamesValue: Codable, Hashable {
 				var longName: String { get }
 }

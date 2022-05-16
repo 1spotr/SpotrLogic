@@ -7,11 +7,11 @@
 
 import Foundation
 
-public protocol Tag: Entity {
+public protocol TagEntity: Entity {
 
 				var name: String { get }
 
-				associatedtype Thumbnail = Picture
+				associatedtype Thumbnail = PictureEntity
 				var thumbnail: Thumbnail? { get }
 
 				var children: [Self]? { get }
@@ -25,7 +25,7 @@ public protocol Tag: Entity {
 
 
 // Optional fields
-public extension Tag {
+public extension TagEntity {
 
 				var thumbnail: URL? {
 								nil

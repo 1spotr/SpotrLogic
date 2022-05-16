@@ -7,18 +7,18 @@
 
 import Foundation
 
-public protocol Area: Entity {
+public protocol AreaEntity: Entity {
 
 				// The area name
 				var name: String { get }
 
 
-				associatedtype AreaPicture = Picture
+				associatedtype AreaPicture = PictureEntity
 				var pictures: [AreaPicture] { get }
 
-				associatedtype AreaCoordinate = Coordinate
+				associatedtype AreaCoordinate = CoordinateValue
 				var coordinate: AreaCoordinate { get }
 
-				associatedtype AreaLocation = Location
+				associatedtype AreaLocation = LocationValue
 				var locations: [AreaLocation] { get }
 }
