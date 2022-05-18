@@ -27,7 +27,7 @@ public protocol TagEntity: Entity {
 // Optional fields
 public extension TagEntity {
 
-				var thumbnail: URL? {
+				var thumbnail: Thumbnail? {
 								nil
 				}
 
