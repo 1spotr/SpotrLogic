@@ -22,3 +22,10 @@ public protocol PictureEntity: Entity {
 }
 
 
+public extension PictureEntity {
+				var author: Author? {
+								nil
+				}
+}
+
+
