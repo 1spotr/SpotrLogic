@@ -27,10 +27,6 @@ public protocol TagEntity: Entity {
 // Optional fields
 public extension TagEntity {
 
-				var thumbnail: Thumbnail? {
-								nil
-				}
-
 				var children: [Self]? {
 								nil
 				}
