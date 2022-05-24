@@ -92,4 +92,8 @@ extension URLQueryItem {
 								self = .init(name: "text", value: text)
 				}
 
+				init(area id: String) {
+								self = .init(name: "areaID", value: id)
+				}
+
 }

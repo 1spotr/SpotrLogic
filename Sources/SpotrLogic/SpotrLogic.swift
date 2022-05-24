@@ -105,9 +105,15 @@ public class SpotrLogic {
     
     let searchLog : StaticString = "Search"
     
-    public func search(search text: String, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
+				public func search(search text: String, areaID: String? = nil, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
         /// `/search`
-        let url : URL = endpoints.search(.search, query: [.init(search: text)])!
+								var queryItems : Set<URLQueryItem> = [.init(search: text)]
+
+								if let areaID = areaID {
+												queryItems.insert(.init(area: areaID))
+								}
+
+								let url : URL = endpoints.search(.search, query: queryItems)!
         
         /// The data task for this request
         let task = session.dataTask(with: url) { unsafeData, response, error in
