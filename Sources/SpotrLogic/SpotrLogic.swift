@@ -14,6 +14,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import SpotrVerse
 @_exported import FirebaseAnalytics
 
 

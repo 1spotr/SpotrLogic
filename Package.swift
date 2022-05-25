@@ -30,6 +30,7 @@ let package = Package(
         .target(
             name: "SpotrLogic",
             dependencies: [
+																"SpotrVerse",
                 "Firebase",
                 "FirebaseAnalyticsTarget",
                 "FirebaseAuthTarget",
