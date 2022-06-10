@@ -238,7 +238,7 @@ public class SpotrLogic {
         do {
             // Check if the query resolved with an error
             if let error = error {
-                throw self.handle(error: error)
+                throw error
             }
             if authResult == nil {
                 throw AuthErrors.failed
