@@ -106,15 +106,15 @@ public class SpotrLogic {
     
     let searchLog : StaticString = "Search"
     
-				public func search(search text: String, areaID: String? = nil, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
+    public func search(search text: String, areaID: String? = nil, completion handler: @escaping(Result<[SearchResult], Error>) -> Void) -> Progress {
         /// `/search`
-								var queryItems : Set<URLQueryItem> = [.init(search: text)]
-
-								if let areaID = areaID {
-												queryItems.insert(.init(area: areaID))
-								}
-
-								let url : URL = endpoints.search(.search, query: queryItems)!
+        var queryItems : Set<URLQueryItem> = [.init(search: text)]
+        
+        if let areaID = areaID {
+            queryItems.insert(.init(area: areaID))
+        }
+        
+        let url : URL = endpoints.search(.search, query: queryItems)!
         
         /// The data task for this request
         let task = session.dataTask(with: url) { unsafeData, response, error in
@@ -132,57 +132,57 @@ public class SpotrLogic {
         
         return task.progress
     }
-
-
-				// MARK: - Tag
-
-				let tagParentsLog : StaticString = "TagParents"
-
-
-				public func tagParents(completion handler: @escaping(Result<[Tag], Error>) -> Void) -> Progress {
-								let url : URL = endpoints.tags(.parents)!
-
-								let task = session.dataTask(with: url) { unsafeData, response, error in
-												do {
-																let httpResponse = try self.verify(response, error, log: self.tagParentsLog)
-
-																let parentTags : [Tag] = try self.validate(response: httpResponse,
-																																																																							data: unsafeData, log: self.tagParentsLog)
-
-																handler(.success(parentTags))
-												} catch {
-																handler(.failure(error))
-												}
-								}
-
-								return task.progress
-				}
-
-				let tagChildrenLog : StaticString = "TagChildren"
-
-
-				public func children(tag: Tag, completion handler: @escaping(Result<[Tag], Error>) -> Void) -> Progress {
-								let url : URL = endpoints.tag(id: tag.id, .children)!
-
-								let task = session.dataTask(with: url) { unsafeData, response, error in
-												do {
-																let httpResponse = try self.verify(response, error, log: self.tagChildrenLog)
-
-																let parentTags : [Tag] = try self.validate(response: httpResponse,
-																																																											data: unsafeData, log: self.tagChildrenLog)
-
-																handler(.success(parentTags))
-												} catch {
-																handler(.failure(error))
-												}
-								}
-
-								return task.progress
-				}
-
-				public func thumbnail(tag: Tag) -> URL? {
-								return endpoints.tag(id: tag.id, .thumbnail)
-				}
+    
+    
+    // MARK: - Tag
+    
+    let tagParentsLog : StaticString = "TagParents"
+    
+    
+    public func tagParents(completion handler: @escaping(Result<[Tag], Error>) -> Void) -> Progress {
+        let url : URL = endpoints.tags(.parents)!
+        
+        let task = session.dataTask(with: url) { unsafeData, response, error in
+            do {
+                let httpResponse = try self.verify(response, error, log: self.tagParentsLog)
+                
+                let parentTags : [Tag] = try self.validate(response: httpResponse,
+                                                           data: unsafeData, log: self.tagParentsLog)
+                
+                handler(.success(parentTags))
+            } catch {
+                handler(.failure(error))
+            }
+        }
+        
+        return task.progress
+    }
+    
+    let tagChildrenLog : StaticString = "TagChildren"
+    
+    
+    public func children(tag: Tag, completion handler: @escaping(Result<[Tag], Error>) -> Void) -> Progress {
+        let url : URL = endpoints.tag(id: tag.id, .children)!
+        
+        let task = session.dataTask(with: url) { unsafeData, response, error in
+            do {
+                let httpResponse = try self.verify(response, error, log: self.tagChildrenLog)
+                
+                let parentTags : [Tag] = try self.validate(response: httpResponse,
+                                                           data: unsafeData, log: self.tagChildrenLog)
+                
+                handler(.success(parentTags))
+            } catch {
+                handler(.failure(error))
+            }
+        }
+        
+        return task.progress
+    }
+    
+    public func thumbnail(tag: Tag) -> URL? {
+        return endpoints.tag(id: tag.id, .thumbnail)
+    }
     
     
     // MARK: - Authentications
@@ -238,7 +238,7 @@ public class SpotrLogic {
         do {
             // Check if the query resolved with an error
             if let error = error {
-                throw error
+                throw self.handle(error: error)
             }
             if authResult == nil {
                 throw AuthErrors.failed
@@ -1692,6 +1692,12 @@ public class SpotrLogic {
         case missingCredentials
         case notAuthenticated
         case missingID
+        case emailAlreadyInUse
+        case invalidEmail
+        case userNotFound
+        case weakPassword
+        case wrongPassword
+        case errorOccured
     }
     
     public enum QueryErrors: Error {
@@ -1718,7 +1724,18 @@ public class SpotrLogic {
     }
     
     private func handle(error: Error) -> Error {
-        error
+        if let errorCode = AuthErrorCode(rawValue: error._code) {
+            switch errorCode {
+            case .emailAlreadyInUse: return AuthErrors.emailAlreadyInUse
+            case .invalidEmail: return AuthErrors.invalidEmail
+            case .userNotFound: return AuthErrors.userNotFound
+            case .weakPassword: return AuthErrors.weakPassword
+            case .wrongPassword: return AuthErrors.wrongPassword
+            default: return AuthErrors.errorOccured
+            }
+        } else {
+            return error
+        }
     }
     
     public enum RequestError: Error {
