@@ -8,6 +8,15 @@
 import Foundation
 
 public struct SearchResult: Codable, Identifiable, Hashable {
+				public init(id: SearchResult.ID, hit: SearchResult.Hit, name: String, values: Int?, news: Int?, thumbnail: URL?) {
+								self.id = id
+								self.hit = hit
+								self.name = name
+								self.values = values
+								self.news = news
+								self.thumbnail = thumbnail
+				}
+
 				public typealias ID = String
 
 				public enum Hit: String, Codable, CaseIterable {
