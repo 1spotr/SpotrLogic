@@ -1697,6 +1697,7 @@ public class SpotrLogic {
         case userNotFound
         case weakPassword
         case wrongPassword
+        case tooManyRequests
         case errorOccured
     }
     
@@ -1731,6 +1732,7 @@ public class SpotrLogic {
             case .userNotFound: return AuthErrors.userNotFound
             case .weakPassword: return AuthErrors.weakPassword
             case .wrongPassword: return AuthErrors.wrongPassword
+            case .tooManyRequests: return AuthErrors.tooManyRequests
             default: return AuthErrors.errorOccured
             }
         } else {
