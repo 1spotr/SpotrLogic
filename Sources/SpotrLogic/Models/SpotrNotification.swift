@@ -10,12 +10,12 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 public struct SpotrNotification: Identifiable, Codable, Hashable {
-    public let id: String
-    public let createdAt: Date
-    public let localizationKey: String
-    public let localizedTitle: String
-    public let localizedBody: String
-    public let deepLink: String
+    public var id: String
+    public var createdAt: Date
+    public var localizationKey: String
+    public var localizedTitle: String
+    public var localizedBody: String
+    public var deepLink: String
     
     // MARK: Equatable
     public static func == (lhs: SpotrNotification, rhs: SpotrNotification) -> Bool {
