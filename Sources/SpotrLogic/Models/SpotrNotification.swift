@@ -10,114 +10,20 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 public struct SpotrNotification: Identifiable, Codable, Hashable {
-    
-    public let deeplinkUrl: String
-    public let created: Date
     public let id: String
-    public let mentionedTags: [Tag.ID]?
-    public let mentionedUsers: [User]?
-    public let spot: NotificationSpot?
-    public let title: String
-    public let text: String
-    public let type: NotificationType
-    public let user: User
-    
-    public enum NotificationType: String {
-        case mention = "mention"
-        case moderationAccepted = "pictures_suggestion_accepted"
-        case moderationRefused = "pictures_suggestion_rejected"
-    }
-    
-    public struct NotificationSpot: Codable {
-        public let id: String?
-        public let name: String?
-        public let geolocation: GeoPoint?
-        public let picture: NotificationPicture?
-        public let tags: [Tag.ID]?
-        
-        public struct NotificationPicture: Codable {
-            public let id: String?
-            public let url: String?
-        }
-    }
-    
-    // MARK: Coding Keys
-    
-    enum CodingKeys: String, CodingKey {
-        case deeplinkUrl = "url"
-        case created = "dt_create"
-        case id
-        case mentionedTags = "mentioned_tags"
-        case mentionedUsers = "mentioned_users"
-        case spot
-        case title
-        case text
-        case type
-        case user = "author"
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        deeplinkUrl = try container.decode(String.self, forKey: .deeplinkUrl)
-        
-        let createdTimestamp = try container.decode(Timestamp.self, forKey: .created)
-        created = createdTimestamp.dateValue()
-        
-        id = try container.decode(String.self, forKey: .id)
-        
-        mentionedTags = try container.decodeIfPresent([Tag.ID].self, forKey: .mentionedTags)
-        
-        mentionedUsers = try container.decodeIfPresent([User].self, forKey: .mentionedUsers)
-        
-        spot = try container.decodeIfPresent(NotificationSpot.self, forKey: .spot)
-        
-        title = try container.decode(String.self, forKey: .title)
-        
-        text = try container.decode(String.self, forKey: .text)
-        
-        let newType = try container.decode(String.self, forKey: .type)
-        type = NotificationType(rawValue: newType) ?? .mention
-        
-        user = try container.decode(User.self, forKey: .user)
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        try container.encode(deeplinkUrl, forKey: .deeplinkUrl)
-        
-        let createdTimestamp = Timestamp(date: created)
-        try container.encode(createdTimestamp, forKey: .created)
-        
-        try container.encode(id, forKey: .id)
-        try container.encode(mentionedTags, forKey: .mentionedTags)
-        try container.encode(mentionedUsers, forKey: .mentionedUsers)
-        try container.encodeIfPresent(spot, forKey: .spot)
-        try container.encode(title, forKey: .title)
-        try container.encode(text, forKey: .text)
-        try container.encode(type.rawValue, forKey: .type)
-        try container.encode(user, forKey: .user)
-        
-    }
+    public let createdAt: Date
+    public let localizationKey: String
+    public let localizedTitle: String
+    public let localizedBody: String
+    public let deepLink: String
     
     // MARK: Equatable
-    
     public static func == (lhs: SpotrNotification, rhs: SpotrNotification) -> Bool {
         lhs.id == rhs.id
     }
     
     // MARK: Hashable
-    
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-    }
-    
-    // MARK: Collection
-    
-    static let notificationsCollection = firestore.collection("notifications")
-    
-    static func notificationsCollectionForCurrentUser(id: String) -> CollectionReference {
-        return firestore.collection("users_private_metadata/\(id)/notifications")
     }
 }

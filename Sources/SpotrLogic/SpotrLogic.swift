@@ -1213,133 +1213,140 @@ public class SpotrLogic {
     /// Get all notifications from notifications collection.
     /// - Parameter completion: The completion result.
     public func allNotifications(completion: @escaping (Result<[SpotrNotification], Error>) -> Void) throws {
-        SpotrNotification.notificationsCollection
-            .order(by: "dt_create", descending: true)
-            .getDocuments { query, error in
-                do {
-                    if let error = error {
-                        throw error
-                    }
-                    
-                    guard let documents = query?.documents else {
-                        throw QueryErrors.noDocuments
-                        
-                    }
-                    
-                    let result = try documents.compactMap({ try $0.data(as: SpotrNotification.self )})
-                    
-                    completion(.success(.init(result)))
-                } catch {
-                    completion(.failure(self.handle(error: error)))
-                }
-            }
+        completion(.success([])) // TODO-MARCUS: CALL
+//        SpotrNotification.notificationsCollection
+//            .order(by: "dt_create", descending: true)
+//            .getDocuments { query, error in
+//                do {
+//                    if let error = error {
+//                        throw error
+//                    }
+//
+//                    guard let documents = query?.documents else {
+//                        throw QueryErrors.noDocuments
+//
+//                    }
+//
+//                    let result = try documents.compactMap({ try $0.data(as: SpotrNotification.self )})
+//
+//                    completion(.success(.init(result)))
+//                } catch {
+//                    completion(.failure(self.handle(error: error)))
+//                }
+//            }
     }
     
     /// Get all notifications from notifications collection.
     /// - Returns: Array of `SpotrNotification`.
     public func allNotifications() async throws -> [SpotrNotification] {
-        do {
-            let query = try await SpotrNotification.notificationsCollection
-                .order(by: "dt_create", descending: true)
-                .getDocuments()
-            
-            let result = try query.documents.compactMap({ try $0.data(as: SpotrNotification.self )})
-            return result
-        } catch {
-            throw self.handle(error: error)
-        }
+        return [] // TODO-MARCUS: CALL
+//        do {
+//            let query = try await SpotrNotification.notificationsCollection
+//                .order(by: "dt_create", descending: true)
+//                .getDocuments()
+//
+//            let result = try query.documents.compactMap({ try $0.data(as: SpotrNotification.self )})
+//            return result
+//        } catch {
+//            throw self.handle(error: error)
+//        }
     }
     
     /// Check if user has unread notification.
     /// - Parameter completion: The completion result.
     public func hasUnreadNotification(completion: @escaping (Result<Bool, Error>) -> Void) throws {
-        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
-        
-        SpotrNotification.notificationsCollectionForCurrentUser(id: id)
-            .whereField("viewed", isEqualTo: false)
-            .getDocuments { query, error in
-                do {
-                    if let error = error {
-                        throw error
-                    }
-                    completion(.success(query?.count ?? 0 > 0))
-                } catch {
-                    completion(.failure(self.handle(error: error)))
-                }
-            }
+        completion(.success(true)) // TODO-MARCUS CALL
+//        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+//
+//        SpotrNotification.notificationsCollectionForCurrentUser(id: id)
+//            .whereField("viewed", isEqualTo: false)
+//            .getDocuments { query, error in
+//                do {
+//                    if let error = error {
+//                        throw error
+//                    }
+//                    completion(.success(query?.count ?? 0 > 0))
+//                } catch {
+//                    completion(.failure(self.handle(error: error)))
+//                }
+//            }
     }
     
     /// Check if user has unread notification.
     public func hasUnreadNotification() async throws -> Bool {
-        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
-        do {
-            let query = try await SpotrNotification.notificationsCollectionForCurrentUser(id: id)
-                .whereField("viewed", isEqualTo: false)
-                .getDocuments()
-            return query.count > 0
-        } catch {
-            throw self.handle(error: error)
-        }
+        return true // TODO-MARCUS CALL
+//        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+//        do {
+//            let query = try await SpotrNotification.notificationsCollectionForCurrentUser(id: id)
+//                .whereField("viewed", isEqualTo: false)
+//                .getDocuments()
+//            return query.count > 0
+//        } catch {
+//            throw self.handle(error: error)
+//        }
     }
     
     /// Listen for user's unread notification.
     public func listenForUnreadNotification(completion: @escaping (Result<Bool, Error>) -> Void) throws {
-        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
-        
-        let registration = SpotrNotification.notificationsCollectionForCurrentUser(id: id)
-            .whereField("viewed", isEqualTo: false)
-            .addSnapshotListener { query, error in
-                do {
-                    if let error = error {
-                        throw error
-                    }
-                    completion(.success(query?.count ?? 0 > 0))
-                } catch {
-                    completion(.failure(self.handle(error: error)))
-                }
-            }
-        
-        registrations.append(registration)
+        completion(.success(true)) // TODO-MARCUS CALL
+//        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+//
+//        let registration = SpotrNotification.notificationsCollectionForCurrentUser(id: id)
+//            .whereField("viewed", isEqualTo: false)
+//            .addSnapshotListener { query, error in
+//                do {
+//                    if let error = error {
+//                        throw error
+//                    }
+//                    completion(.success(query?.count ?? 0 > 0))
+//                } catch {
+//                    completion(.failure(self.handle(error: error)))
+//                }
+//            }
+//
+//        registrations.append(registration)
     }
     
     /// Get all notifications for logged user.
     /// - Parameter completion: The completion result.
     public func notificationsForLoggedUser(completion: @escaping (Result<[SpotrNotification], Error>) -> Void) throws {
-        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
-        SpotrNotification.notificationsCollectionForCurrentUser(id: id)
-            .order(by: "dt_create", descending: true)
-            .getDocuments { query, error in
-                do {
-                    if let error = error {
-                        throw error
-                    }
-                    
-                    guard let documents = query?.documents else {
-                        throw QueryErrors.noDocuments
-                    }
-                    
-                    let result = try documents.compactMap({ try $0.data(as: SpotrNotification.self)})
-                    
-                    completion(.success(.init(result)))
-                } catch {
-                    completion(.failure(self.handle(error: error)))
-                }
-            }
+        completion(.success([])) // TODO-MARCUS CALL
+//        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+//        SpotrNotification.notificationsCollectionForCurrentUser(id: id)
+//            .order(by: "dt_create", descending: true)
+//            .getDocuments { query, error in
+//                do {
+//                    if let error = error {
+//                        throw error
+//                    }
+//
+//                    guard let documents = query?.documents else {
+//                        throw QueryErrors.noDocuments
+//                    }
+//
+//                    let result = try documents.compactMap({ try $0.data(as: SpotrNotification.self)})
+//
+//                    completion(.success(.init(result)))
+//                } catch {
+//                    completion(.failure(self.handle(error: error)))
+//                }
+//            }
     }
     
     /// Get all notifications for logged user.
     public func notificationsForLoggedUser() async throws -> [SpotrNotification] {
-        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
-        
-        do {
-            let query = try await SpotrNotification.notificationsCollectionForCurrentUser(id: id)
-                .order(by: "dt_create", descending: true)
-                .getDocuments()
-            let result = try query.documents.compactMap({ try $0.data(as: SpotrNotification.self)})
-            return .init(result)
-        } catch {
-            throw self.handle(error: error)
-        }
+        return [] // TODO-MARCUS CALL
+//        guard let id = loggedUser?.id else { throw UserErrors.noCurrentUser }
+//
+//        do {
+//            let query = try await SpotrNotification.notificationsCollectionForCurrentUser(id: id)
+//                .order(by: "dt_create", descending: true)
+//                .getDocuments()
+//            let result = try query.documents.compactMap({ try $0.data(as: SpotrNotification.self)})
+//            return .init(result)
+//        } catch {
+//            throw self.handle(error: error)
+//        }
     }
     
     /// Set user notifications to viewed.
