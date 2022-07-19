@@ -17,7 +17,7 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
     public var localizedBody: String
     public var deepLink: String
 
-    init(dummy: Bool) {
+    public init(dummy: Bool) {
         self.id = UUID().uuidString
         self.localizedBody = "Test boyd notification \(Int.random(in: 0...100))"
         self.localizedTitle = "Test title notification \(Int.random(in: 0...100))"
