@@ -16,7 +16,16 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
     public var localizedTitle: String
     public var localizedBody: String
     public var deepLink: String
-    
+
+    init(dummy: Bool) {
+        self.id = UUID().uuidString
+        self.localizedBody = "Test boyd notification \(Int.random(in: 0...100))"
+        self.localizedTitle = "Test title notification \(Int.random(in: 0...100))"
+        self.localizationKey = "Test_localized_key"
+        self.createdAt = Date()
+        self.deepLink = "deepLink"
+    }
+
     // MARK: Equatable
     public static func == (lhs: SpotrNotification, rhs: SpotrNotification) -> Bool {
         lhs.id == rhs.id
