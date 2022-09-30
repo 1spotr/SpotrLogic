@@ -613,6 +613,10 @@ public class SpotrLogic {
         guard let currentUser = auth?.currentUser, let email = currentUser.email else {
             throw UserErrors.noCurrentUser
         }
+        guard email != newEmail else {
+            completion(.failure(UpdateUserErrors.invalidEmail))
+            return
+        }
         reauthenticate(with: email, password: password) { result in
             switch result {
             case .success:
