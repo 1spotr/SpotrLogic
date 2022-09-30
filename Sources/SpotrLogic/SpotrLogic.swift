@@ -619,8 +619,9 @@ public class SpotrLogic {
                 currentUser.updateEmail(to: newEmail) { error in
                     if error != nil {
                         completion(.failure(UpdateUserErrors.invalidEmail))
+                    } else {
+                        completion(.success(()))
                     }
-                    completion(.success(()))
                 }
             case .failure:
                 completion(.failure(UpdateUserErrors.failReauthenticate))
@@ -643,8 +644,9 @@ public class SpotrLogic {
                 currentUser.updatePassword(to: newPassword) { error in
                     if error != nil {
                         completion(.failure(UpdateUserErrors.weakPassword))
+                    } else {
+                        completion(.success(()))
                     }
-                    completion(.success(()))
                 }
             case .failure:
                 completion(.failure(UpdateUserErrors.failReauthenticate))
