@@ -21,6 +21,8 @@ public protocol TagEntity: Entity {
 				var relatives: [Self]? { get }
 
 				var siblings: [Self]? { get }
+				
+				var count: Int? { get }
 }
 
 
@@ -42,4 +44,6 @@ public extension TagEntity {
 				var siblings: [Self]? {
 								nil
 				}
+				
+				var count: Int? { nil }
 }
