@@ -195,6 +195,10 @@ public class SpotrLogic {
         auth?.currentUser != nil
     }
     
+    public var email: String? {
+        auth?.currentUser?.email
+    }
+    
     /// Restore properties
     public func restore() throws -> Void {
         auth = Auth.auth()
