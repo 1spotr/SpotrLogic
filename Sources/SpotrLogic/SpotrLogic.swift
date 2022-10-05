@@ -895,11 +895,9 @@ public class SpotrLogic {
     /// - Parameters:
     ///   - area: The seleted area.
     ///   - completion: The completion callbac
-    public func setResidence(area: Area, completion: @escaping(Result<Void, Error>) -> Void) throws {
+    public func setResidence(areaId: String, completion: @escaping(Result<Void, Error>) -> Void) throws {
         guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
-        
-        guard let areaId = area.id else { throw QueryErrors.noGetterID }
-        
+				
         let areaCommand = AreaCommand(user_id: id, area_id: areaId)
         
         let data = try encoderFirestore.encode(areaCommand)
@@ -916,9 +914,8 @@ public class SpotrLogic {
     
     /// Set the user residence area in the user private metadata.
     /// - Parameter area: The seleted area.
-    public func setResidence(area: Area) async throws {
+				public func setResidence(areaId: String) async throws {
         guard let id = loggedUser?.id else { throw AuthErrors.notAuthenticated }
-        guard let areaId = area.id else { throw QueryErrors.noGetterID }
         
         let areaCommand = AreaCommand(user_id: id, area_id: areaId)
         let data = try encoderFirestore.encode(areaCommand)

@@ -67,20 +67,18 @@ class AreasTests: XCTestCase {
         
         wait(for: [anonymousSign(for: logic)], timeout: 10)
         
-        /// Random test area
-        let area = Area(id: UUID().description, name: "testing",
-                        pictures: [], geolocation: .init(latitude: 0, longitude: 0), locations: [])
+        /// Random test area id
+								let areaId = UUID().description
         
         let expectation = XCTestExpectation(description: "Residence creation")
         
         
-        try logic.setResidence(area: area, completion: { result in
+								try logic.setResidence(areaId: areaId, completion: { result in
             switch result {
             case .success:
                 break
             case .failure(let error):
                 XCTFail(error.localizedDescription)
-                
             }
             expectation.fulfill()
         })
@@ -106,7 +104,7 @@ class AreasTests: XCTestCase {
                     if let document = query?.documents.first {
                         CommandTests.verifyCommand(document)
                         XCTAssertEqual(document.get("payload.user_id") as? String, userID)
-                        XCTAssertEqual(document.get("payload.area_id") as? String, area.id)
+                        XCTAssertEqual(document.get("payload.area_id") as? String, areaId)
                     }
                     
                     
