@@ -19,9 +19,9 @@ public protocol SpotEntity: Entity {
 				/// The spot updated date.
 				var updated: Date { get }
 
-				associatedtype SpotLocation = LocationValue
+				associatedtype SpotLocation = LocationEntity
 				/// The spot location description.
-				var location: SpotLocation? { get }
+				var locations: [SpotLocation]? { get }
 
 				associatedtype SpotPicture = PictureEntity
 				var picture: SpotPicture? { get }
@@ -34,4 +34,8 @@ public protocol SpotEntity: Entity {
 
 				associatedtype SpotCoordinate = CoordinateValue
 				var coordinate: SpotCoordinate { get }
+}
+
+public extension SpotEntity {
+				var locations: [SpotLocation]? { nil }
 }

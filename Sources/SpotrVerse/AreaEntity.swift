@@ -19,6 +19,10 @@ public protocol AreaEntity: Entity {
 				associatedtype AreaCoordinate = CoordinateValue
 				var coordinate: AreaCoordinate { get }
 
-				associatedtype AreaLocation = LocationValue
-				var locations: [AreaLocation] { get }
+				associatedtype AreaLocation = LocationEntity
+				var locations: [AreaLocation]? { get }
+}
+
+public extension AreaEntity {
+				var locations: [AreaLocation]? { nil }
 }
