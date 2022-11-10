@@ -10,13 +10,17 @@ import FirebaseFirestoreSwift
 import FirebaseFirestore
 
 public struct SpotrNotification: Identifiable, Codable, Hashable {
-				public init(id: String, createdAt: Date, localizationKey: String, localizedTitle: String, localizedBody: String, deepLink: String) {
+				public init(id: String, createdAt: Date, localizationKey: String, localizedTitle: String, localizedBody: String, deepLink: String,
+																thumbnail: String? = nil, icon: String? = nil
+				) {
 								self.id = id
 								self.createdAt = createdAt
 								self.localizationKey = localizationKey
 								self.localizedTitle = localizedTitle
 								self.localizedBody = localizedBody
 								self.deepLink = deepLink
+								self.thumbnail = thumbnail
+								self.icon = icon
 				}
 
     public var id: String
@@ -25,6 +29,8 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
     public var localizedTitle: String
     public var localizedBody: String
     public var deepLink: String
+				public var thumbnail: String?
+				public var icon: String?
 
     public init(dummy: Bool) {
         self.id = UUID().uuidString
@@ -33,6 +39,8 @@ public struct SpotrNotification: Identifiable, Codable, Hashable {
         self.localizationKey = "Test_localized_key"
         self.createdAt = Date()
         self.deepLink = "deepLink"
+								self.thumbnail = nil
+								self.icon = nil
     }
 
     // MARK: Equatable
