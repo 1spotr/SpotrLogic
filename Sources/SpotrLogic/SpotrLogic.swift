@@ -1215,6 +1215,21 @@ public class SpotrLogic {
         }
     }
     
+    public func userApprovedSpotsCount(for user: User?) async throws -> Int {
+        guard let id = user?.id ?? loggedUser?.id else { throw QueryErrors.noGetterID }
+        
+        do {
+            let query = try await firestore.collection("content_suggestions")
+                .whereField("author_id", isEqualTo: id)
+                .whereField("approved", isEqualTo: true)
+                .getDocuments()
+            let count = query.documents.count
+            return count
+        } catch {
+            throw self.handle(error: error)
+        }
+    }
+    
     // MARK: - Notifications
     
     /// Get all notifications from notifications collection.
