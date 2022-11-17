@@ -1221,6 +1221,7 @@ public class SpotrLogic {
         do {
             let query = try await firestore.collection("content_suggestions")
                 .whereField("author_id", isEqualTo: id)
+                .whereField("approved", isEqualTo: true)
                 .getDocuments()
             let count = query.documents.count
             return count
