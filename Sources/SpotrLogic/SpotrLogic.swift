@@ -339,6 +339,7 @@ public class SpotrLogic {
         
         do {
             try auth?.signOut()
+            self.loggedUser = nil
         } catch {
             throw handle(error: error)
         }
