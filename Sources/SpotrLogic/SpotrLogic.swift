@@ -256,7 +256,9 @@ public class SpotrLogic {
             Task {
                 self.loggedUser?.publicMetadata = try await getUserPublicData(from: id)
                 self.loggedUser?.privateMetadata = try await getUserPrivateData(from: id)
-                completion(.success(()))
+                DispatchQueue.main.async {
+                    completion(.success(()))
+                }
                 try listenLoggedUserChanges()
             }
         } catch {
