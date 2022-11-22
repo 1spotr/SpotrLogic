@@ -259,8 +259,8 @@ public class SpotrLogic {
                 DispatchQueue.main.async {
                     completion(.success(()))
                 }
-                try listenLoggedUserChanges()
             }
+            try listenLoggedUserChanges()
         } catch {
             completion(.failure(self.handle(error: error)))
         }
