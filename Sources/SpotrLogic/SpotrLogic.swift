@@ -266,6 +266,30 @@ public class SpotrLogic {
         }
     }
     
+    private func handleSignResult(currentAuth: Auth,
+                                  authResult: AuthDataResult?, error: Error?,
+                                  completion: @escaping(Result<Void, Error>)-> Void) {
+        do {
+            // Check if the query resolved with an error
+            if let error = error {
+                throw error
+            }
+            if authResult == nil {
+                throw AuthErrors.failed
+            }
+            
+            self.auth = currentAuth
+            guard let id = self.auth?.currentUser?.uid else {
+                throw AuthErrors.missingID
+            }
+            self.loggedUser = LoggedUser(id: id)
+            completion(.success(()))
+            try listenLoggedUserChanges()
+        } catch {
+            completion(.failure(self.handle(error: error)))
+        }
+    }
+    
     /// Authenticate an user using a third-party.
     /// - Parameters:
     ///   - authentication: The third party auth result.
@@ -299,12 +323,11 @@ public class SpotrLogic {
         let signAuth = Auth.auth()
         
         signAuth.createUser(withEmail: email, password: password) { authResult, error in
-            self.handleAuthResult(currentAuth: signAuth,
+            self.handleSignResult(currentAuth: signAuth,
                                   authResult: authResult, error: error,
                                   completion: completion)
         }
     }
-    
     
     // MARK: Login
     
