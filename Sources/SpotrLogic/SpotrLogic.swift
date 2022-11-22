@@ -253,8 +253,12 @@ public class SpotrLogic {
                 throw AuthErrors.missingID
             }
             self.loggedUser = LoggedUser(id: id)
-            completion(.success(()))
-            try listenLoggedUserChanges()
+            Task {
+                self.loggedUser?.publicMetadata = try await getUserPublicData(from: id)
+                self.loggedUser?.privateMetadata = try await getUserPrivateData(from: id)
+                completion(.success(()))
+                try listenLoggedUserChanges()
+            }
         } catch {
             completion(.failure(self.handle(error: error)))
         }
@@ -561,6 +565,18 @@ public class SpotrLogic {
             let snapshot = try await User.collection.document(id).getDocument()
             guard let user = try snapshot.data(as: User.self) else { throw UserErrors.incorrectUserData }
             return user
+        } catch {
+            throw handle(error: error)
+        }
+    }
+    
+    public func getUserPrivateData(from id: String) async throws -> PrivateMetadata {
+        guard !id.isEmpty else { throw UserErrors.emptyId }
+        
+        do {
+            let snapshot = try await PrivateMetadata.collection.document(id).getDocument()
+            guard let privateMetadata = try snapshot.data(as: PrivateMetadata.self) else { throw UserErrors.incorrectUserData }
+            return privateMetadata
         } catch {
             throw handle(error: error)
         }
